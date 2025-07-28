@@ -5,7 +5,6 @@ body {
   color: #111827;
 }
 
-/* Encabezado */
 header {
   background-color: #10b981;
   color: white;
@@ -13,23 +12,23 @@ header {
   text-align: center;
 }
 
-/* Menú de navegación */
 nav {
   background-color: #ecfdf5;
   padding: 10px;
   text-align: center;
 }
+
 nav a {
   margin: 0 15px;
   color: #065f46;
   text-decoration: none;
   font-weight: bold;
 }
+
 nav a:hover {
   text-decoration: underline;
 }
 
-/* Secciones */
 section {
   max-width: 900px;
   margin: 30px auto;
@@ -43,7 +42,6 @@ h2 {
   color: #047857;
 }
 
-/* Botón */
 a.btn {
   background: #10b981;
   color: white;
@@ -53,11 +51,11 @@ a.btn {
   display: inline-block;
   margin-top: 10px;
 }
+
 a.btn:hover {
   background: #059669;
 }
 
-/* Pie de página */
 footer {
   text-align: center;
   padding: 20px;
