@@ -1,23 +1,23 @@
 /* === ESTILO GENERAL === */
 body {
   font-family: 'Inter', sans-serif;
-  background: #ffffff;
-  color: #222;
+  background: #0f172a;
+  color: #f8fafc;
   margin: 0;
   line-height: 1.6;
 }
 
 /* === CABECERA === */
 header {
-  background: #1abc9c;
-  color: white;
+  background: #1e293b;
+  color: #f8fafc;
   padding: 30px 20px;
   text-align: center;
 }
 
 header a {
-  background: white;
-  color: #1abc9c;
+  background: #f8fafc;
+  color: #1e293b;
   padding: 6px 12px;
   border-radius: 6px;
   text-decoration: none;
@@ -26,7 +26,7 @@ header a {
 }
 
 header a:hover {
-  background: #e0f7fa;
+  background: #334155;
 }
 
 /* === NAVEGACIÓN === */
@@ -42,7 +42,7 @@ nav ul {
 }
 
 nav a {
-  color: #1abc9c;
+  color: #38bdf8;
   text-decoration: none;
   margin: 0 15px;
   font-weight: bold;
@@ -62,21 +62,21 @@ main {
 
 /* === SECCIONES === */
 section {
-  background: #f9f9f9;
+  background: #1e293b;
   padding: 25px;
   margin-bottom: 20px;
   border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  border: 1px solid #334155;
 }
 
 section h2 {
-  color: #16a085;
+  color: #38bdf8;
 }
 
 /* === ENLACES Y BOTONES === */
 a {
-  background: #1abc9c;
+  background: #0ea5e9;
   color: white;
   padding: 8px 12px;
   border-radius: 6px;
@@ -87,12 +87,12 @@ a {
 }
 
 a:hover {
-  background: #16a085;
+  background: #0284c7;
 }
 
 /* === BOTÓN DE CV === */
 .boton-cv {
-  background: #e67e22;
+  background: #f97316;
   color: white;
   padding: 10px 15px;
   border-radius: 6px;
@@ -104,12 +104,13 @@ a:hover {
 }
 
 .boton-cv:hover {
-  background: #d35400;
+  background: #ea580c;
 }
 
 /* === PIE DE PÁGINA === */
 footer {
   text-align: center;
   padding: 20px;
-  backgroun
+}
+
 
