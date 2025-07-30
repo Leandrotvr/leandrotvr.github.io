@@ -96,6 +96,31 @@ footer {
   text-decoration: underline;
 }
 
+/* Formulario de contacto */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+input, textarea {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-family: inherit;
+}
+button {
+  background: #0073e6;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+}
+button:hover {
+  background: #005bb5;
+}
+
 
 
 
