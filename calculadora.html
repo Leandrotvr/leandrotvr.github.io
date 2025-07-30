@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculadora Web</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .calculadora {
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input[type="text"] {
+      width: 100%;
+      height: 40px;
+      font-size: 1.5rem;
+      text-align: right;
+      margin-bottom: 1rem;
+      padding: 0.5rem;
+    }
+    .botones {
+      display: grid;
+      grid-template-columns: repeat(4, 60px);
+      gap: 10px;
+    }
+    button {
+      height: 50px;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="calculadora">
+    <input type="text" id="pantalla" disabled />
+    <div class="botones">
+      <button onclick="borrar()">C</button>
+      <button onclick="agregar('/')">/</button>
+      <button onclick="agregar('*')">*</button>
+      <button onclick="agregar('-')">-</button>
+
+      <button onclick="agregar('7')">7</button>
+      <button onclick="agregar('8')">8</button>
+      <button onclick="agregar('9')">9</button>
+      <button onclick="agregar('+')">+</button>
+
+      <button onclick="agregar('4')">4</button>
+      <button onclick="agregar('5')">5</button>
+      <button onclick="agregar('6')">6</button>
+      <button onclick="calcular()">=</button>
+
+      <button onclick="agregar('1')">1</button>
+      <button onclick="agregar('2')">2</button>
+      <button onclick="agregar('3')">3</button>
+      <button onclick="agregar('0')">0</button>
+    </div>
+  </div>
+
+  <script>
+    let pantalla = document.getElementById("pantalla");
+
+    function agregar(valor) {
+      pantalla.value += valor;
+    }
+
+    function borrar() {
+      pantalla.value = "";
+    }
+
+    function calcular() {
+      try {
+        pantalla.value = eval(pantalla.value);
+      } catch (e) {
+        pantalla.value = "Error";
+      }
+    }
+  </script>
+</body>
+</html>
