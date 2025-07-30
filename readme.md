@@ -1,24 +1,32 @@
-# Portfolio de Leandro Maciel
+# Portfolio Web - Leandro Maciel
 
-👨‍💻 Desarrollador Backend | Python • SQL • Node.js  
-📍 Mercedes, Corrientes – Argentina  
-📫 leandrotvr@gmail.com | [LinkedIn](https://www.linkedin.com/in/leandromaciel581)
+¡Gracias Hashem por esta oportunidad!
 
-## 🚀 Tecnologías que uso
-- **Lenguajes:** Python, JavaScript
-- **Frameworks:** Flask, Django, Node.js, Express
-- **Bases de datos:** SQLite, PostgreSQL, MongoDB
-- **Herramientas:** Git, GitHub, Docker (básico)
+Este es mi portfolio personal como educador y profesional TIC, orientado al desarrollo frontend y la tecnología aplicada a la educación.
 
-## 💼 Proyectos destacados
-- [API de tareas (Flask + SQLite)](https://github.com/usuario/api-tareas)
-- [CRUD con Node.js y MongoDB](https://github.com/usuario/crud-node)
-- [Reportes automáticos con Python + Pandas](https://github.com/usuario/reportes-python)
+## 👨‍🏫 Sobre mí
 
-## ✨ Sobre mí
-Autodidacta, con fuerte pasión por resolver problemas del mundo real usando software. Combino pensamiento lógico, curiosidad, y compromiso. Vengo de la docencia y encontré en la programación un modo de multiplicar el impacto educativo y social.
+Docente de Geografía con sólida experiencia en TICs, hojas de cálculo y comunicación clara. Me apasiona el aprendizaje constante, la tecnología y la enseñanza. Busco oportunidades en el sector privado donde desarrollar todo mi potencial.
 
-## 🤝 Contacto
-📧 leandrotvr@gmail.com  
-📱 [WhatsApp directo](https://wa.me/543777416857)  
-🔗 [LinkedIn](https://www.linkedin.com/in/leandromaciel581)
+## 🛠️ Tecnologías utilizadas
+
+- HTML5
+- CSS3
+- GitHub Pages
+
+## 🌐 Enlaces
+
+- Portfolio online: [https://leandrotvr.github.io](https://leandrotvr.github.io)
+- LinkedIn: [linkedin.com/in/leandromaciel581](https://www.linkedin.com/in/leandromaciel581)
+
+## 📬 Contacto
+
+- 📧 Email: leandrotvr@gmail.com
+- 📱 WhatsApp: +54 3777 416857
+- 📍 Ubicación: Mercedes, Corrientes (Argentina)
+
+---
+
+> Proyecto simple, claro y funcional, pensado para mostrar mi perfil profesional y mis competencias digitales.
+
+
