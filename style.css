@@ -1,111 +1,62 @@
-/* General reset */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
-
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
-    color: #333;
-    line-height: 1.6;
+  font-family: 'Segoe UI', sans-serif;
+  line-height: 1.6;
+  background: #f4f4f4;
+  color: #333;
+  padding: 20px;
 }
-
-.container {
-    width: 80%;
-    margin: 0 auto;
-}
-
-/* Header */
 header {
-    background-color: #00796b;
-    color: #fff;
-    padding: 20px 0;
-    text-align: center;
+  text-align: center;
+  margin-bottom: 30px;
 }
-
 header h1 {
-    font-size: 2.5rem;
-    margin-bottom: 10px;
+  color: #0073e6;
+  margin-bottom: 10px;
 }
-
-nav ul {
-    list-style: none;
-    display: flex;
-    justify-content: center;
+.contacto p {
+  margin: 5px 0;
 }
-
-nav ul li {
-    margin: 0 15px;
+a {
+  color: #0073e6;
+  text-decoration: none;
 }
-
-nav ul li a {
-    text-decoration: none;
-    color: #fff;
-    font-size: 1.2rem;
-    transition: color 0.3s;
+a:hover {
+  text-decoration: underline;
 }
-
-nav ul li a:hover {
-    color: #ffcc00;
-}
-
-/* Main content */
 main {
-    padding: 40px 0;
+  max-width: 800px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
 }
-
 section {
-    margin-bottom: 30px;
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
 }
-
-section h2 {
-    font-size: 2rem;
-    color: #00796b;
-    margin-bottom: 15px;
+h2 {
+  color: #333;
+  margin-bottom: 10px;
+  border-bottom: 2px solid #0073e6;
+  padding-bottom: 5px;
 }
-
-section p {
-    font-size: 1.1rem;
-    color: #555;
+ul {
+  list-style: none;
 }
-
-/* Contact section */
-#contacto {
-    background-color: #00796b;
-    color: #fff;
+ul li::before {
+  content: "✔️ ";
+  margin-right: 5px;
 }
-
-.contact-info p {
-    font-size: 1.1rem;
-    margin: 10px 0;
-}
-
-.contact-info a {
-    color: #ffcc00;
-    text-decoration: none;
-}
-
-.contact-info a:hover {
-    text-decoration: underline;
-}
-
-/* Footer */
 footer {
-    text-align: center;
-    padding: 20px;
-    background-color: #333;
-    color: #fff;
-    margin-top: 40px;
+  text-align: center;
+  margin-top: 30px;
+  font-style: italic;
+  color: #555;
 }
 
-footer p {
-    font-size: 1rem;
-}
 
 
