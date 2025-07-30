@@ -34,9 +34,10 @@ main {
   background: #fff;
   padding: 20px;
   border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
 }
 section {
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 h2 {
   color: #333;
@@ -46,14 +47,27 @@ h2 {
 }
 ul {
   list-style: none;
+  padding-left: 0;
 }
 ul li::before {
   content: "✔️ ";
   margin-right: 5px;
 }
+a.button {
+  display: inline-block;
+  background-color: #0073e6;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 5px;
+  margin-top: 10px;
+  font-weight: bold;
+}
+a.button:hover {
+  background-color: #005bb5;
+}
 footer {
   text-align: center;
-  margin-top: 30px;
+  margin-top: 40px;
   font-style: italic;
   color: #555;
 }
