@@ -6,9 +6,9 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
     line-height: 1.6;
-    background-color: #f4f4f4;
+    background-color: #fafafa;
     color: #333;
 }
 
@@ -22,24 +22,42 @@ nav ul {
     list-style-type: none;
     display: flex;
     justify-content: center;
+    flex-wrap: wrap; /* Permite que los elementos se envuelvan en pantallas pequeñas */
+    padding: 0;
 }
 
 nav ul li {
-    margin: 0 10px;
+    margin: 10px;
 }
 
 nav ul li a {
     color: #fff;
     text-decoration: none;
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
 }
 
+nav ul li a:hover {
+    color: #ff6347; /* Color de enlace al pasar el ratón */
+}
+
+/* Sección general */
 section {
     padding: 20px;
-    margin: 20px;
+    margin: 20px auto; /* Centra las secciones */
+    max-width: 1000px; /* Máximo ancho para pantallas grandes */
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 #home {
     text-align: center;
+}
+
+#projects {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
 }
 
 .project {
@@ -47,6 +65,7 @@ section {
     padding: 10px;
     margin: 10px 0;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    flex: 1 1 calc(50% - 20px);
 }
 
 footer {
@@ -55,6 +74,38 @@ footer {
     background: #333;
     color: #fff;
 }
+
+/* Ajustes para dispositivos pequeños */
+@media screen and (max-width: 768px) {
+    nav ul {
+        flex-direction: column; /* Cambia la dirección de la lista de horizontal a vertical en móviles */
+    }
+
+    nav ul li {
+        margin: 5px 0;
+    }
+
+    section {
+        margin: 10px;
+    }
+
+    #projects {
+        flex-direction: column; /* Hace que los proyectos se apilen uno debajo del otro en pantallas pequeñas */
+    }
+
+    .project {
+        flex: 1 1 100%; /* Los proyectos ocupan el 100% de ancho en pantallas pequeñas */
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    p {
+        font-size: 1rem;
+    }
+}
+
 
 
 
