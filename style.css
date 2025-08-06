@@ -1,4 +1,4 @@
-/* Estilos generales */
+/* Ejemplo 1: Estilos generales */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -12,7 +12,7 @@ header, section {
     margin: 10px;
 }
 
-/* Estilos para la sección de contacto */
+/* Ejemplo 2: Estilos para la sección de contacto */
 form {
     display: flex;
     flex-direction: column;
@@ -50,7 +50,7 @@ form button:hover {
     background-color: #e5533f;
 }
 
-/* Feedback de éxito o error */
+/* Ejemplo 3: Feedback de éxito o error */
 #form-feedback {
     margin-top: 10px;
     padding: 10px;
@@ -68,11 +68,49 @@ form button:hover {
     color: white;
 }
 
+/* Ejemplo 4: Diseño responsivo */
+@media screen and (max-width: 768px) {
+    header, section {
+        padding: 15px;
+    }
 
+    form {
+        max-width: 100%;
+        padding: 10px;
+    }
 
+    form input, form textarea, form button {
+        font-size: 0.9rem;
+    }
+}
 
+/* Ejemplo 5: Sección de Proyectos */
+#projects ul {
+    list-style-type: none;
+    padding: 0;
+}
 
+#projects li {
+    margin: 10px 0;
+}
 
+/* Ejemplo 6: Mejoras generales en el diseño */
+h1, h2 {
+    font-size: 2rem;
+}
+
+p {
+    font-size: 1rem;
+}
+
+a {
+    color: #ff6347;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
 
 
 
