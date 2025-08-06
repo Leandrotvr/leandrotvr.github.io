@@ -1,4 +1,4 @@
-/* 1. Reset de Estilos Básicos */
+/* Estilo básico y de transición */
 * {
     margin: 0;
     padding: 0;
@@ -10,149 +10,40 @@ body {
     background-color: #f4f6f8;
     color: #333;
     line-height: 1.6;
-    padding: 0;
-    margin: 0;
 }
 
-/* 2. Header - Estilo Principal */
 header {
     background-color: #1a1a1a;
     color: white;
     text-align: center;
     padding: 50px 20px;
     border-bottom: 3px solid #4CAF50;
-    opacity: 0;
-    animation: fadeIn 1s ease-in-out forwards;
 }
 
 header h1 {
     font-size: 3rem;
-    margin-bottom: 10px;
 }
 
-header p {
-    font-size: 1.2rem;
-    margin-top: 5px;
-}
-
-/* 3. Sección Sobre mí */
-#about {
-    background-color: #fff;
+section {
     padding: 50px 20px;
-    margin: 20px auto;
-    max-width: 1200px;
-    border-radius: 10px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    transform: translateY(50px);
-    opacity: 0;
-    animation: slideUp 1s ease-out 0.5s forwards;
 }
 
-#about h2 {
-    font-size: 2.5rem;
-    color: #1a1a1a;
-    margin-bottom: 20px;
-}
-
-#about p {
-    font-size: 1.2rem;
-    color: #555;
-}
-
-/* 4. Sección Proyectos */
-#projects {
-    padding: 50px 20px;
-    background-color: #f9f9f9;
-    opacity: 0;
-    transform: translateY(50px);
-    animation: slideUp 1s ease-out 1s forwards;
-}
-
-#projects h2 {
-    font-size: 2.5rem;
-    text-align: center;
-    color: #1a1a1a;
-    margin-bottom: 40px;
-}
-
-#projects ul {
-    list-style-type: none;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
-    padding: 0;
-}
-
-#projects li {
-    background-color: #fff;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    opacity: 0;
-    animation: fadeInUp 1s ease-out forwards;
-}
-
-#projects li:nth-child(odd) {
-    animation-delay: 0.5s;
-}
-
-#projects li:nth-child(even) {
-    animation-delay: 1s;
-}
-
-#projects li:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
-}
-
-#projects li a {
-    text-decoration: none;
-    color: #333;
-    font-weight: bold;
-    font-size: 1.2rem;
-    transition: color 0.3s ease;
-}
-
-#projects li a:hover {
-    color: #4CAF50;
-}
-
-/* 5. Sección Contacto */
 #contact {
     background-color: #fff;
-    padding: 50px 20px;
     margin: 20px auto;
-    max-width: 1200px;
+    max-width: 600px;
     border-radius: 10px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     text-align: center;
-    transform: translateY(50px);
-    opacity: 0;
-    animation: slideUp 1s ease-out 1.5s forwards;
-}
-
-#contact h2 {
-    font-size: 2.5rem;
-    color: #1a1a1a;
-    margin-bottom: 20px;
-}
-
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    max-width: 600px;
-    margin: 0 auto;
 }
 
 form input, form textarea {
+    width: 100%;
     padding: 15px;
     font-size: 1rem;
     border: 2px solid #ddd;
     border-radius: 8px;
+    margin-bottom: 15px;
     background-color: #f9f9f9;
 }
 
@@ -171,7 +62,6 @@ form button:hover {
     background-color: #45a049;
 }
 
-/* 6. Feedback de Exito/Error */
 #form-feedback {
     margin-top: 20px;
     padding: 15px;
@@ -190,51 +80,6 @@ form button:hover {
     color: white;
 }
 
-/* 7. Estilo de Enlaces */
-a {
-    color: #4CAF50;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
-/* 8. Animaciones de Entrada */
-@keyframes fadeIn {
-    0% { opacity: 0; }
-    100% { opacity: 1; }
-}
-
-@keyframes slideUp {
-    0% { transform: translateY(50px); opacity: 0; }
-    100% { transform: translateY(0); opacity: 1; }
-}
-
-@keyframes fadeInUp {
-    0% { opacity: 0; transform: translateY(30px); }
-    100% { opacity: 1; transform: translateY(0); }
-}
-
-/* 9. Estilos Responsivos */
-@media screen and (max-width: 768px) {
-    header h1 {
-        font-size: 2.5rem;
-    }
-
-    header p {
-        font-size: 1.1rem;
-    }
-
-    #about h2, #projects h2, #contact h2 {
-        font-size: 2rem;
-    }
-
-    form input, form textarea, form button {
-        font-size: 0.9rem;
-    }
-}
 
 
 
