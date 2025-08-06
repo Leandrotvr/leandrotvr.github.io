@@ -1,110 +1,74 @@
-/* Reset de márgenes y padding */
-* {
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
+    background-color: #f4f4f4;
 }
 
-body {
-    font-family: 'Arial', sans-serif;
-    line-height: 1.6;
-    background-color: #fafafa;
-    color: #333;
-}
-
-header {
-    background: #333;
-    color: #fff;
-    padding: 1rem;
-}
-
-nav ul {
-    list-style-type: none;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap; /* Permite que los elementos se envuelvan en pantallas pequeñas */
-    padding: 0;
-}
-
-nav ul li {
+header, section {
+    padding: 20px;
+    text-align: center;
     margin: 10px;
 }
 
-nav ul li a {
-    color: #fff;
-    text-decoration: none;
-    font-size: 1.2rem;
-    transition: color 0.3s ease;
-}
-
-nav ul li a:hover {
-    color: #ff6347; /* Color de enlace al pasar el ratón */
-}
-
-/* Sección general */
-section {
-    padding: 20px;
-    margin: 20px auto; /* Centra las secciones */
-    max-width: 1000px; /* Máximo ancho para pantallas grandes */
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-#home {
-    text-align: center;
-}
-
-#projects {
+/* Estilos para la sección de contacto */
+form {
     display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-.project {
-    background: #fff;
+form label {
+    font-weight: bold;
+}
+
+form input, form textarea {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    width: 100%;
+}
+
+form button {
     padding: 10px;
-    margin: 10px 0;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    flex: 1 1 calc(50% - 20px);
+    background-color: #ff6347;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
-footer {
-    text-align: center;
+form button:hover {
+    background-color: #e5533f;
+}
+
+/* Feedback de éxito o error */
+#form-feedback {
+    margin-top: 10px;
     padding: 10px;
-    background: #333;
-    color: #fff;
+    border-radius: 5px;
+    display: none;
 }
 
-/* Ajustes para dispositivos pequeños */
-@media screen and (max-width: 768px) {
-    nav ul {
-        flex-direction: column; /* Cambia la dirección de la lista de horizontal a vertical en móviles */
-    }
-
-    nav ul li {
-        margin: 5px 0;
-    }
-
-    section {
-        margin: 10px;
-    }
-
-    #projects {
-        flex-direction: column; /* Hace que los proyectos se apilen uno debajo del otro en pantallas pequeñas */
-    }
-
-    .project {
-        flex: 1 1 100%; /* Los proyectos ocupan el 100% de ancho en pantallas pequeñas */
-    }
-
-    h1 {
-        font-size: 2rem;
-    }
-
-    p {
-        font-size: 1rem;
-    }
+.success {
+    background-color: #4CAF50;
+    color: white;
 }
+
+.error {
+    background-color: #f44336;
+    color: white;
+}
+
+
 
 
 
