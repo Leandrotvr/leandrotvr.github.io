@@ -3,39 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Portafolio - Nombre</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-</head>
-<body>
+    <title>Mi Portafolio - [Tu Nombre]</title>
 
-    <header>
-        <h1>¡Hola, soy [Tu Nombre]!</h1>
-        <p>Un [Tu Profesión o Especialidad] apasionado por crear cosas increíbles.</p>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <style>
+        .profile-picture {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-root-margin="0px 0px -40%" data-bs-smooth-scroll="true" class="scrollspy-example bg-body-tertiary" tabindex="0">
+
+    <nav id="navbar-example2" class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#inicio">Mi Portafolio</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#acerca-de-mi">Acerca de mí</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#proyectos">Proyectos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contacto">Contacto</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header id="inicio" class="bg-primary text-white text-center py-5">
+        <div class="container">
+            <img src="https://via.placeholder.com/150" alt="Foto de perfil" class="profile-picture">
+            <h1 class="display-4">¡Hola, soy [Tu Nombre]!</h1>
+            <p class="lead">Un [Tu Profesión o Especialidad] apasionado por crear cosas increíbles.</p>
+        </div>
     </header>
 
-    <section id="acerca-de-mi">
-        <h2>Acerca de mí</h2>
-        <p>Aquí puedes escribir una breve biografía sobre ti, tus habilidades y tus intereses.</p>
-    </section>
-
-    <section id="proyectos">
-        <h2>Mis Proyectos</h2>
-        <div>
-            <h3>Nombre del Proyecto 1</h3>
-            <p>Descripción breve del proyecto y las tecnologías que usaste.</p>
-        </div>
-        <div>
-            <h3>Nombre del Proyecto 2</h3>
-            <p>Descripción breve del proyecto y las tecnologías que usaste.</p>
+    <section id="acerca-de-mi" class="container my-5">
+        <h2 class="text-center mb-4">Acerca de mí</h2>
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <p>Aquí puedes escribir una biografía más detallada sobre ti, tus habilidades, tu experiencia laboral y tus pasatiempos. ¡Hazla personal!</p>
+                <div class="d-flex justify-content-center flex-wrap gap-2 mt-4">
+                    <span class="badge bg-secondary">Habilidad 1</span>
+                    <span class="badge bg-secondary">Habilidad 2</span>
+                    <span class="badge bg-secondary">Habilidad 3</span>
+                    </div>
+            </div>
         </div>
     </section>
 
-    <section id="contacto">
-        <h2>Contacto</h2>
-        <p>Puedes contactarme en [tu-correo@ejemplo.com] o visitar mis redes sociales.</p>
+    <section id="proyectos" class="bg-light py-5">
+        <div class="container">
+            <h2 class="text-center mb-4">Mis Proyectos</h2>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <img src="https://via.placeholder.com/400x250" class="card-img-top" alt="Proyecto 1">
+                        <div class="card-body">
+                            <h3 class="card-title">Nombre del Proyecto 1</h3>
+                            <p class="card-text">Descripción breve del proyecto y las tecnologías que usaste. El objetivo de este proyecto y los resultados que obtuviste.</p>
+                            <a href="#" class="btn btn-primary mt-2">Ver Proyecto</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <img src="https://via.placeholder.com/400x250" class="card-img-top" alt="Proyecto 2">
+                        <div class="card-body">
+                            <h3 class="card-title">Nombre del Proyecto 2</h3>
+                            <p class="card-text">Descripción breve del proyecto y las tecnologías que usaste. El objetivo de este proyecto y los resultados que obtuviste.</p>
+                            <a href="#" class="btn btn-primary mt-2">Ver Proyecto</a>
+                        </div>
+                    </div>
+                </div>
+                </div>
+        </div>
     </section>
 
+    <footer id="contacto" class="bg-dark text-white text-center py-4">
+        <div class="container">
+            <h2>Contacto</h2>
+            <p>Puedes contactarme en <a href="mailto:tu-correo@ejemplo.com" class="text-white">[tu-correo@ejemplo.com]</a> o visitar mis redes sociales:</p>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="https://www.linkedin.com/" class="text-white" target="_blank">LinkedIn</a>
+                <a href="https://github.com/" class="text-white" target="_blank">GitHub</a>
+                <a href="https://twitter.com/" class="text-white" target="_blank">Twitter</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>
 
