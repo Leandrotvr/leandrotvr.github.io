@@ -24,3 +24,4 @@ function showFeedback(message, type) {
     feedbackElement.style.display = "block";
 }
 
+
