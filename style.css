@@ -152,6 +152,63 @@ button[type="submit"]:hover {
   background: #55aaff;
 }
 
+/* 📱 Responsive Mobile */
+@media (max-width: 600px) {
+  body {
+    font-size: 1rem;
+  }
+
+  header, main, footer {
+    padding: 1rem;
+    text-align: center;
+  }
+
+  header h1 {
+    font-size: 1.5rem;
+  }
+
+  header p {
+    font-size: 0.95rem;
+  }
+
+  nav.filtros {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .filtro-btn {
+    flex: 1 0 45%;
+    margin: 0.25rem;
+    font-size: 0.95rem;
+  }
+
+  form {
+    padding: 0 0.5rem;
+  }
+
+  input, textarea {
+    font-size: 1rem;
+  }
+
+  button[type="submit"],
+  button#tema-toggle {
+    width: 100%;
+    font-size: 1rem;
+  }
+
+  ul#lista-proyectos {
+    padding-left: 0;
+    list-style-position: inside;
+  }
+
+  .proyecto {
+    margin-bottom: 1rem;
+  }
+}
+
+
 
 
 
