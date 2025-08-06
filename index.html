@@ -5,52 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Portfolio</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
 </head>
 <body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="#home">Inicio</a></li>
-                <li><a href="#about">Sobre mí</a></li>
-                <li><a href="#projects">Proyectos</a></li>
-                <li><a href="#contact">Contacto</a></li>
-            </ul>
-        </nav>
+    <!-- Sección de Inicio -->
+    <header id="home">
+        <h1>Bienvenido a Mi Portfolio</h1>
+        <p>Soy un desarrollador web apasionado por la tecnología.</p>
     </header>
 
-    <section id="home">
-        <h1>Bienvenido a mi Portfolio</h1>
-        <p>¡Hola! Soy un desarrollador apasionado por la tecnología.</p>
-    </section>
-
+    <!-- Sección Sobre mí -->
     <section id="about">
         <h2>Sobre mí</h2>
-        <p>Soy un desarrollador web con experiencia en HTML, CSS, JavaScript, y más...</p>
+        <p>Hola, soy un entusiasta de la programación, especializado en desarrollo web y siempre buscando nuevos retos.</p>
     </section>
 
+    <!-- Sección de Proyectos -->
     <section id="projects">
-        <h2>Mis Proyectos</h2>
-        <div class="project">
-            <h3>Proyecto 1</h3>
-            <p>Descripción del proyecto.</p>
-        </div>
-        <div class="project">
-            <h3>Proyecto 2</h3>
-            <p>Descripción del proyecto.</p>
-        </div>
+        <h2>Proyectos</h2>
+        <p>Estos son algunos de los proyectos en los que he trabajado:</p>
+        <ul>
+            <li>Proyecto 1: Desarrollo de página web para una tienda en línea.</li>
+            <li>Proyecto 2: Aplicación de gestión de tareas con React.</li>
+        </ul>
     </section>
 
+    <!-- Sección de Contacto -->
     <section id="contact">
         <h2>Contacto</h2>
         <p>Contáctame a través de <a href="mailto:correo@ejemplo.com">mi correo electrónico</a>.</p>
+        
+        <!-- Formulario de Contacto -->
+        <form id="contact-form">
+            <label for="name">Nombre:</label>
+            <input type="text" id="name" name="name" required>
+            
+            <label for="email">Correo electrónico:</label>
+            <input type="email" id="email" name="email" required>
+            
+            <label for="message">Mensaje:</label>
+            <textarea id="message" name="message" rows="5" required></textarea>
+            
+            <button type="submit">Enviar</button>
+        </form>
+
+        <!-- Mensajes de éxito o error -->
+        <div id="form-feedback"></div>
     </section>
 
-    <footer>
-        <p>&copy; 2025 Mi Portfolio. Todos los derechos reservados.</p>
-    </footer>
+    <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
