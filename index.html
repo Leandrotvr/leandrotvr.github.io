@@ -17,67 +17,69 @@
 
   <main>
     <section>
-      <h2>Perfil Profesional / Professional Profile</h2>
+      <h2>Perfil Profesional</h2>
       <p>
         Asistente Virtual con experiencia en soporte técnico, atención al cliente y tareas administrativas remotas. Manejo avanzado de Google Workspace, hojas de cálculo y herramientas digitales. Busco desafíos 100% remotos.
       </p>
-      <p>
-        Virtual Assistant experienced in tech support, customer service, and remote admin tasks. Skilled in Google Workspace, spreadsheets, and digital tools. Seeking fully remote opportunities.
-      </p>
     </section>
 
     <section>
-      <h2>Competencias / Skills</h2>
+      <h2>Competencias</h2>
       <ul>
-        <li>Soporte técnico / Tech support</li>
-        <li>Google Workspace (Docs, Sheets, Drive, Meet)</li>
-        <li>Excel y Google Sheets avanzado / Advanced spreadsheets</li>
-        <li>Atención al cliente / Customer support</li>
-        <li>Desarrollo Web básico (HTML, CSS) / Basic Web Dev</li>
-        <li>Inglés B2+ (intermedio-avanzado) / Intermediate-advanced English</li>
+        <li>Soporte técnico</li>
+        <li>Google Workspace</li>
+        <li>Excel y Google Sheets avanzado</li>
+        <li>Atención al cliente</li>
+        <li>Desarrollo Web (HTML, CSS)</li>
+        <li>Inglés B2+</li>
       </ul>
     </section>
 
     <section>
-      <h2>Ejemplos de Trabajo / Work Examples</h2>
-      <ul>
-        <li>
-          <strong>Base de datos en GitHub / GitHub Database</strong><br />
-          🔗 <a href="https://github.com/Leandrotvr/portfolio-bases-datos" target="_blank">Ver proyecto / View project</a>
+      <h2>Proyectos</h2>
+
+      <!-- 🔍 Filtro -->
+      <div class="filtros">
+        <button class="filtro-btn activo" data-filtro="todos">Todos</button>
+        <button class="filtro-btn" data-filtro="web">Web</button>
+        <button class="filtro-btn" data-filtro="excel">Excel</button>
+      </div>
+
+      <!-- 🔗 Lista -->
+      <ul id="lista-proyectos">
+        <li class="proyecto" data-tipo="web">
+          <strong>Base de datos en GitHub</strong><br />
+          🔗 <a href="https://github.com/Leandrotvr/portfolio-bases-datos" target="_blank">Ver proyecto</a>
         </li>
-        <li>
-          <strong>Calculadora Web / Web Calculator</strong><br />
-          🔗 <a href="https://leandrotvr.github.io/calculadora.html" target="_blank">Ver proyecto / View project</a>
+        <li class="proyecto" data-tipo="web">
+          <strong>Calculadora Web</strong><br />
+          🔗 <a href="https://leandrotvr.github.io/calculadora.html" target="_blank">Ver proyecto</a>
         </li>
-        <li>
-          <strong>CV interactivo / Interactive Resume</strong><br />
-          🔗 <a href="https://leandrotvr.github.io/cvinteractivo.html" target="_blank">Ver proyecto / View project</a>
+        <li class="proyecto" data-tipo="web">
+          <strong>CV interactivo</strong><br />
+          🔗 <a href="https://leandrotvr.github.io/cvinteractivo.html" target="_blank">Ver proyecto</a>
         </li>
-        <li>
-          <strong>Currículum online actualizado / Online CV (updated regularly)</strong><br />
-          🔗 <a href="https://leandrotvr.github.io/" target="_blank">Visitar / Visit</a><br />
-          <em>Versión siempre actualizada de mi experiencia laboral y proyectos.</em><br />
-          <em>Always updated version of my work experience and projects.</em>
+        <li class="proyecto" data-tipo="web">
+          <strong>Currículum online actualizado</strong><br />
+          🔗 <a href="https://leandrotvr.github.io/" target="_blank">Visitar</a>
         </li>
-        <li>
+        <li class="proyecto" data-tipo="excel">
           <strong>Tabla interactiva Excel/Sheets</strong><br />
-          🔗 <a href="https://docs.google.com/spreadsheets/d/1xEXDKMMkslKKaPFpcegfuPu1f8c-ZnLD4HwbE3RlJC8/edit?usp=sharing" target="_blank">Ver tabla / View table</a><br />
-          <em>Experiencia laboral organizada y editable.</em><br />
-          <em>Organized and editable work history.</em>
+          🔗 <a href="https://docs.google.com/spreadsheets/d/1xEXDKMMkslKKaPFpcegfuPu1f8c-ZnLD4HwbE3RlJC8/edit?usp=sharing" target="_blank">Ver tabla</a>
         </li>
       </ul>
     </section>
 
     <section>
-      <h2>Contacto / Contact</h2>
+      <h2>Contacto</h2>
       <form id="formulario-contacto">
-        <label for="nombre">Nombre / Name:</label><br />
+        <label for="nombre">Nombre:</label><br />
         <input type="text" id="nombre" name="nombre" required /><br /><br />
 
         <label for="email">Email:</label><br />
         <input type="email" id="email" name="email" required /><br /><br />
 
-        <label for="mensaje">Mensaje / Message:</label><br />
+        <label for="mensaje">Mensaje:</label><br />
         <textarea id="mensaje" name="mensaje" rows="5" required></textarea><br /><br />
 
         <button type="submit">Enviar mensaje</button>
@@ -96,8 +98,6 @@
   <script src="script.js"></script>
 </body>
 </html>
-
-
 
 
 
