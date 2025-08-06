@@ -1,27 +1,31 @@
-// Agregar evento de envío del formulario
-document.getElementById("contact-form").addEventListener("submit", function(event) {
-    event.preventDefault(); // Evita el envío real del formulario
+document.getElementById('contact-form').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevenir el envío del formulario
 
-    // Obtener los valores de los campos
-    var name = document.getElementById("name").value;
-    var email = document.getElementById("email").value;
-    var message = document.getElementById("message").value;
-    
-    // Validación simple
-    if (name === "" || email === "" || message === "") {
-        showFeedback("Por favor, completa todos los campos.", "error");
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const message = document.getElementById('message').value;
+
+    // Validación básica de campos
+    if (name === '' || email === '' || message === '') {
+        showFeedback('error', 'Por favor, rellena todos los campos.');
     } else {
-        showFeedback("¡Mensaje enviado con éxito! Nos pondremos en contacto contigo pronto.", "success");
-        // Aquí podrías agregar código para enviar el formulario a un servidor
+        showFeedback('success', '¡Mensaje enviado correctamente!');
+        // Aquí puedes agregar la lógica para enviar los datos (por ejemplo, con fetch o AJAX)
+        // Recuerda integrar un backend para recibir estos datos, o usar un servicio de formulario
     }
 });
 
-// Función para mostrar mensajes de éxito o error
-function showFeedback(message, type) {
-    var feedbackElement = document.getElementById("form-feedback");
+function showFeedback(type, message) {
+    const feedbackElement = document.getElementById('form-feedback');
     feedbackElement.textContent = message;
-    feedbackElement.className = type; // success o error
-    feedbackElement.style.display = "block";
+    feedbackElement.className = type;
+    feedbackElement.style.display = 'block';
+
+    // Ocultar el mensaje después de 5 segundos
+    setTimeout(function() {
+        feedbackElement.style.display = 'none';
+    }, 5000);
 }
+
 
 
