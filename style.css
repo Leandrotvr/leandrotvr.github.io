@@ -24,16 +24,6 @@ header p {
   margin: 0.5rem 0;
 }
 
-nav {
-  margin-top: 1rem;
-}
-
-nav a {
-  color: #f9f9f9;
-  margin: 0 1rem;
-  text-decoration: none;
-}
-
 main {
   max-width: 800px;
   margin: auto;
@@ -59,7 +49,7 @@ footer {
   margin-top: 2rem;
 }
 
-/* 🎨 Modo oscuro */
+/* 🌙 Modo oscuro */
 .dark-mode {
   background: #121212;
   color: #eee;
@@ -67,7 +57,6 @@ footer {
 
 .dark-mode header {
   background: #000;
-  color: #fff;
 }
 
 .dark-mode main {
@@ -123,7 +112,6 @@ button[type="submit"]:hover {
   background-color: #0056b3;
 }
 
-/* 🌙 Formulario modo oscuro */
 .dark-mode input,
 .dark-mode textarea {
   background: #333;
@@ -133,6 +121,35 @@ button[type="submit"]:hover {
 
 .dark-mode button[type="submit"] {
   background-color: #55aaff;
+}
+
+/* 🎯 Filtros */
+.filtros {
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.filtro-btn {
+  margin: 0.25rem;
+  padding: 0.5rem 1rem;
+  background: #ccc;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.filtro-btn.activo {
+  background: #007bff;
+  color: white;
+}
+
+.dark-mode .filtro-btn {
+  background: #444;
+  color: white;
+}
+
+.dark-mode .filtro-btn.activo {
+  background: #55aaff;
 }
 
 
