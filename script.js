@@ -1,31 +1,26 @@
 document.getElementById('contact-form').addEventListener('submit', function(event) {
-    event.preventDefault(); // Prevenir el envío del formulario
+  event.preventDefault();
 
-    const name = document.getElementById('name').value;
-    const email = document.getElementById('email').value;
-    const message = document.getElementById('message').value;
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const message = document.getElementById('message').value.trim();
+  const feedback = document.getElementById('form-feedback');
 
-    // Validación básica de campos
-    if (name === '' || email === '' || message === '') {
-        showFeedback('error', 'Por favor, rellena todos los campos.');
-    } else {
-        showFeedback('success', '¡Mensaje enviado correctamente!');
-        // Aquí puedes agregar la lógica para enviar los datos (por ejemplo, con fetch o AJAX)
-        // Recuerda integrar un backend para recibir estos datos, o usar un servicio de formulario
-    }
-});
+  if (!name || !email || !message) {
+    showFeedback('Por favor, completá todos los campos.', 'error');
+  } else {
+    showFeedback('Mensaje enviado. Gracias por contactarme.', 'success');
+    this.reset();
+  }
 
-function showFeedback(type, message) {
-    const feedbackElement = document.getElementById('form-feedback');
-    feedbackElement.textContent = message;
-    feedbackElement.className = type;
-    feedbackElement.style.display = 'block';
-
-    // Ocultar el mensaje después de 5 segundos
-    setTimeout(function() {
-        feedbackElement.style.display = 'none';
+  function showFeedback(msg, type) {
+    feedback.textContent = msg;
+    feedback.className = type;
+    feedback.classList.remove('hidden');
+    setTimeout(() => {
+      feedback.classList.add('hidden');
     }, 5000);
-}
-
+  }
+});
 
 
