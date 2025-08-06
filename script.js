@@ -2,13 +2,17 @@
 const botonTema = document.getElementById("tema-toggle");
 
 botonTema.addEventListener("click", () => {
-  document.body.classList.toggle("dark-mode");
-  localStorage.setItem("tema", document.body.classList.contains("dark-mode") ? "oscuro" : "claro");
+  const modoOscuro = document.body.classList.toggle("dark-mode");
+  localStorage.setItem("tema", modoOscuro ? "oscuro" : "claro");
+
+  // Cambiar ícono dinámicamente
+  botonTema.textContent = modoOscuro ? "☀️ Cambiar tema" : "🌙 Cambiar tema";
 });
 
 window.addEventListener("DOMContentLoaded", () => {
   if (localStorage.getItem("tema") === "oscuro") {
     document.body.classList.add("dark-mode");
+    botonTema.textContent = "☀️ Cambiar tema";
   }
 });
 
@@ -36,24 +40,24 @@ form.addEventListener("submit", function (e) {
   }, 5000);
 });
 
-// 🎯 Filtro de proyectos
+// 🎯 Filtro de proyectos con accesibilidad
 const botonesFiltro = document.querySelectorAll(".filtro-btn");
 const proyectos = document.querySelectorAll(".proyecto");
 
 botonesFiltro.forEach(btn => {
   btn.addEventListener("click", () => {
-    botonesFiltro.forEach(b => b.classList.remove("activo"));
+    botonesFiltro.forEach(b => {
+      b.classList.remove("activo");
+      b.setAttribute("aria-pressed", "false");
+    });
+
     btn.classList.add("activo");
+    btn.setAttribute("aria-pressed", "true");
 
     const filtro = btn.dataset.filtro;
 
     proyectos.forEach(proy => {
-      if (filtro === "todos" || proy.dataset.tipo === filtro) {
-        proy.style.display = "block";
-      } else {
-        proy.style.display = "none";
-      }
+      proy.style.display = (filtro === "todos" || proy.dataset.tipo === filtro) ? "block" : "none";
     });
   });
 });
-
