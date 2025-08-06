@@ -1,72 +1,55 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Formulario de Contacto</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
-  <!-- Encabezado de la página -->
-  <header>
-    <h1>Formulario de Contacto</h1>
-    <p>Por favor, completa el formulario con tu información para ponernos en contacto.</p>
-    <button id="tema-toggle">Cambiar Tema</button>
-  </header>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="#home">Inicio</a></li>
+                <li><a href="#about">Sobre mí</a></li>
+                <li><a href="#projects">Proyectos</a></li>
+                <li><a href="#contact">Contacto</a></li>
+            </ul>
+        </nav>
+    </header>
 
-  <!-- Cuerpo principal de la página -->
-  <main>
-    <!-- Formulario de contacto -->
-    <form id="formulario-contacto">
-      <label for="nombre">Nombre:</label>
-      <input type="text" id="nombre" required>
+    <section id="home">
+        <h1>Bienvenido a mi Portfolio</h1>
+        <p>¡Hola! Soy un desarrollador apasionado por la tecnología.</p>
+    </section>
 
-      <label for="email">Correo Electrónico:</label>
-      <input type="email" id="email" required>
+    <section id="about">
+        <h2>Sobre mí</h2>
+        <p>Soy un desarrollador web con experiencia en HTML, CSS, JavaScript, y más...</p>
+    </section>
 
-      <label for="mensaje">Mensaje:</label>
-      <textarea id="mensaje" required></textarea>
+    <section id="projects">
+        <h2>Mis Proyectos</h2>
+        <div class="project">
+            <h3>Proyecto 1</h3>
+            <p>Descripción del proyecto.</p>
+        </div>
+        <div class="project">
+            <h3>Proyecto 2</h3>
+            <p>Descripción del proyecto.</p>
+        </div>
+    </section>
 
-      <button type="submit">Enviar</button>
-    </form>
+    <section id="contact">
+        <h2>Contacto</h2>
+        <p>Contáctame a través de <a href="mailto:correo@ejemplo.com">mi correo electrónico</a>.</p>
+    </section>
 
-    <!-- Mensaje de éxito tras el envío -->
-    <div id="mensaje-exito" style="display:none;">
-      <p>¡Mensaje enviado exitosamente!</p>
-    </div>
-
-    <!-- Filtro de proyectos -->
-    <div class="filtros">
-      <button class="filtro-btn" data-filtro="todos">Todos</button>
-      <button class="filtro-btn" data-filtro="web">Web</button>
-      <button class="filtro-btn" data-filtro="app">App</button>
-    </div>
-
-    <!-- Lista de proyectos -->
-    <div class="proyecto" data-tipo="web">
-      <h2>Proyecto Web 1</h2>
-      <p>Descripción del proyecto web.</p>
-    </div>
-    <div class="proyecto" data-tipo="app">
-      <h2>Proyecto App 1</h2>
-      <p>Descripción del proyecto de aplicación móvil.</p>
-    </div>
-    <div class="proyecto" data-tipo="web">
-      <h2>Proyecto Web 2</h2>
-      <p>Descripción del proyecto web.</p>
-    </div>
-  </main>
-
-  <!-- Pie de página -->
-  <footer>
-    <p>&copy; 2025 Mi Sitio Web</p>
-  </footer>
-
-  <script src="scripts.js"></script>
+    <footer>
+        <p>&copy; 2025 Mi Portfolio. Todos los derechos reservados.</p>
+    </footer>
 </body>
-
 </html>
+
 
 
