@@ -21,6 +21,8 @@ header {
     text-align: center;
     padding: 50px 20px;
     border-bottom: 3px solid #4CAF50;
+    opacity: 0;
+    animation: fadeIn 1s ease-in-out forwards;
 }
 
 header h1 {
@@ -42,6 +44,9 @@ header p {
     border-radius: 10px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     text-align: center;
+    transform: translateY(50px);
+    opacity: 0;
+    animation: slideUp 1s ease-out 0.5s forwards;
 }
 
 #about h2 {
@@ -59,6 +64,9 @@ header p {
 #projects {
     padding: 50px 20px;
     background-color: #f9f9f9;
+    opacity: 0;
+    transform: translateY(50px);
+    animation: slideUp 1s ease-out 1s forwards;
 }
 
 #projects h2 {
@@ -83,6 +91,16 @@ header p {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     text-align: center;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    opacity: 0;
+    animation: fadeInUp 1s ease-out forwards;
+}
+
+#projects li:nth-child(odd) {
+    animation-delay: 0.5s;
+}
+
+#projects li:nth-child(even) {
+    animation-delay: 1s;
 }
 
 #projects li:hover {
@@ -111,6 +129,9 @@ header p {
     border-radius: 10px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     text-align: center;
+    transform: translateY(50px);
+    opacity: 0;
+    animation: slideUp 1s ease-out 1.5s forwards;
 }
 
 #contact h2 {
@@ -180,7 +201,23 @@ a:hover {
     text-decoration: underline;
 }
 
-/* 8. Estilos Responsivos */
+/* 8. Animaciones de Entrada */
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@keyframes slideUp {
+    0% { transform: translateY(50px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fadeInUp {
+    0% { opacity: 0; transform: translateY(30px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* 9. Estilos Responsivos */
 @media screen and (max-width: 768px) {
     header h1 {
         font-size: 2.5rem;
@@ -198,6 +235,8 @@ a:hover {
         font-size: 0.9rem;
     }
 }
+
+
 
 
 
