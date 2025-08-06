@@ -1,32 +1,15 @@
-# Portfolio Web - Leandro Maciel
+# Portafolio de Leandro Maciel
 
-¡Gracias Hashem por esta oportunidad!
+¡Hola! Bienvenido a mi portafolio digital.
 
-Este es mi portfolio personal como educador y profesional TIC, orientado al desarrollo frontend y la tecnología aplicada a la educación.
+Este proyecto fue desarrollado como una demostración de mis habilidades en la integración de Tecnologías de la Información y la Comunicación (TICs) y mi capacidad de aprendizaje autodidacta.
 
-## 👨‍🏫 Sobre mí
+## Tecnologías utilizadas
+* **HTML:** Para la estructura de la página.
+* **Bootstrap:** Un framework de CSS para un diseño moderno y responsivo.
 
-Docente de Geografía con sólida experiencia en TICs, hojas de cálculo y comunicación clara. Me apasiona el aprendizaje constante, la tecnología y la enseñanza. Busco oportunidades en el sector privado donde desarrollar todo mi potencial.
+## Acerca de mí
+Soy Leandro Maciel, docente que utiliza TICs en el aula y en todos los campos posibles. Poseo certificación en Inglés B2+ y domino Microsoft Excel. Me considero un eterno aprendiz.
 
-## 🛠️ Tecnologías utilizadas
-
-- HTML5
-- CSS3
-- GitHub Pages
-
-## 🌐 Enlaces
-
-- Portfolio online: [https://leandrotvr.github.io](https://leandrotvr.github.io)
-- LinkedIn: [linkedin.com/in/leandromaciel581](https://www.linkedin.com/in/leandromaciel581)
-
-## 📬 Contacto
-
-- 📧 Email: leandrotvr@gmail.com
-- 📱 WhatsApp: +54 3777 416857
-- 📍 Ubicación: Mercedes, Corrientes (Argentina)
-
----
-
-> Proyecto simple, claro y funcional, pensado para mostrar mi perfil profesional y mis competencias digitales.
-
-
+## Contacto
+Puedes contactarme a través de mi correo electrónico [leandrotvr@gmail.com](mailto:leandrotvr@gmail.com) o mi celular: 3777416857.
