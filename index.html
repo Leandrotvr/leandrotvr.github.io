@@ -1,57 +1,26 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio - Nombre del Proyecto</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <header>
-        <h1>Mi Portfolio</h1>
-        <p>Bienvenidos a mi sitio web personal</p>
-    </header>
+<section id="contact">
+  <h2>Contacto</h2>
+  <div class="card">
+    <form id="contact-form">
+      <div class="form-group">
+        <input type="text" id="name" name="name" required>
+        <label for="name">Tu Nombre</label>
+      </div>
+      <div class="form-group">
+        <input type="email" id="email" name="email" required>
+        <label for="email">Tu Correo</label>
+      </div>
+      <div class="form-group">
+        <textarea id="message" name="message" rows="5" required></textarea>
+        <label for="message">Tu Mensaje</label>
+      </div>
+      <button type="submit">Enviar</button>
+    </form>
+    <div id="form-feedback" class="hidden"></div>
+  </div>
+</section>
 
-    <!-- Sección Sobre mí -->
-    <section id="about">
-        <h2>Sobre mí</h2>
-        <p>Soy desarrollador web con experiencia en front-end y back-end, creando proyectos funcionales y visualmente atractivos.</p>
-    </section>
 
-    <!-- Sección Proyectos -->
-    <section id="projects">
-        <h2>Proyectos</h2>
-        <ul>
-            <li>
-                <h3>Proyecto 1</h3>
-                <p>Descripción del proyecto 1.</p>
-            </li>
-            <li>
-                <h3>Proyecto 2</h3>
-                <p>Descripción del proyecto 2.</p>
-            </li>
-            <li>
-                <h3>Proyecto 3</h3>
-                <p>Descripción del proyecto 3.</p>
-            </li>
-        </ul>
-    </section>
-
-    <!-- Sección Contacto -->
-    <section id="contact">
-        <h2>Contacto</h2>
-        <form id="contact-form">
-            <input type="text" id="name" name="name" placeholder="Tu Nombre" required>
-            <input type="email" id="email" name="email" placeholder="Tu Correo" required>
-            <textarea id="message" name="message" placeholder="Tu Mensaje" rows="5" required></textarea>
-            <button type="submit">Enviar Mensaje</button>
-        </form>
-        <div id="form-feedback" class="success"></div>
-    </section>
-
-    <script src="script.js"></script>
-</body>
-</html>
 
 
 
