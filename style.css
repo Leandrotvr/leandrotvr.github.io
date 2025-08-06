@@ -1,60 +1,143 @@
 /* Ejemplo 1: Estilos generales */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    background-color: #f4f6f8;
+    color: #333;
 }
 
 header, section {
-    padding: 20px;
-    text-align: center;
-    margin: 10px;
+    padding: 30px 20px;
+    margin: 20px;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Ejemplo 2: Estilos para la sección de contacto */
+/* Ejemplo 2: Estilos para el header */
+header {
+    text-align: center;
+    background-color: #1a1a1a;
+    color: white;
+    border-radius: 8px;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    margin: 0;
+}
+
+header p {
+    font-size: 1.2rem;
+    margin-top: 10px;
+}
+
+/* Ejemplo 3: Estilos para la sección Sobre mí */
+#about {
+    background-color: #f9f9f9;
+    text-align: center;
+}
+
+#about h2 {
+    font-size: 2rem;
+    color: #1a1a1a;
+}
+
+#about p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #555;
+}
+
+/* Ejemplo 4: Estilos para la sección de Proyectos */
+#projects {
+    background-color: #f9f9f9;
+}
+
+#projects ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+#projects li {
+    font-size: 1.1rem;
+    padding: 10px;
+    margin-bottom: 15px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#projects li:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+#projects h2 {
+    font-size: 2rem;
+    color: #1a1a1a;
+}
+
+/* Ejemplo 5: Estilos para la sección de Contacto */
+#contact {
+    background-color: #fff;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+#contact h2 {
+    font-size: 2rem;
+    color: #333;
+}
+
 form {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    margin-top: 20px;
+    gap: 15px;
     max-width: 500px;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 0 auto;
 }
 
 form label {
+    font-size: 1rem;
     font-weight: bold;
+    color: #333;
 }
 
 form input, form textarea {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
     font-size: 1rem;
-    width: 100%;
+    background-color: #f9f9f9;
+    color: #333;
 }
 
 form button {
-    padding: 10px;
-    background-color: #ff6347;
+    padding: 15px;
+    background-color: #4CAF50;
     color: white;
     border: none;
-    border-radius: 5px;
-    font-size: 1rem;
+    border-radius: 8px;
+    font-size: 1.1rem;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, transform 0.3s;
 }
 
 form button:hover {
-    background-color: #e5533f;
+    background-color: #45a049;
+    transform: translateY(-3px);
 }
 
-/* Ejemplo 3: Feedback de éxito o error */
+/* Ejemplo 6: Feedback de éxito o error */
 #form-feedback {
-    margin-top: 10px;
-    padding: 10px;
-    border-radius: 5px;
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 1rem;
     display: none;
 }
 
@@ -68,14 +151,13 @@ form button:hover {
     color: white;
 }
 
-/* Ejemplo 4: Diseño responsivo */
+/* Ejemplo 7: Diseño responsivo */
 @media screen and (max-width: 768px) {
     header, section {
-        padding: 15px;
+        padding: 20px;
     }
 
     form {
-        max-width: 100%;
         padding: 10px;
     }
 
@@ -84,33 +166,27 @@ form button:hover {
     }
 }
 
-/* Ejemplo 5: Sección de Proyectos */
-#projects ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-#projects li {
-    margin: 10px 0;
-}
-
-/* Ejemplo 6: Mejoras generales en el diseño */
-h1, h2 {
-    font-size: 2rem;
-}
-
-p {
-    font-size: 1rem;
-}
-
+/* Ejemplo 8: Estilo para enlaces */
 a {
-    color: #ff6347;
+    color: #4CAF50;
     text-decoration: none;
+    font-weight: bold;
 }
 
 a:hover {
     text-decoration: underline;
 }
+
+/* Ejemplo 9: Animaciones suaves */
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+header, #about, #projects, #contact {
+    animation: fadeIn 1s ease-in-out;
+}
+
 
 
 
