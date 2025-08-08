@@ -76,18 +76,18 @@
 
   <div class="container my-5 text-center">
       <div class="d-flex flex-column align-items-center gap-2">
-          <button id="descargar-html" class="btn btn-secondary">Generar (HTML)</button>
-          <a href="https://cloudconvert.com/html-to-docx" target="_blank" class="btn btn-secondary">Generar (DOCX)</a>
-          <button id="descargar-pdf" class="btn btn-secondary">Generar (PDF)</button>
+          <button id="descargar-html" class="btn btn-secondary">Generar CV en HTML</button>
+          <a href="https://cloudconvert.com/html-to-docx" target="_blank" class="btn btn-secondary">Generar CV en DOCX</a>
+          <a href="https://cloudconvert.com/html-to-pdf" target="_blank" class="btn btn-secondary">Generar CV en PDF</a>
       </div>
       <div class="mt-4">
         <h5>Instrucciones de uso:</h5>
         <ul class="list-unstyled">
           <li>
-            <strong>Para el archivo HTML y PDF:</strong> Simplemente haz clic en el botón correspondiente. El navegador generará y descargará el archivo de forma automática.
+            <strong>Para el CV en HTML:</strong> Simplemente haz clic en el botón **"Generar CV en HTML"**. El navegador generará y descargará el archivo de forma automática.
           </li>
           <li>
-            <strong>Para el archivo DOCX:</strong> Haz clic en el botón, que te redirigirá a un conversor externo. En esa página, selecciona "URL" y pega la siguiente dirección: `https://leandrotvr.github.io`. Luego, sigue las instrucciones para convertir y descargar el archivo.
+            <strong>Para el CV en DOCX y PDF:</strong> Haz clic en el botón correspondiente, que te redirigirá a un conversor externo. En esa página, selecciona "URL" y pega la siguiente dirección: `https://leandrotvr.github.io`. Luego, sigue las instrucciones para convertir y descargar el archivo.
           </li>
         </ul>
       </div>
@@ -99,15 +99,6 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-      // Descargar PDF
-      document.getElementById("descargar-pdf").addEventListener("click", function () {
-        const opciones = {
-          filename: 'cvleandromaciel.pdf',
-          html2canvas: { scale: 2 },
-          jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-        };
-        html2pdf().set(opciones).from(document.body).save();
-      });
       // Descargar HTML
       document.getElementById("descargar-html").addEventListener("click", function () {
         const contenido = document.documentElement.outerHTML;
@@ -118,6 +109,7 @@
   </script>
 </body>
 </html>
+
 
 
 
