@@ -76,9 +76,9 @@
 
   <div class="container my-5 text-center">
       <div class="d-flex flex-column align-items-center gap-2">
-          <button id="descargar-html" class="btn btn-outline-secondary">Descargar cv como HTML</button>
-          <button id="descargar-docx" class="btn btn-outline-secondary">Descargar cv como DOCX</button>
-          <button id="descargar-pdf" class="btn btn-secondary">Descargar cv como PDF</button>
+          <button id="descargar-html" class="btn btn-outline-secondary">Obtener CV (HTML)</button>
+          <button id="descargar-docx" class="btn btn-outline-secondary">Obtener CV (DOCX)</button>
+          <button id="descargar-pdf" class="btn btn-secondary">Obtener CV (PDF)</button>
       </div>
   </div>
 
@@ -111,14 +111,10 @@
 
       // Descargar DOCX
       document.getElementById("descargar-docx").addEventListener("click", function () {
+        const header = `<!DOCTYPE html><html><head><meta charset="utf-8"></head><body>`;
+        const footer = `</body></html>`;
         const bodyContent = document.querySelector("body").innerHTML;
-        const docHTML = `
-          <!DOCTYPE html>
-          <html>
-            <head><meta charset="utf-8"></head>
-            <body>${bodyContent}</body>
-          </html>
-        `;
+        const docHTML = header + bodyContent + footer;
         const blob = htmlDocx.asBlob(docHTML);
         saveAs(blob, "cvleandromaciel.docx");
       });
