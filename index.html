@@ -111,19 +111,24 @@
 
       // Descargar DOCX
       document.getElementById("descargar-docx").addEventListener("click", function () {
-        // Se crea un nuevo documento temporal para la descarga DOCX
-        const cvContent = document.body.cloneNode(true);
-        // Elimina los botones de descarga del contenido que se va a guardar
-        const downloadButtons = cvContent.querySelector('.container.my-5.text-center');
+        // Se crea una copia del contenido del cuerpo del documento para la conversión
+        const docContent = document.body.cloneNode(true);
+        // Se elimina el script de descarga y los botones del contenido de la copia
+        const scriptTags = docContent.querySelectorAll('script');
+        scriptTags.forEach(script => script.remove());
+        const downloadButtons = docContent.querySelector('.container.my-5.text-center');
         if (downloadButtons) {
             downloadButtons.remove();
         }
-        
+
         const docHTML = `
           <!DOCTYPE html>
-          <html>
-            <head><meta charset="utf-8"></head>
-            <body>${cvContent.innerHTML}</body>
+          <html lang="es">
+            <head>
+              <meta charset="utf-8">
+              <style>${document.querySelector('style').innerHTML}</style>
+            </head>
+            <body>${docContent.innerHTML}</body>
           </html>
         `;
         const blob = htmlDocx.asBlob(docHTML);
@@ -134,6 +139,7 @@
   </script>
 </body>
 </html>
+
 
 
 
