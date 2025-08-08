@@ -76,9 +76,9 @@
 
   <div class="container my-5 text-center">
       <div class="d-flex flex-column align-items-center gap-2">
-          <button id="descargar-html" class="btn btn-secondary">Obtener CV (HTML)</button>
-          <button id="descargar-docx" class="btn btn-secondary">Obtener CV (DOCX)</button>
-          <button id="descargar-pdf" class="btn btn-secondary">Obtener CV (PDF)</button>
+          <button id="descargar-html" class="btn btn-secondary">Descargar CV (HTML)</button>
+          <button id="descargar-docx" class="btn btn-secondary">Descargar CV (DOCX)</button>
+          <button id="descargar-pdf" class="btn btn-secondary">Descargar CV (PDF)</button>
       </div>
   </div>
 
@@ -111,16 +111,13 @@
 
       // Descargar DOCX
       document.getElementById("descargar-docx").addEventListener("click", function () {
-        // Se crea una copia del contenido del cuerpo del documento para la conversión
-        const docContent = document.body.cloneNode(true);
-        // Se elimina el script de descarga y los botones del contenido de la copia
-        const scriptTags = docContent.querySelectorAll('script');
-        scriptTags.forEach(script => script.remove());
-        const downloadButtons = docContent.querySelector('.container.my-5.text-center');
+        const cvContent = document.body.cloneNode(true);
+        const downloadButtons = cvContent.querySelector('.container.my-5.text-center');
         if (downloadButtons) {
             downloadButtons.remove();
         }
-
+        const scripts = cvContent.querySelectorAll('script');
+        scripts.forEach(script => script.remove());
         const docHTML = `
           <!DOCTYPE html>
           <html lang="es">
@@ -128,7 +125,7 @@
               <meta charset="utf-8">
               <style>${document.querySelector('style').innerHTML}</style>
             </head>
-            <body>${docContent.innerHTML}</body>
+            <body>${cvContent.innerHTML}</body>
           </html>
         `;
         const blob = htmlDocx.asBlob(docHTML);
@@ -139,6 +136,7 @@
   </script>
 </body>
 </html>
+
 
 
 
