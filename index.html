@@ -76,9 +76,9 @@
 
   <div class="container my-5 text-center">
       <div class="d-flex flex-column align-items-center gap-2">
-          <button id="descargar-html" class="btn btn-secondary">Descargar CV (HTML)</button>
-          <button id="descargar-docx" class="btn btn-secondary">Descargar CV (DOCX)</button>
-          <button id="descargar-pdf" class="btn btn-secondary">Descargar CV (PDF)</button>
+          <button id="descargar-html" class="btn btn-secondary">Guardar CV (HTML)</button>
+          <button id="descargar-docx" class="btn btn-secondary">Guardar CV (DOCX)</button>
+          <button id="descargar-pdf" class="btn btn-secondary">Guardar CV (PDF)</button>
       </div>
   </div>
 
@@ -109,24 +109,23 @@
         saveAs(blob, "cvleandromaciel.html");
       });
 
-      // Descargar DOCX (Versión simple)
+      // Descargar DOCX
       document.getElementById("descargar-docx").addEventListener("click", function () {
-        // Se extrae el contenido de texto relevante del CV para generar un archivo DOCX básico y compatible
-        let cvText = '';
-        document.querySelectorAll('h1, h2, p, a, span').forEach(element => {
-          // Excluir elementos de la barra de navegación y los botones de descarga
-          if (!element.closest('.navbar') && !element.closest('.container.my-5.text-center')) {
-            cvText += element.innerText + '\n\n';
-          }
-        });
-
+        const cvContent = document.body.cloneNode(true);
+        const downloadButtons = cvContent.querySelector('.container.my-5.text-center');
+        if (downloadButtons) {
+            downloadButtons.remove();
+        }
+        const scripts = cvContent.querySelectorAll('script');
+        scripts.forEach(script => script.remove());
         const docHTML = `
           <!DOCTYPE html>
           <html lang="es">
-            <head><meta charset="utf-8"></head>
-            <body>
-              <p>${cvText.replace(/\n\n/g, '<br><br>')}</p>
-            </body>
+            <head>
+              <meta charset="utf-8">
+              <style>${document.querySelector('style').innerHTML}</style>
+            </head>
+            <body>${cvContent.innerHTML}</body>
           </html>
         `;
         const blob = htmlDocx.asBlob(docHTML);
@@ -137,6 +136,7 @@
   </script>
 </body>
 </html>
+
 
 
 
