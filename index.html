@@ -12,13 +12,6 @@
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
       margin-right: 10px; /* Espacio entre la imagen y el botón */
     }
-    .download-container {
-      display: flex;
-      flex-direction: row; /* Coloca los elementos en fila */
-      align-items: center; /* Centra verticalmente los elementos */
-      justify-content: center; /* Centra horizontalmente los elementos */
-      gap: 20px; /* Espacio entre la imagen y los botones */
-    }
   </style>
 </head>
 <body class="scrollspy-example bg-body-tertiary" tabindex="0">
@@ -68,9 +61,10 @@
   </section>
 
   <section id="ejemplos" class="container my-5 text-center">
-    <h2 class="text-center mb-4">Ejemplos de lo que puedo hacer</h2>
-    <div class="download-container">
+    <h2 class="text-center mb-4">Ejemplos de proyectos</h2>
+    <div class="d-flex flex-column flex-md-row justify-content-center align-items-center gap-3">
         <a href="https://github.com/Leandrotvr/portfolio-bases-datos" target="_blank" class="btn btn-secondary">Ver ejemplo: Base de Datos SQL</a>
+        <a href="https://github.com/Leandrotvr/leandrotvr.github.io/blob/main/DashboardEducativo.xlsx" target="_blank" class="btn btn-secondary">Ver ejemplo: Dashboard Educativo</a>
     </div>
   </section>
 
@@ -86,7 +80,7 @@
   </footer>
 
   <div class="container my-5 text-center">
-      <div class="download-container">
+      <div class="d-flex flex-row justify-content-center align-items-center gap-2">
           <img src="cvleandromaciel.png" alt="Imagen del currículum" class="cv-image">
           <button id="descargar-html" class="btn btn-secondary">Descargar currículum</button>
       </div>
