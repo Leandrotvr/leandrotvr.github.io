@@ -76,9 +76,9 @@
 
   <div class="container my-5 text-center">
       <div class="d-flex flex-column align-items-center gap-2">
-          <button id="descargar-html" class="btn btn-secondary">Conservar CV (HTML)</button>
-          <button id="descargar-docx" class="btn btn-secondary">Conservar CV (DOCX)</button>
-          <button id="descargar-pdf" class="btn btn-secondary">Conservar CV (PDF)</button>
+          <button id="descargar-html" class="btn btn-secondary">Guardar CV (HTML)</button>
+          <button id="descargar-docx" class="btn btn-secondary">Guardar CV (DOCX)</button>
+          <button id="descargar-pdf" class="btn btn-secondary">Guardar CV (PDF)</button>
       </div>
   </div>
 
@@ -111,11 +111,19 @@
 
       // Descargar DOCX
       document.getElementById("descargar-docx").addEventListener("click", function () {
+        // Se crea un nuevo documento temporal para la descarga DOCX
+        const cvContent = document.body.cloneNode(true);
+        // Elimina los botones de descarga del contenido que se va a guardar
+        const downloadButtons = cvContent.querySelector('.container.my-5.text-center');
+        if (downloadButtons) {
+            downloadButtons.remove();
+        }
+        
         const docHTML = `
           <!DOCTYPE html>
           <html>
             <head><meta charset="utf-8"></head>
-            <body>${document.body.innerHTML}</body>
+            <body>${cvContent.innerHTML}</body>
           </html>
         `;
         const blob = htmlDocx.asBlob(docHTML);
@@ -126,6 +134,7 @@
   </script>
 </body>
 </html>
+
 
 
 
