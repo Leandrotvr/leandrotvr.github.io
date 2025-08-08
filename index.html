@@ -76,9 +76,9 @@
 
   <div class="container my-5 text-center">
       <div class="d-flex flex-column align-items-center gap-2">
-          <button id="descargar-html" class="btn btn-secondary">Crear Archivo (HTML)</button>
-          <a href="https://cloudconvert.com/html-to-docx" target="_blank" class="btn btn-secondary">Crear Archivo (DOCX)</a>
-          <button id="descargar-pdf" class="btn btn-secondary">Crear Archivo (PDF)</button>
+          <button id="descargar-html" class="btn btn-secondary">Generar (HTML)</button>
+          <a href="https://cloudconvert.com/html-to-docx" target="_blank" class="btn btn-secondary">Generar (DOCX)</a>
+          <button id="descargar-pdf" class="btn btn-secondary">Generar (PDF)</button>
       </div>
       <div class="mt-4">
         <h5>Instrucciones de uso:</h5>
@@ -103,8 +103,6 @@
       document.getElementById("descargar-pdf").addEventListener("click", function () {
         const opciones = {
           filename: 'cvleandromaciel.pdf',
-          margin: 0.5,
-          image: { type: 'jpeg', quality: 0.98 },
           html2canvas: { scale: 2 },
           jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
         };
@@ -120,6 +118,7 @@
   </script>
 </body>
 </html>
+
 
 
 
