@@ -61,7 +61,7 @@
                 </div>
 
                 <div class="d-flex flex-column align-items-center mt-4">
-                    <button id="descargar-pdf" class="btn btn-secondary">Descargar Página en PDF</button>
+                    <button id="descargar-pdf" class="btn btn-secondary">Descargar como PDF</button>
                     <img src="cvleandromaciel.png" alt="CV de Leandro Maciel" class="cv-image">
                 </div>
             </div>
@@ -79,9 +79,28 @@
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsxO4d1Xk5I5Lg96+8G1x2v4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4z7R4k6B4
+    <!-- Librerías -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
+    <!-- Script para generar PDF -->
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("descargar-pdf").addEventListener("click", function () {
+            const opciones = {
+                filename: 'cvleandromaciel.pdf',
+                margin: 0.5,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+            const elemento = document.body;
+            html2pdf().set(opciones).from(elemento).save();
+        });
+    });
+    </script>
+</body>
+</html>
 
 
 
