@@ -1,40 +1,54 @@
 <html lang="es">
 <head>
- <meta charset="UTF-8">
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <title>Currículum Online - Leandro Maciel</title>
- <style>
- body {
- font-family: sans-serif;
- display: flex;
- flex-direction: column;
- align-items: center;
- justify-content: center;
- min-height: 100vh;
- margin: 0;
- background-color: #f8f9fa;
- color: #333;
- }
- .qr-container {
- text-align: center;
- margin-bottom: 20px;
- }
- .qr-image {
- max-width: 200px;
- height: auto;
- border: 1px solid #ddd;
- box-shadow: 0 4px 8px rgba(0,0,0,0.1);
- }
- .scan-text {
- font-size: 1.2em;
- margin-top: 15px;
- }
- </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currículum - Leandro Maciel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f8f9fa;
+            color: #343a40;
+            text-align: center;
+        }
+        .container {
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .qr-image {
+            max-width: 250px;
+            height: auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: #007bff;
+        }
+        p {
+            font-size: 1.1em;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+    </style>
 </head>
 <body>
- <div class="qr-container">
- <img src="cvleandromaciel.png" alt="Código QR a mis proyectos online" class="qr-image">
- <p class="scan-text">Escanea este código QR para conocer mis proyectos online.</p>
- </div>
+    <div class="container">
+        <h1>Leandro Maciel</h1>
+        <p>
+            ¡Bienvenido a mi currículum! Escanea este código QR para explorar mis proyectos en línea
+            y ver mis constantes actualizaciones.
+        </p>
+        <img src="cvleandromaciel.png" alt="Código QR de Leandro Maciel" class="qr-image">
+    </div>
 </body>
 </html>
