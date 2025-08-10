@@ -1,142 +1,106 @@
-<!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-bs-theme="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leandro Maciel - Currículum Vitae Dinámico</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
-        }
-        .cv-container {
-            max-width: 900px;
-            margin: 40px auto;
-            background: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            padding: 30px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .qr-section {
-            text-align: center;
-            padding-bottom: 30px;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #e9ecef;
-        }
-        .qr-section img.cv-photo {
-            width: 150px;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 50%;
-            border: 5px solid #ffffff;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-        .qr-section img.cv-qr {
-            max-width: 250px;
-            width: 100%;
-            height: auto;
-            border-radius: 10px;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
-            transition: transform 0.3s ease-in-out;
-            margin-top: 20px;
-        }
-        .qr-section img.cv-qr:hover {
-            transform: scale(1.05);
-        }
-        .qr-section h1 {
-            font-weight: 700;
-            color: #343a40;
-            margin-top: 20px;
-        }
-        .qr-section p {
-            color: #6c757d;
-            font-style: italic;
-        }
-        .main-content {
-            width: 100%;
-        }
-        .section-title {
-            font-weight: 600;
-            color: #495057;
-            border-bottom: 1px solid #dee2e6;
-            padding-bottom: 5px;
-            margin-bottom: 20px;
-        }
-        .badge {
-            font-size: 0.9em;
-            font-weight: 400;
-            padding: 8px 12px;
-            margin: 4px;
-        }
-        .contact-info a {
-            color: #007bff;
-            text-decoration: none;
-        }
-        .contact-info a:hover {
-            text-decoration: underline;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dossier - Leandro Maciel</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css"> <style>
+    .cv-image {
+      max-width: 100px;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-right: 10px;
+    }
+    .theme-toggle-btn {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+      margin-left: 1rem;
+    }
+  </style>
 </head>
-<body>
+<body class="scrollspy-example bg-body-tertiary" tabindex="0">
 
-    <div class="container cv-container">
-        <div class="qr-section">
-            <img src="cvfoto.jpg" alt="Foto de perfil de Leandro Maciel" class="cv-photo">
-            <h1>Leandro Maciel</h1>
-            <p class="lead">Pedagogo y Educador Digital</p>
-            <p class="mt-3">
-                <img src="cvleandromaciel.png" alt="Código QR del portfolio dinámico" class="img-fluid cv-qr">
-                <strong>¡Escanea para explorar mi portfolio dinámico!</strong><br>
-                Constantemente actualizado con mis últimos proyectos y aprendizajes.
-            </p>
-        </div>
-
-        <div class="main-content">
-            <div class="row">
-                <div class="col-md-8">
-                    <section>
-                        <h2 class="section-title">Perfil Profesional</h2>
-                        <p>Pedagogo entusiasta con un fuerte enfoque en la integración de las Tecnologías de la Información y la Comunicación (TICs) en entornos educativos. Con habilidades sólidas en gestión de datos y herramientas digitales, me considero un eterno aprendiz, comprometido con el desarrollo profesional continuo para potenciar el proceso de enseñanza-aprendizaje.</p>
-                    </section>
-
-                    <section class="mt-4">
-                        <h2 class="section-title">Habilidades Clave</h2>
-                        <div class="d-flex flex-wrap">
-                            <span class="badge bg-primary">Pedagogía</span>
-                            <span class="badge bg-primary">TICs en el Aula</span>
-                            <span class="badge bg-primary">Gestión de Proyectos Educativos</span>
-                            <span class="badge bg-secondary">Inglés B2+</span>
-                            <span class="badge bg-success">Excel Avanzado</span>
-                            <span class="badge bg-info">HTML</span>
-                            <span class="badge bg-info">CSS</span>
-                            <span class="badge bg-info">Bootstrap</span>
-                            <span class="badge bg-warning">Bases de Datos SQL</span>
-                            <span class="badge bg-warning">Dashboards Educativos</span>
-                        </div>
-                    </section>
-                </div>
-                <div class="col-md-4">
-                    <section class="contact-info">
-                        <h2 class="section-title">Contacto</h2>
-                        <ul class="list-unstyled">
-                            <li><strong>Email:</strong> <a href="mailto:leandrotvr@gmail.com">leandrotvr@gmail.com</a></li>
-                            <li><strong>Teléfono:</strong> 3777416857</li>
-                            <li><strong>GitHub:</strong> <a href="https://github.com/Leandrotvr" target="_blank">github.com/Leandrotvr</a></li>
-                        </ul>
-                    </section>
-                </div>
-            </div>
-        </div>
-
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container">
+      <a class="navbar-brand" href="#inicio">🧑‍🎓 Leandro Maciel</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="#sobre-mi">Acerca de mí</a></li>
+          <li class="nav-item"><a class="nav-link" href="#ejemplos">Ejemplos</a></li>
+          <li class="nav-item"><a class="nav-link" href="#contacto">Contacto</a></li>
+          <li class="nav-item"><a class="nav-link" href="https://github.com/Leandrotvr/leandrotvr.github.io" target="_blank">💻 Ver Código</a></li>
+          <li class="nav-item"><a class="nav-link" href="cvleandromaciel.html" target="_blank">📄 Currículum</a></li>
+        </ul>
+        <button id="theme-toggle-btn" class="theme-toggle-btn">☀️</button>
+      </div>
     </div>
+  </nav>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <header id="inicio" class="bg-primary text-white text-center py-5">
+    <div class="container">
+      <h1 class="display-4">👋 ¡Hola, soy Leandro Maciel!</h1>
+      <p class="lead">Educador que maneja TICs en el aula y todos los campos posibles. Eterno aprendiz.</p>
+    </div>
+  </header>
 
-</body>
+  <section id="sobre-mi" class="container my-5">
+    <h2 class="text-center mb-4">🧑‍🎓 Sobre mí</h2>
+    <div class="row justify-content-center">
+      <div class="col-lg-8 text-center">
+        <p>Soy un pedagogo entusiasta de la educación y el progreso. Mi principal enfoque es la inserción de las Tecnologías de la Información y la Comunicación (TICs) en el aula para enriquecer el proceso de aprendizaje.</p>
+        <p>Dispongo de una certificación de <strong>Inglés B2+</strong> 🇬🇧 y tengo habilidad en <strong>Excel</strong> 📊. Me considero un <strong>eterno aprendiz</strong> 📚, siempre buscando avanzar profesionalmente.</p>
+
+        <div class="d-flex justify-content-center flex-wrap gap-2 mt-4">
+          <span class="badge bg-secondary">Pedagogía</span>
+          <span class="badge bg-secondary">TICs en el Aula</span>
+          <span class="badge bg-secondary">Inglés B2+</span>
+          <span class="badge bg-secondary">Excel</span>
+          <span class="badge bg-secondary">HTML</span>
+          <span class="badge bg-secondary">CSS</span>
+          <span class="badge bg-secondary">Bootstrap</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="ejemplos" class="container my-5 text-center">
+    <h2 class="text-center mb-4">📝 Ejemplos de proyectos</h2>
+    <div class="d-flex flex-column flex-md-row justify-content-center align-items-center gap-3">
+        <a href="https://drive.google.com/drive/u/0/folders/1nZ4Qbqqflk_B1tJAjOlGlamHVUdOjgsE" target="_blank" class="btn btn-secondary">📊 Ver ejemplo: Base de Datos SQL</a>
+        <a href="https://docs.google.com/spreadsheets/d/1xEXDKMMkslKKaPFpcegfuPu1f8c-ZnLD4HwbE3RlJC8/edit?gid=0#gid=0" target="_blank" class="btn btn-secondary">📈 Ver ejemplo: Dashboard Educativo</a>
+        <a href="calculadora.html" target="_blank" class="btn btn-secondary">➕ Abrir calculadora</a>
+        <a href="https://youtu.be/rK7Ctl4bcks?si=CC_8QHX3Zdq-zTlt" target="_blank" class="btn btn-secondary">▶️ Ver playlist de YouTube</a>
+    </div>
+  </section>
+
+  <footer id="contacto" class="bg-dark text-white text-center py-4">
+    <div class="container">
+      <h2>✉️ Contacto</h2>
+      <p>Puedes contactarme a través de estos medios:</p>
+      <div class="d-flex justify-content-center flex-column align-items-center gap-2">
+        <a href="mailto:leandrotvr@gmail.com" class="text-white" target="_blank">📧 Email: leandrotvr@gmail.com</a>
+        <span class="text-white">📱 Celular: 3777416857</span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="container my-5 text-center">
+      <div class="d-flex flex-row justify-content-center align-items-center gap-2">
+          <img src="cvleandromaciel.png" alt="Imagen del currículum" class="cv-image">
+          <a href="cvleandromaciel.html" class="btn btn-secondary" target="_blank">📄 Ver currículum</a>
+          <a href="CVQRLeandroMaciel.pdf" class="btn btn-secondary" download>⬇️ Descargar/Ver CV (PDF)</a>
+      </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="script.js"></script> </body>
 </html>
 
 
