@@ -30,6 +30,16 @@
       border: 3px solid #fff;
       margin-bottom: 15px;
     }
+    /* Efecto hover en botones */
+    .btn {
+      transition: all 0.3s ease-in-out;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.2), 0 0 10px rgba(255,255,255,0.4);
+      filter: brightness(1.1);
+    }
   </style>
 </head>
 <body class="scrollspy-example bg-body-tertiary" tabindex="0">
@@ -121,6 +131,8 @@
   <script src="script.js"></script> 
 </body>
 </html>
+
+
 
 
 
