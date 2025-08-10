@@ -1,26 +1,35 @@
-document.getElementById('contact-form').addEventListener('submit', function(event) {
-  event.preventDefault();
+document.addEventListener('DOMContentLoaded', () => {
+  const themeToggleBtn = document.getElementById('theme-toggle-btn');
+  const body = document.body;
+  const html = document.documentElement;
 
-  const name = document.getElementById('name').value.trim();
-  const email = document.getElementById('email').value.trim();
-  const message = document.getElementById('message').value.trim();
-  const feedback = document.getElementById('form-feedback');
+  // Revisa si hay un tema guardado en localStorage
+  const savedTheme = localStorage.getItem('theme');
 
-  if (!name || !email || !message) {
-    showFeedback('Por favor, completá todos los campos.', 'error');
+  // Si hay un tema guardado, lo aplica. De lo contrario, revisa la preferencia del sistema.
+  if (savedTheme) {
+    html.setAttribute('data-bs-theme', savedTheme);
+    themeToggleBtn.textContent = savedTheme === 'dark' ? '🌙' : '☀️';
   } else {
-    showFeedback('Mensaje enviado. Gracias por contactarme.', 'success');
-    this.reset();
+    // Revisa la preferencia de tema del sistema
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const initialTheme = prefersDark ? 'dark' : 'light';
+    html.setAttribute('data-bs-theme', initialTheme);
+    themeToggleBtn.textContent = initialTheme === 'dark' ? '🌙' : '☀️';
   }
 
-  function showFeedback(msg, type) {
-    feedback.textContent = msg;
-    feedback.className = type;
-    feedback.classList.remove('hidden');
-    setTimeout(() => {
-      feedback.classList.add('hidden');
-    }, 5000);
-  }
+  // Agrega el 'event listener' al botón
+  themeToggleBtn.addEventListener('click', () => {
+    const currentTheme = html.getAttribute('data-bs-theme');
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    
+    // Establece el nuevo tema
+    html.setAttribute('data-bs-theme', newTheme);
+    
+    // Actualiza el ícono del botón
+    themeToggleBtn.textContent = newTheme === 'dark' ? '🌙' : '☀️';
+
+    // Guarda el nuevo tema en localStorage
+    localStorage.setItem('theme', newTheme);
+  });
 });
-
-
