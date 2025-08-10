@@ -1,102 +1,68 @@
-#contact {
-  padding: 60px 20px;
-  background: #f0f2f5;
-  display: flex;
-  justify-content: center;
+:root {
+  --body-bg: #f8f9fa;
+  --text-color: #212529;
+  --header-bg: #0d6efd;
+  --header-text: #ffffff;
+  --navbar-bg: #343a40;
+  --navbar-link: rgba(255, 255, 255, 0.55);
+  --section-bg: #ffffff;
+  --footer-bg: #212529;
+  --footer-text: #ffffff;
 }
 
-.card {
-  background: white;
-  padding: 40px;
-  border-radius: 12px;
-  max-width: 500px;
-  width: 100%;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+[data-bs-theme="dark"] {
+  --body-bg: #212529;
+  --text-color: #f8f9fa;
+  --header-bg: #495057;
+  --header-text: #ffffff;
+  --navbar-bg: #1a1e21;
+  --navbar-link: rgba(255, 255, 255, 0.75);
+  --section-bg: #2b3035;
+  --footer-bg: #1a1e21;
+  --footer-text: #ffffff;
 }
 
-.card h2 {
-  margin-bottom: 20px;
-  text-align: center;
+body {
+  background-color: var(--body-bg) !important;
+  color: var(--text-color) !important;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.form-group {
-  position: relative;
-  margin-bottom: 25px;
+#inicio {
+  background-color: var(--header-bg) !important;
+  color: var(--header-text) !important;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.form-group input,
-.form-group textarea {
-  width: 100%;
-  padding: 12px 12px 12px 0;
-  border: none;
-  border-bottom: 2px solid #ccc;
-  outline: none;
-  font-size: 1rem;
-  background: transparent;
-  transition: border-color 0.3s;
+#sobre-mi {
+  background-color: var(--section-bg);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.form-group label {
-  position: absolute;
-  top: 12px;
-  left: 0;
-  font-size: 1rem;
-  color: #999;
-  pointer-events: none;
-  transition: 0.3s ease all;
+.navbar {
+  background-color: var(--navbar-bg) !important;
+  transition: background-color 0.3s ease;
 }
 
-.form-group input:focus,
-.form-group textarea:focus {
-  border-bottom: 2px solid #4CAF50;
+.navbar-brand, .navbar-nav .nav-link {
+  color: var(--navbar-link) !important;
 }
 
-.form-group input:focus ~ label,
-.form-group input:not(:placeholder-shown) ~ label,
-.form-group textarea:focus ~ label,
-.form-group textarea:not(:placeholder-shown) ~ label {
-  top: -10px;
-  font-size: 0.8rem;
-  color: #4CAF50;
+.navbar-brand:hover, .navbar-nav .nav-link:hover {
+  color: #fff !important;
 }
 
-button {
-  width: 100%;
-  padding: 12px;
-  font-size: 1.1rem;
-  border: none;
-  border-radius: 6px;
-  background: #4CAF50;
-  color: white;
-  cursor: pointer;
-  transition: background 0.3s;
+.badge {
+  background-color: var(--navbar-bg) !important;
 }
 
-button:hover {
-  background: #43a047;
+footer {
+  background-color: var(--footer-bg) !important;
+  color: var(--footer-text) !important;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-#form-feedback {
-  margin-top: 20px;
-  padding: 12px;
-  border-radius: 6px;
-  text-align: center;
-  font-weight: bold;
-}
-
-#form-feedback.success {
-  background-color: #d4edda;
-  color: #155724;
-}
-
-#form-feedback.error {
-  background-color: #f8d7da;
-  color: #721c24;
-}
-
-.hidden {
-  display: none;
-}
 
 
 
