@@ -40,6 +40,17 @@
         transform: translateY(0);
       }
     }
+    /* Animación intermitente de atención */
+    @keyframes pulseGlow {
+      0%, 100% {
+        box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        transform: scale(1);
+      }
+      50% {
+        box-shadow: 0 6px 15px rgba(255,215,0,0.5);
+        transform: scale(1.04);
+      }
+    }
     /* Efecto hover en botones */
     .btn {
       transition: all 0.3s ease-in-out;
@@ -53,12 +64,18 @@
       box-shadow: 0 6px 12px rgba(0,0,0,0.2), 0 0 12px rgba(255,255,255,0.4);
       filter: brightness(1.1);
     }
-    /* Retraso en la animación para botones */
+    /* Retraso en animación de entrada */
     .btn:nth-child(1) { animation-delay: 0.3s; }
     .btn:nth-child(2) { animation-delay: 0.45s; }
     .btn:nth-child(3) { animation-delay: 0.6s; }
     .btn:nth-child(4) { animation-delay: 0.75s; }
     .btn:nth-child(5) { animation-delay: 0.9s; }
+
+    /* Efecto pulse intermitente para destacar botones clave con retraso */
+    .highlight-btn {
+      animation: fadeInUp 0.8s ease forwards, pulseGlow 2.5s infinite ease-in-out;
+      animation-delay: 0.9s, 5s; /* entrada normal y luego pulso después de 5s */
+    }
   </style>
 </head>
 <body class="scrollspy-example bg-body-tertiary" tabindex="0">
@@ -120,8 +137,8 @@
         <a href="https://drive.google.com/drive/u/0/folders/1nZ4Qbqqflk_B1tJAjOlGlamHVUdOjgsE" target="_blank" class="btn btn-secondary">📊 Explorar Base de Datos SQL</a>
         <a href="https://docs.google.com/spreadsheets/d/1xEXDKMMkslKKaPFpcegfuPu1f8c-ZnLD4HwbE3RlJC8/edit?gid=0#gid=0" target="_blank" class="btn btn-secondary">📈 Ver Dashboard Educativo</a>
         <a href="calculadora.html" target="_blank" class="btn btn-secondary">➕ Probar Calculadora</a>
-        <a href="https://youtu.be/rK7Ctl4bcks?si=CC_8QHX3Zdq-zTlt" target="_blank" class="btn btn-success">📚💡 Aprende Excel/Sheets</a>
-        <a href="index.html" download="portfolioleandromaciel.html" class="btn btn-warning">⬇️🌐 Guardar Mi Portfolio</a>
+        <a href="https://youtu.be/rK7Ctl4bcks?si=CC_8QHX3Zdq-zTlt" target="_blank" class="btn btn-success highlight-btn">📚💡 Aprende Excel/Sheets</a>
+        <a href="index.html" download="portfolioleandromaciel.html" class="btn btn-warning highlight-btn">⬇️🌐 Guardar Mi Portfolio</a>
     </div>
   </section>
 
@@ -142,7 +159,7 @@
       <div class="d-flex flex-row justify-content-center align-items-center gap-2">
           <img src="cvleandromaciel.png" alt="Imagen del currículum" class="cv-image">
           <a href="cvleandromaciel.html" class="btn btn-secondary">📄 Ver Currículum</a>
-          <a href="CVQRLeandroMaciel.pdf" class="btn btn-secondary" download>⬇️ Descargar CV en PDF</a>
+          <a href="CVQRLeandroMaciel.pdf" class="btn btn-secondary highlight-btn" download>📄 Currículum en PDF</a>
       </div>
   </div>
 
@@ -150,6 +167,8 @@
   <script src="script.js"></script> 
 </body>
 </html>
+
+
 
 
 
