@@ -21,6 +21,7 @@
       cursor: pointer;
       margin-left: 1rem;
     }
+    /* FOTO CARNET */
     .foto-carnet {
       width: 150px;
       height: 150px;
@@ -32,36 +33,62 @@
       opacity: 0;
       transform: translateY(-20px);
       animation: fadeInUp 1s ease forwards;
+      transition: all 0.3s ease-in-out;
+    }
+    .foto-carnet:hover {
+      box-shadow: 0 0 18px 5px rgba(0, 191, 255, 0.8);
+      transform: scale(1.05);
     }
     /* Animación de entrada */
     @keyframes fadeInUp {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      to { opacity: 1; transform: translateY(0); }
     }
-    /* Animación intermitente de atención */
-    @keyframes pulseGlow {
-      0%, 100% {
-        box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-        transform: scale(1);
-      }
-      50% {
-        box-shadow: 0 6px 15px rgba(255,215,0,0.5);
-        transform: scale(1.04);
-      }
+    /* Animaciones pulsantes con brillo natural */
+    @keyframes pulseSQL {
+      0%, 100% { box-shadow: 0 3px 6px rgba(0,0,0,0.15); transform: scale(1); }
+      25% { box-shadow: 0 5px 12px rgba(128,0,128,0.4); transform: scale(1.02); }
+      50% { box-shadow: 0 7px 18px rgba(128,0,128,0.6); transform: scale(1.04); }
+      75% { box-shadow: 0 5px 12px rgba(128,0,128,0.4); transform: scale(1.02); }
     }
-    /* Efecto hover en botones */
+    @keyframes pulseDashboard {
+      0%, 100% { box-shadow: 0 3px 6px rgba(0,0,0,0.15); transform: scale(1); }
+      25% { box-shadow: 0 5px 12px rgba(0,255,127,0.4); transform: scale(1.02); }
+      50% { box-shadow: 0 7px 18px rgba(0,255,127,0.6); transform: scale(1.04); }
+      75% { box-shadow: 0 5px 12px rgba(0,255,127,0.4); transform: scale(1.02); }
+    }
+    @keyframes pulseCalc {
+      0%, 100% { box-shadow: 0 3px 6px rgba(0,0,0,0.15); transform: scale(1); }
+      25% { box-shadow: 0 5px 12px rgba(255,165,0,0.4); transform: scale(1.02); }
+      50% { box-shadow: 0 7px 18px rgba(255,165,0,0.6); transform: scale(1.04); }
+      75% { box-shadow: 0 5px 12px rgba(255,165,0,0.4); transform: scale(1.02); }
+    }
+    @keyframes pulseRed {
+      0%, 100% { box-shadow: 0 3px 6px rgba(0,0,0,0.15); transform: scale(1); }
+      25% { box-shadow: 0 5px 12px rgba(255,0,0,0.4); transform: scale(1.02); }
+      50% { box-shadow: 0 7px 18px rgba(255,0,0,0.6); transform: scale(1.04); }
+      75% { box-shadow: 0 5px 12px rgba(255,0,0,0.4); transform: scale(1.02); }
+    }
+    @keyframes pulseGold {
+      0%, 100% { box-shadow: 0 3px 6px rgba(0,0,0,0.15); transform: scale(1); }
+      25% { box-shadow: 0 5px 12px rgba(255,215,0,0.4); transform: scale(1.02); }
+      50% { box-shadow: 0 7px 18px rgba(255,215,0,0.6); transform: scale(1.04); }
+      75% { box-shadow: 0 5px 12px rgba(255,215,0,0.4); transform: scale(1.02); }
+    }
+    @keyframes pulseBlue {
+      0%, 100% { box-shadow: 0 3px 6px rgba(0,0,0,0.15); transform: scale(1); }
+      25% { box-shadow: 0 5px 12px rgba(0,123,255,0.4); transform: scale(1.02); }
+      50% { box-shadow: 0 7px 18px rgba(0,123,255,0.6); transform: scale(1.04); }
+      75% { box-shadow: 0 5px 12px rgba(0,123,255,0.4); transform: scale(1.02); }
+    }
+    /* Efecto hover general en botones */
     .btn {
       transition: all 0.3s ease-in-out;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
       opacity: 0;
       transform: translateY(15px);
       animation: fadeInUp 0.8s ease forwards;
     }
     .btn:hover {
-      transform: translateY(-3px) scale(1.03);
-      box-shadow: 0 6px 12px rgba(0,0,0,0.2), 0 0 12px rgba(255,255,255,0.4);
+      transform: translateY(-3px) scale(1.05);
       filter: brightness(1.1);
     }
     /* Retraso en animación de entrada */
@@ -70,12 +97,13 @@
     .btn:nth-child(3) { animation-delay: 0.6s; }
     .btn:nth-child(4) { animation-delay: 0.75s; }
     .btn:nth-child(5) { animation-delay: 0.9s; }
-
-    /* Efecto pulse intermitente para destacar botones clave con retraso */
-    .highlight-btn {
-      animation: fadeInUp 0.8s ease forwards, pulseGlow 2.5s infinite ease-in-out;
-      animation-delay: 0.9s, 5s; /* entrada normal y luego pulso después de 5s */
-    }
+    /* Botones destacados con animación pulsante después de 5s */
+    .highlight-sql { animation: fadeInUp 0.8s ease forwards, pulseSQL 3s infinite ease-in-out; animation-delay: 0.3s, 5s; }
+    .highlight-dashboard { animation: fadeInUp 0.8s ease forwards, pulseDashboard 3s infinite ease-in-out; animation-delay: 0.45s, 5s; }
+    .highlight-calc { animation: fadeInUp 0.8s ease forwards, pulseCalc 3s infinite ease-in-out; animation-delay: 0.6s, 5s; }
+    .highlight-red { animation: fadeInUp 0.8s ease forwards, pulseRed 3s infinite ease-in-out; animation-delay: 0.75s, 5s; }
+    .highlight-gold { animation: fadeInUp 0.8s ease forwards, pulseGold 3s infinite ease-in-out; animation-delay: 0.9s, 5s; }
+    .highlight-blue { animation: fadeInUp 0.8s ease forwards, pulseBlue 3s infinite ease-in-out; animation-delay: 0.9s, 5s; }
   </style>
 </head>
 <body class="scrollspy-example bg-body-tertiary" tabindex="0">
@@ -134,11 +162,11 @@
   <section id="ejemplos" class="container my-5 text-center">
     <h2 class="text-center mb-4">📝 Ejemplos de proyectos</h2>
     <div class="d-flex flex-column flex-md-row justify-content-center align-items-center gap-3">
-        <a href="https://drive.google.com/drive/u/0/folders/1nZ4Qbqqflk_B1tJAjOlGlamHVUdOjgsE" target="_blank" class="btn btn-secondary">📊 Explorar Base de Datos SQL</a>
-        <a href="https://docs.google.com/spreadsheets/d/1xEXDKMMkslKKaPFpcegfuPu1f8c-ZnLD4HwbE3RlJC8/edit?gid=0#gid=0" target="_blank" class="btn btn-secondary">📈 Ver Dashboard Educativo</a>
-        <a href="calculadora.html" target="_blank" class="btn btn-secondary">➕ Probar Calculadora</a>
-        <a href="https://youtu.be/rK7Ctl4bcks?si=CC_8QHX3Zdq-zTlt" target="_blank" class="btn btn-success highlight-btn">📚💡 Aprende Excel/Sheets</a>
-        <a href="index.html" download="portfolioleandromaciel.html" class="btn btn-warning highlight-btn">⬇️🌐 Guardar Mi Portfolio</a>
+        <a href="https://drive.google.com/drive/u/0/folders/1nZ4Qbqqflk_B1tJAjOlGlamHVUdOjgsE" target="_blank" class="btn btn-secondary highlight-sql">📊 Explorar Base de Datos SQL</a>
+        <a href="https://docs.google.com/spreadsheets/d/1xEXDKMMkslKKaPFpcegfuPu1f8c-ZnLD4HwbE3RlJC8/edit?gid=0#gid=0" target="_blank" class="btn btn-secondary highlight-dashboard">📈 Ver Dashboard Educativo</a>
+        <a href="calculadora.html" target="_blank" class="btn btn-secondary highlight-calc">➕ Probar Calculadora</a>
+        <a href="https://youtu.be/rK7Ctl4bcks?si=CC_8QHX3Zdq-zTlt" target="_blank" class="btn btn-danger highlight-red">📚💡 Aprende Excel/Sheets</a>
+        <a href="index.html" download="portfolioleandromaciel.html" class="btn btn-warning highlight-gold">⬇️🌐 Guardar Mi Portfolio</a>
     </div>
   </section>
 
@@ -158,8 +186,8 @@
   <div class="container my-5 text-center">
       <div class="d-flex flex-row justify-content-center align-items-center gap-2">
           <img src="cvleandromaciel.png" alt="Imagen del currículum" class="cv-image">
-          <a href="cvleandromaciel.html" class="btn btn-secondary">📄 Ver Currículum</a>
-          <a href="CVQRLeandroMaciel.pdf" class="btn btn-secondary highlight-btn" download>📄 Currículum en PDF</a>
+          <a href="cvleandromaciel.html" class="btn btn-secondary highlight-dashboard">📄 Ver Currículum</a>
+          <a href="CVQRLeandroMaciel.pdf" class="btn btn-secondary highlight-blue" download>📄 Currículum en PDF</a>
       </div>
   </div>
 
@@ -167,6 +195,7 @@
   <script src="script.js"></script> 
 </body>
 </html>
+
 
 
 
