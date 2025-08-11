@@ -51,8 +51,7 @@
             font-size: 0.9em;
             margin-right: 5px;
         }
-
-        /* FOTO CARNET - Estilos duplicados para mantener independencia si se abre solo el CV */
+        
         .foto-carnet {
             width: 150px;
             height: 150px;
@@ -70,11 +69,14 @@
             box-shadow: 0 0 18px 5px rgba(0, 191, 255, 0.8);
             transform: scale(1.05);
         }
-        /* Animación de entrada - Estilos duplicados */
         @keyframes fadeInUp {
             to { opacity: 1; transform: translateY(0); }
         }
-
+        .qr-code {
+            max-width: 150px;
+            height: auto;
+            margin-top: 1rem;
+        }
     </style>
 </head>
 <body class="bg-body-tertiary">
@@ -125,7 +127,7 @@
         <section class="my-4">
             <h2 class="cv-section-title">Formación Académica</h2>
             <ul class="cv-list">
-                <li><strong>Título de Pedagogo</strong> - Universidad de Corrientes, 2020</li>
+                <li><strong>Título de Pedagogo</strong>, 2020</li>
                 <li><strong>Certificación de Inglés B2+</strong> - Cambridge English, 2021</li>
             </ul>
         </section>
@@ -151,6 +153,11 @@
                 <span class="badge bg-secondary cv-badge text-white">Inglés: Medio alto (B2+)</span>
                 <span class="badge bg-secondary cv-badge text-white">Italiano: Conversacional</span>
             </div>
+        </section>
+
+        <section class="my-4 text-center">
+            <h2 class="cv-section-title">¡Escanea para ver mi Portfolio!</h2>
+            <img src="cvleandromaciel.png" alt="Código QR del portfolio de Leandro Maciel" class="qr-code">
         </section>
     </div>
 
