@@ -1,137 +1,140 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-bs-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leandro Maciel - Currículum Vitae Dinámico (Modo Oscuro)</title>
+    <title>Currículum Vitae - Leandro Maciel</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css"> 
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #121212; /* Fondo oscuro */
-            color: #e0e0e0; /* Texto claro */
+        .theme-toggle-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            margin-left: 1rem;
         }
+        
         .cv-container {
             max-width: 900px;
-            margin: 40px auto;
-            background: #1e1e1e; /* Contenedor oscuro */
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5); /* Sombra más pronunciada */
-            padding: 30px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            margin: 2rem auto;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
-        .qr-section {
+
+        .cv-header {
             text-align: center;
-            padding-bottom: 30px;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #444; /* Borde oscuro */
+            border-bottom: 2px solid var(--text-color);
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
         }
-        .qr-section img {
-            max-width: 250px;
-            width: 100%;
-            height: auto;
-            border-radius: 10px;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.5);
-            transition: transform 0.3s ease-in-out;
+
+        .cv-section-title {
+            color: var(--header-bg);
+            border-bottom: 1px solid var(--header-bg);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
         }
-        .qr-section img:hover {
-            transform: scale(1.05);
+
+        .cv-list {
+            list-style-type: none;
+            padding-left: 0;
         }
-        .qr-section h1 {
-            font-weight: 700;
-            color: #f0f0f0; /* Título claro */
-            margin-top: 20px;
+
+        .cv-list li {
+            margin-bottom: 0.5rem;
         }
-        .qr-section p {
-            color: #b0b0b0; /* Párrafo claro */
-            font-style: italic;
-        }
-        .main-content {
-            width: 100%;
-        }
-        .section-title {
-            font-weight: 600;
-            color: #f0f0f0; /* Título de sección claro */
-            border-bottom: 1px solid #555; /* Borde de sección oscuro */
-            padding-bottom: 5px;
-            margin-bottom: 20px;
-        }
-        .badge {
+        
+        .cv-badge {
             font-size: 0.9em;
-            font-weight: 400;
-            padding: 8px 12px;
-            margin: 4px;
+            margin-right: 5px;
         }
-        .contact-info a {
-            color: #90caf9; /* Enlace de color claro */
-            text-decoration: none;
-        }
-        .contact-info a:hover {
-            text-decoration: underline;
-        }
-        /* Ajuste de colores de los badges para modo oscuro */
-        .badge.bg-primary { background-color: #5d93e1 !important; }
-        .badge.bg-secondary { background-color: #6c757d !important; }
-        .badge.bg-success { background-color: #4CAF50 !important; }
-        .badge.bg-info { background-color: #03A9F4 !important; }
-        .badge.bg-warning { background-color: #FFC107 !important; }
+        
     </style>
 </head>
-<body>
+<body class="bg-body-tertiary">
 
-    <div class="container cv-container">
-        <div class="qr-section">
-            <img src="cvleandromaciel.png" alt="Código QR del portfolio dinámico" class="img-fluid">
-            <h1>Leandro Maciel</h1>
-            <p class="lead">Pedagogo y Educador Digital</p>
-            <p class="mt-3">
-                <strong>¡Escanea para explorar mi portfolio dinámico!</strong><br>
-                Constantemente actualizado con mis últimos proyectos y aprendizajes.
-            </p>
-        </div>
-
-        <div class="main-content">
-            <div class="row">
-                <div class="col-md-8">
-                    <section>
-                        <h2 class="section-title">Perfil Profesional</h2>
-                        <p>Pedagogo entusiasta con un fuerte enfoque en la integración de las Tecnologías de la Información y la Comunicación (TICs) en entornos educativos. Con habilidades sólidas en gestión de datos y herramientas digitales, me considero un eterno aprendiz, comprometido con el desarrollo profesional continuo para potenciar el proceso de enseñanza-aprendizaje.</p>
-                    </section>
-
-                    <section class="mt-4">
-                        <h2 class="section-title">Habilidades Clave</h2>
-                        <div class="d-flex flex-wrap">
-                            <span class="badge bg-primary">Pedagogía</span>
-                            <span class="badge bg-primary">TICs en el Aula</span>
-                            <span class="badge bg-primary">Gestión de Proyectos Educativos</span>
-                            <span class="badge bg-secondary">Inglés B2+</span>
-                            <span class="badge bg-success">Excel Avanzado</span>
-                            <span class="badge bg-info">HTML</span>
-                            <span class="badge bg-info">CSS</span>
-                            <span class="badge bg-info">Bootstrap</span>
-                            <span class="badge bg-warning">Bases de Datos SQL</span>
-                            <span class="badge bg-warning">Dashboards Educativos</span>
-                        </div>
-                    </section>
-                </div>
-                <div class="col-md-4">
-                    <section class="contact-info">
-                        <h2 class="section-title">Contacto</h2>
-                        <ul class="list-unstyled">
-                            <li><strong>Email:</strong> <a href="mailto:leandrotvr@gmail.com">leandrotvr@gmail.com</a></li>
-                            <li><strong>Teléfono:</strong> 3777416857</li>
-                            <li><strong>Portfolio:</strong> <a href="https://leandrotvr.github.io/" target="_blank">leandrotvr.github.io</a></li>
-                        </ul>
-                    </section>
-                </div>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">🧑‍🎓 Portfolio de Leandro</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html#sobre-mi">Acerca de mí</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html#ejemplos">Ejemplos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html#contacto">Contacto</a></li>
+                    <li class="nav-item"><a class="nav-link" href="https://github.com/Leandrotvr/leandrotvr.github.io" target="_blank" rel="noopener noreferrer">💻 Ver Código</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="cvleandromaciel.html">📄 Currículum</a></li>
+                </ul>
+                <button id="theme-toggle-btn" class="theme-toggle-btn">☀️</button>
             </div>
         </div>
+    </nav>
+    
+    <div class="container cv-container bg-section">
+        <header class="cv-header">
+            <h1 class="display-5">Leandro Maciel</h1>
+            <p class="lead">Educador y Entusiasta de la Tecnología</p>
+        </header>
 
+        <section class="my-4">
+            <h2 class="cv-section-title">Datos Personales</h2>
+            <ul class="cv-list">
+                <li><i class="bi bi-person"></i> **Nombre:** Leandro Maciel</li>
+                <li><i class="bi bi-envelope"></i> **Email:** leandrotvr@gmail.com</li>
+                <li><i class="bi bi-phone"></i> **Teléfono:** 3777416857</li>
+                <li><i class="bi bi-geo-alt"></i> **Ubicación:** Corrientes, Argentina</li>
+            </ul>
+        </section>
+
+        <section class="my-4">
+            <h2 class="cv-section-title">Resumen Profesional</h2>
+            <p>Soy un pedagogo con una sólida formación y experiencia en la integración de TICs en el aula. Mi enfoque se centra en enriquecer el proceso de aprendizaje a través de herramientas digitales y metodologías innovadoras. Poseo una certificación B2+ en Inglés y habilidades avanzadas en Excel, además de ser un aprendiz autodidacta de tecnologías web como HTML, CSS y Bootstrap.</p>
+        </section>
+
+        <section class="my-4">
+            <h2 class="cv-section-title">Formación Académica</h2>
+            <ul class="cv-list">
+                <li><strong>Título de Pedagogo</strong> - Universidad de Corrientes, 2020</li>
+                <li><strong>Certificación de Inglés B2+</strong> - Cambridge English, 2021</li>
+            </ul>
+        </section>
+
+        <section class="my-4">
+            <h2 class="cv-section-title">Habilidades Técnicas</h2>
+            <div class="d-flex flex-wrap gap-2">
+                <span class="badge bg-secondary cv-badge text-white">Excel Avanzado</span>
+                <span class="badge bg-secondary cv-badge text-white">Bases de Datos SQL</span>
+                <span class="badge bg-secondary cv-badge text-white">HTML5</span>
+                <span class="badge bg-secondary cv-badge text-white">CSS3</span>
+                <span class="badge bg-secondary cv-badge text-white">Bootstrap 5</span>
+                <span class="badge bg-secondary cv-badge text-white">JavaScript Básico</span>
+                <span class="badge bg-secondary cv-badge text-white">PowerPoint</span>
+                <span class="badge bg-secondary cv-badge text-white">Gestión de TICs</span>
+            </div>
+        </section>
+        
+        <section class="my-4">
+            <h2 class="cv-section-title">Idiomas</h2>
+            <div class="d-flex flex-wrap gap-2">
+                <span class="badge bg-secondary cv-badge text-white">Español: Nativo</span>
+                <span class="badge bg-secondary cv-badge text-white">Inglés: Medio alto (B2+)</span>
+                <span class="badge bg-secondary cv-badge text-white">Italiano: Conversacional</span>
+            </div>
+        </section>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <footer class="bg-dark text-white text-center py-4 mt-5">
+        <div class="container">
+            <p>&copy; 2025 Leandro Maciel. Todos los derechos reservados.</p>
+        </div>
+    </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
