@@ -53,13 +53,15 @@ body {
   color: #fff !important;
 }
 
-.badge {
-  background-color: var(--navbar-bg) !important;
-}
-
 footer {
   background-color: var(--footer-bg) !important;
   color: var(--footer-text) !important;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.badge {
+  background-color: var(--navbar-bg) !important;
+  color: var(--header-text) !important; /* Forces white text for better contrast */
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
