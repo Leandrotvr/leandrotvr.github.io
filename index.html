@@ -87,6 +87,12 @@
             50% { box-shadow: 0 7px 18px rgba(34,139,34,0.6); transform: scale(1.04); }
             75% { box-shadow: 0 5px 12px rgba(34,139,34,0.4); transform: scale(1.02); }
         }
+        @keyframes pulseDuolingo {
+            0%, 100% { box-shadow: 0 3px 6px rgba(0,0,0,0.15); transform: scale(1); }
+            25% { box-shadow: 0 5px 12px rgba(0,255,255,0.4); transform: scale(1.02); }
+            50% { box-shadow: 0 7px 18px rgba(0,255,255,0.6); transform: scale(1.04); }
+            75% { box-shadow: 0 5px 12px rgba(0,255,255,0.4); transform: scale(1.02); }
+        }
         /* Efecto hover general en botones */
         .btn {
             transition: all 0.3s ease-in-out;
@@ -105,6 +111,7 @@
         .btn:nth-child(4) { animation-delay: 0.75s; }
         .btn:nth-child(5) { animation-delay: 0.9s; }
         .btn:nth-child(6) { animation-delay: 1.05s; }
+        .btn:nth-child(7) { animation-delay: 1.2s; }
         /* Botones destacados con animación pulsante después de 5s */
         .highlight-sql { animation: fadeInUp 0.8s ease forwards, pulseSQL 3s infinite ease-in-out; animation-delay: 0.3s, 5s; }
         .highlight-dashboard { animation: fadeInUp 0.8s ease forwards, pulseDashboard 3s infinite ease-in-out; animation-delay: 0.45s, 5s; }
@@ -113,6 +120,7 @@
         .highlight-gold { animation: fadeInUp 0.8s ease forwards, pulseGold 3s infinite ease-in-out; animation-delay: 0.9s, 5s; }
         .highlight-blue { animation: fadeInUp 0.8s ease forwards, pulseBlue 3s infinite ease-in-out; animation-delay: 0.9s, 5s; }
         .highlight-gaming { animation: fadeInUp 0.8s ease forwards, pulseGaming 3s infinite ease-in-out; animation-delay: 1.05s, 5s; }
+        .highlight-duolingo { animation: fadeInUp 0.8s ease forwards, pulseDuolingo 3s infinite ease-in-out; animation-delay: 1.2s, 5s; }
     </style>
 </head>
 <body class="scrollspy-example bg-body-tertiary" tabindex="0">
@@ -183,6 +191,7 @@
                 <a href="https://youtu.be/rK7Ctl4bcks?si=CC_8QHX3Zdq-zTlt" target="_blank" rel="noopener noreferrer" class="btn btn-danger highlight-red">📚💡 Aprende Excel/Sheets</a>
                 <a href="index.html" download="portfolioleandromaciel.html" class="btn btn-warning highlight-gold">⬇️🌐 Guardar Mi Portfolio</a>
                 <a href="https://www.youtube.com/playlist?list=PLJHnCdxT4yfFo5bwvuNicgwoCrANBTmXR" target="_blank" rel="noopener noreferrer" class="btn btn-success highlight-gaming">🎮 Gameplays de Mech Arena</a>
+                <a href="https://www.youtube.com/playlist?list=PLJHnCdxT4yfHNVQ7I_TStOEQFxrMmqndV" target="_blank" rel="noopener noreferrer" class="btn btn-info highlight-duolingo">🦉 Duolingo: Lecciones de Italiano</a>
             </div>
         </section>
     </main>
