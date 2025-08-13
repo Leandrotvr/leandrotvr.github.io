@@ -12,131 +12,6 @@
     <meta property="og:image" content="https://leandrotvr.github.io/cvfoto.jpg">
     <meta property="og:url" content="https://leandrotvr.github.io">
     <meta property="og:type" content="website">
-    
-    <style>
-        .cv-image {
-            max-width: 100px;
-            height: auto;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            margin-right: 10px;
-        }
-        .lang-switch-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 0.5rem;
-            opacity: 0.7;
-            transition: opacity 0.3s ease;
-        }
-        .lang-switch-btn:hover {
-            opacity: 1;
-        }
-        .lang-switch-btn img {
-            width: 30px;
-            height: auto;
-            border-radius: 4px;
-        }
-        /* FOTO CARNET */
-        .foto-carnet {
-            width: 150px;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 50%;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            border: 3px solid #fff;
-            margin-bottom: 15px;
-            opacity: 0;
-            transform: translateY(-20px);
-            animation: fadeInUp 1s ease forwards;
-            transition: all 0.3s ease-in-out;
-        }
-        .foto-carnet:hover {
-            box-shadow: 0 0 18px 5px rgba(0, 191, 255, 0.8);
-            transform: scale(1.05);
-        }
-        /* Animación de entrada */
-        @keyframes fadeInUp {
-            to { opacity: 1; transform: translateY(0); }
-        }
-        /* Animaciones pulsantes con brillo natural */
-        @keyframes pulseSQL {
-            0%, 100% { box-shadow: 0 3px 6px rgba(0,0,0,0.15); transform: scale(1); }
-            25% { box-shadow: 0 5px 12px rgba(128,0,128,0.4); transform: scale(1.02); }
-            50% { box-shadow: 0 7px 18px rgba(128,0,128,0.6); transform: scale(1.04); }
-            75% { box-shadow: 0 5px 12px rgba(128,0,128,0.4); transform: scale(1.02); }
-        }
-        @keyframes pulseDashboard {
-            0%, 100% { box-shadow: 0 3px 6px rgba(0,0,0,0.15); transform: scale(1); }
-            25% { box-shadow: 0 5px 12px rgba(0,255,127,0.4); transform: scale(1.02); }
-            50% { box-shadow: 0 7px 18px rgba(0,255,127,0.6); transform: scale(1.04); }
-            75% { box-shadow: 0 5px 12px rgba(0,255,127,0.4); transform: scale(1.02); }
-        }
-        @keyframes pulseCalc {
-            0%, 100% { box-shadow: 0 3px 6px rgba(0,0,0,0.15); transform: scale(1); }
-            25% { box-shadow: 0 5px 12px rgba(255,165,0,0.4); transform: scale(1.02); }
-            50% { box-shadow: 0 7px 18px rgba(255,165,0,0.6); transform: scale(1.04); }
-            75% { box-shadow: 0 5px 12px rgba(255,165,0,0.4); transform: scale(1.02); }
-        }
-        @keyframes pulseRed {
-            0%, 100% { box-shadow: 0 3px 6px rgba(0,0,0,0.15); transform: scale(1); }
-            25% { box-shadow: 0 5px 12px rgba(255,0,0,0.4); transform: scale(1.02); }
-            50% { box-shadow: 0 7px 18px rgba(255,0,0,0.6); transform: scale(1.04); }
-            75% { box-shadow: 0 5px 12px rgba(255,0,0,0.4); transform: scale(1.02); }
-        }
-        @keyframes pulseGold {
-            0%, 100% { box-shadow: 0 3px 6px rgba(0,0,0,0.15); transform: scale(1); }
-            25% { box-shadow: 0 5px 12px rgba(255,215,0,0.4); transform: scale(1.02); }
-            50% { box-shadow: 0 7px 18px rgba(255,215,0,0.6); transform: scale(1.04); }
-            75% { box-shadow: 0 5px 12px rgba(255,215,0,0.4); transform: scale(1.02); }
-        }
-        @keyframes pulseBlue {
-            0%, 100% { box-shadow: 0 3px 6px rgba(0,0,0,0.15); transform: scale(1); }
-            25% { box-shadow: 0 5px 12px rgba(0,123,255,0.4); transform: scale(1.02); }
-            50% { box-shadow: 0 7px 18px rgba(0,123,255,0.6); transform: scale(1.04); }
-            75% { box-shadow: 0 5px 12px rgba(0,123,255,0.4); transform: scale(1.02); }
-        }
-        @keyframes pulseGaming {
-            0%, 100% { box-shadow: 0 3px 6px rgba(0,0,0,0.15); transform: scale(1); }
-            25% { box-shadow: 0 5px 12px rgba(34,139,34,0.4); transform: scale(1.02); }
-            50% { box-shadow: 0 7px 18px rgba(34,139,34,0.6); transform: scale(1.04); }
-            75% { box-shadow: 0 5px 12px rgba(34,139,34,0.4); transform: scale(1.02); }
-        }
-        @keyframes pulseDuolingo {
-            0%, 100% { box-shadow: 0 3px 6px rgba(0,0,0,0.15); transform: scale(1); }
-            25% { box-shadow: 0 5px 12px rgba(0,255,255,0.4); transform: scale(1.02); }
-            50% { box-shadow: 0 7px 18px rgba(0,255,255,0.6); transform: scale(1.04); }
-            75% { box-shadow: 0 5px 12px rgba(0,255,255,0.4); transform: scale(1.02); }
-        }
-        /* Efecto hover general en botones */
-        .btn {
-            transition: all 0.3s ease-in-out;
-            opacity: 0;
-            transform: translateY(15px);
-            animation: fadeInUp 0.8s ease forwards;
-        }
-        .btn:hover {
-            transform: translateY(-3px) scale(1.05);
-            filter: brightness(1.1);
-        }
-        /* Retraso en animación de entrada */
-        .btn:nth-child(1) { animation-delay: 0.3s; }
-        .btn:nth-child(2) { animation-delay: 0.45s; }
-        .btn:nth-child(3) { animation-delay: 0.6s; }
-        .btn:nth-child(4) { animation-delay: 0.75s; }
-        .btn:nth-child(5) { animation-delay: 0.9s; }
-        .btn:nth-child(6) { animation-delay: 1.05s; }
-        .btn:nth-child(7) { animation-delay: 1.2s; }
-        /* Botones destacados con animación pulsante después de 5s */
-        .highlight-sql { animation: fadeInUp 0.8s ease forwards, pulseSQL 3s infinite ease-in-out; animation-delay: 0.3s, 5s; }
-        .highlight-dashboard { animation: fadeInUp 0.8s ease forwards, pulseDashboard 3s infinite ease-in-out; animation-delay: 0.45s, 5s; }
-        .highlight-calc { animation: fadeInUp 0.8s ease forwards, pulseCalc 3s infinite ease-in-out; animation-delay: 0.6s, 5s; }
-        .highlight-red { animation: fadeInUp 0.8s ease forwards, pulseRed 3s infinite ease-in-out; animation-delay: 0.75s, 5s; }
-        .highlight-gold { animation: fadeInUp 0.8s ease forwards, pulseGold 3s infinite ease-in-out; animation-delay: 0.9s, 5s; }
-        .highlight-blue { animation: fadeInUp 0.8s ease forwards, pulseBlue 3s infinite ease-in-out; animation-delay: 0.9s, 5s; }
-        .highlight-gaming { animation: fadeInUp 0.8s ease forwards, pulseGaming 3s infinite ease-in-out; animation-delay: 1.05s, 5s; }
-        .highlight-duolingo { animation: fadeInUp 0.8s ease forwards, pulseDuolingo 3s infinite ease-in-out; animation-delay: 1.2s, 5s; }
-    </style>
 </head>
 <body class="scrollspy-example bg-body-tertiary" tabindex="0">
 
@@ -174,7 +49,7 @@
         <section id="sobre-mi" class="container my-5">
             <h2 class="text-center mb-4" data-translate="aboutTitle">🧑‍🎓 Sobre mí</h2>
             <div class="row justify-content-center text-center">
-                <img src="cvfoto.jpg" alt="Foto carnet de Leandro Maciel" class="foto-carnet">
+                <img src="cvfoto.jpg" alt="Foto carnet de Leandro Maciel" class="foto-carnet" loading="lazy">
                 <div class="col-lg-8">
                     <p data-translate="aboutText1">Soy un pedagogo entusiasta de la educación y el progreso. Mi principal enfoque es la inserción de las Tecnologías de la Información y la Comunicación (TICs) en el aula para enriquecer el proceso de aprendizaje.</p>
                     <p data-translate="aboutText2">Dispongo de una certificación de <strong>Inglés B2+</strong> 🇬🇧 y tengo habilidad en <strong>Excel</strong> 📊. Me considero un <strong>eterno aprendiz</strong> 📚, siempre buscando avanzar profesionalmente.</p>
@@ -228,7 +103,7 @@
 
     <div class="container my-5 text-center">
         <div class="d-flex flex-row justify-content-center align-items-center gap-2">
-            <img src="cvleandromaciel.png" alt="Vista previa del currículum" class="cv-image">
+            <img src="cvleandromaciel.png" alt="Vista previa del currículum" class="cv-image" loading="lazy">
             <a href="cvleandromaciel.html" class="btn btn-secondary highlight-dashboard" data-translate="btnViewCV">📄 Ver Currículum</a>
             <a href="CVLeandroMacielQR.pdf" class="btn btn-secondary highlight-blue" download data-translate="btnDownloadPDF">📄 Currículum en PDF</a>
         </div>
@@ -242,8 +117,8 @@
         </div>
     </section>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="script.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
+    <script src="script.js" defer></script> 
 </body>
 </html>
 
