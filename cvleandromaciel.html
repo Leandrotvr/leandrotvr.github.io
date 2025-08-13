@@ -6,69 +6,9 @@
     <title>Currículum Vitae - Leandro Maciel</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <style>
-        .lang-column {
-            padding: 15px;
-            border-right: 1px solid var(--text-color);
-        }
-        .lang-column:last-child {
-            border-right: none;
-        }
-        .lang-title {
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-        .qr-img {
-            max-width: 120px;
-            height: auto;
-            border-radius: 8px;
-        }
-        .portfolio-link {
-            font-weight: bold;
-            font-size: 1.2rem;
-            display: block;
-            color: var(--text-color);
-            text-decoration: none;
-        }
-        .portfolio-link:hover {
-            text-decoration: underline;
-        }
-        .foto-carnet {
-            width: 120px;
-            height: 120px;
-            object-fit: cover;
-            border-radius: 50%;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            border: 3px solid #fff;
-        }
-        .contact-box {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 25px;
-            flex-wrap: wrap;
-            margin-bottom: 15px;
-        }
-        @media print {
-            a {
-                color: black !important;
-                text-decoration: none !important;
-            }
-            .bg-primary, .bg-dark {
-                background-color: white !important;
-                color: black !important;
-            }
-            .badge {
-                border: 1px solid black !important;
-            }
-        }
-    </style>
 </head>
 <body class="bg-body-tertiary">
 
-    <!-- Encabezado -->
     <header id="inicio" class="bg-primary text-white text-center py-3">
         <div class="container">
             <h1 class="display-6 mb-1">Currículum Vitae - Leandro Maciel</h1>
@@ -78,11 +18,10 @@
 
     <div class="container cv-container bg-section my-4">
 
-        <!-- Contacto en una fila -->
         <section class="text-center">
             <div class="contact-box">
-                <img src="cvfoto.jpg" alt="Foto de Leandro Maciel" class="foto-carnet">
-                <img src="cvleandromaciel.png" alt="QR Portfolio Leandro Maciel" class="qr-img">
+                <img src="cvfoto.jpg" alt="Foto de Leandro Maciel" class="foto-carnet" loading="lazy">
+                <img src="cvleandromaciel.png" alt="QR Portfolio Leandro Maciel" class="qr-img" loading="lazy">
                 <div>
                     <a href="https://leandrotvr.github.io" class="portfolio-link" target="_blank">🌐 leandrotvr.github.io</a>
                     <p class="mb-0">📧 leandrotvr@gmail.com</p>
@@ -91,7 +30,6 @@
             </div>
         </section>
 
-        <!-- Capacidades -->
         <section class="my-3">
             <h2 class="cv-section-title text-center mb-3">Capacidades y Tecnologías</h2>
             <div class="row">
@@ -147,13 +85,12 @@
         </section>
     </div>
 
-    <!-- Footer -->
     <footer class="bg-dark text-white text-center py-2">
         <div class="container">
             <p class="mb-0">&copy; 2025 Leandro Maciel</p>
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
 </body>
 </html>
