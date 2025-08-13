@@ -11,6 +11,8 @@
   --bs-body-bg: #212529;
   --bs-body-color: #f8f9fa;
   --bs-heading-color: #f8f9fa;
+  --link-color: #0d6efd;
+  --link-hover-color: #0b5ed7;
 }
 
 body {
