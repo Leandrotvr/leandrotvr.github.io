@@ -141,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
             btnCalculator: '➕ Prova Calcolatrice',
             btnExcelLessons: '📚💡 Impara Excel/Sheets',
             btnDownloadPortfolio: '⬇️🌐 Salva il mio Portfolio',
-            btnGaming: '🎮 Gameplays di Mech Arena',
+            btnGaming: '🎮 Mech Arena Gameplays',
             btnDuolingo: '🦉 Duolingo: Lezioni di Italiano',
             contactTitle: '✉️ Contatti',
             contactText: 'Puoi contattarmi tramite questi mezzi:',
