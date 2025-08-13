@@ -1,35 +1,202 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const themeToggleBtn = document.getElementById('theme-toggle-btn');
-  const body = document.body;
-  const html = document.documentElement;
+    // Definición de las traducciones
+    const translations = {
+        es: {
+            dossierTitle: 'Dossier - Leandro Maciel',
+            navAbout: 'Acerca de mí',
+            navExamples: 'Ejemplos',
+            navContact: 'Contacto',
+            navCode: '💻 Ver Código',
+            navCV: '📄 Currículum',
+            headerTitle: '👋 ¡Hola, soy Leandro Maciel!',
+            headerSubtitle: 'Educador que maneja TICs en el aula y todos los campos posibles. Eterno aprendiz.',
+            aboutTitle: '🧑‍🎓 Sobre mí',
+            aboutText1: 'Soy un pedagogo entusiasta de la educación y el progreso. Mi principal enfoque es la inserción de las Tecnologías de la Información y la Comunicación (TICs) en el aula para enriquecer el proceso de aprendizaje.',
+            aboutText2: 'Dispongo de una certificación de <strong>Inglés B2+</strong> 🇬🇧 y tengo habilidad en <strong>Excel</strong> 📊. Me considero un <strong>eterno aprendiz</strong> 📚, siempre buscando avanzar profesionalmente.',
+            badgePedagogy: 'Pedagogía',
+            badgeICT: 'TICs en el Aula',
+            badgeEnglish: 'Inglés B2+',
+            badgeExcel: 'Excel',
+            languagesTitle: '🌐 Idiomas',
+            langSpanish: 'Español: Nativo',
+            langEnglish: 'Inglés: Medio alto (B2+)',
+            langItalian: 'Italiano: Conversacional',
+            examplesTitle: '📝 Ejemplos de proyectos',
+            btnSQL: '📊 Explorar Base de Datos SQL',
+            btnDashboard: '📈 Ver Dashboard Educativo',
+            btnCalculator: '➕ Probar Calculadora',
+            btnExcelLessons: '📚💡 Aprende Excel/Sheets',
+            btnDownloadPortfolio: '⬇️🌐 Guardar Mi Portfolio',
+            btnGaming: '🎮 Gameplays de Mech Arena',
+            btnDuolingo: '🦉 Duolingo: Lecciones de Italiano',
+            contactTitle: '✉️ Contacto',
+            contactText: 'Puedes contactarme a través de estos medios:',
+            contactPhone: '📱 Llamar al: 3777416857',
+            btnViewCV: '📄 Ver Currículum',
+            btnDownloadPDF: '📄 Currículum en PDF',
+            siteHowItWorksTitle: '¿Cómo funciona este sitio?',
+            btnViewReadme: '📖 Ver Documentación del Sitio (README)',
+            btnDownloadReadme: '⬇️ Descargar README en Markdown',
+            cvTitle: 'Currículum Vitae - Leandro Maciel',
+            cvNavPortfolio: '🧑‍🎓 Portfolio de Leandro',
+            cvSubtitle: 'Educador y Entusiasta de la Tecnología',
+            personalInfoTitle: 'Datos Personales',
+            personalInfoName: 'Nombre:',
+            personalInfoEmail: 'Email:',
+            personalInfoPhone: 'Teléfono:',
+            personalInfoLocation: 'Ubicación:',
+            professionalSummaryTitle: 'Resumen Profesional',
+            professionalSummaryText: 'Soy un pedagogo con una sólida formación y experiencia en la integración de TICs en el aula. Mi enfoque se centra en enriquecer el proceso de aprendizaje a través de herramientas digitales y metodologías innovadoras. Poseo una certificación B2+ en Inglés y habilidades avanzadas en Excel, además de ser un aprendiz autodidacta de tecnologías web como HTML, CSS y Bootstrap.',
+            academicTitle: 'Formación Académica',
+            academicDegree: 'Título de Pedagogo',
+            academicCert: 'Certificación de Inglés B2+',
+            skillsTitle: 'Habilidades Técnicas',
+            skillExcel: 'Excel Avanzado',
+            skillSQL: 'Bases de Datos SQL',
+            skillJS: 'JavaScript Básico',
+            skillICT: 'Gestión de TICs',
+            scanTitle: '¡Escanea para ver mi Portfolio!',
+            footerText: '&copy; 2025 Leandro Maciel. Todos los derechos reservados.'
+        },
+        en: {
+            dossierTitle: 'Dossier - Leandro Maciel',
+            navAbout: 'About Me',
+            navExamples: 'Examples',
+            navContact: 'Contact',
+            navCode: '💻 View Code',
+            navCV: '📄 Resume',
+            headerTitle: '👋 Hello, I\'m Leandro Maciel!',
+            headerSubtitle: 'Educator who uses ICT in the classroom and all possible fields. A lifelong learner.',
+            aboutTitle: '🧑‍🎓 About Me',
+            aboutText1: 'I am a pedagogue passionate about education and progress. My main focus is the integration of Information and Communication Technologies (ICTs) in the classroom to enrich the learning process.',
+            aboutText2: 'I hold a **B2+ English** 🇬🇧 certification and am proficient in **Excel** 📊. I consider myself a **lifelong learner** 📚, always seeking to advance professionally.',
+            badgePedagogy: 'Pedagogy',
+            badgeICT: 'ICT in the Classroom',
+            badgeEnglish: 'B2+ English',
+            badgeExcel: 'Excel',
+            languagesTitle: '🌐 Languages',
+            langSpanish: 'Spanish: Native',
+            langEnglish: 'English: Upper-Intermediate (B2+)',
+            langItalian: 'Italian: Conversational',
+            examplesTitle: '📝 Project Examples',
+            btnSQL: '📊 Explore SQL Database',
+            btnDashboard: '📈 View Educational Dashboard',
+            btnCalculator: '➕ Try a Calculator',
+            btnExcelLessons: '📚💡 Learn Excel/Sheets',
+            btnDownloadPortfolio: '⬇️🌐 Save My Portfolio',
+            btnGaming: '🎮 Mech Arena Gameplays',
+            btnDuolingo: '🦉 Duolingo: Italian Lessons',
+            contactTitle: '✉️ Contact',
+            contactText: 'You can contact me through these channels:',
+            contactPhone: '📱 Call: 3777416857',
+            btnViewCV: '📄 View Resume',
+            btnDownloadPDF: '📄 Resume in PDF',
+            siteHowItWorksTitle: 'How does this site work?',
+            btnViewReadme: '📖 View Site Documentation (README)',
+            btnDownloadReadme: '⬇️ Download README in Markdown',
+            cvTitle: 'Curriculum Vitae - Leandro Maciel',
+            cvNavPortfolio: '🧑‍🎓 Leandro\'s Portfolio',
+            cvSubtitle: 'Educator and Tech Enthusiast',
+            personalInfoTitle: 'Personal Information',
+            personalInfoName: 'Name:',
+            personalInfoEmail: 'Email:',
+            personalInfoPhone: 'Phone:',
+            personalInfoLocation: 'Location:',
+            professionalSummaryTitle: 'Professional Summary',
+            professionalSummaryText: 'I am a pedagogue with a solid background and experience in integrating ICT into the classroom. My focus is on enriching the learning process through digital tools and innovative methodologies. I have a B2+ certification in English and advanced skills in Excel, in addition to being a self-taught learner of web technologies like HTML, CSS, and Bootstrap.',
+            academicTitle: 'Academic Background',
+            academicDegree: 'Pedagogy Degree',
+            academicCert: 'B2+ English Certification',
+            skillsTitle: 'Technical Skills',
+            skillExcel: 'Advanced Excel',
+            skillSQL: 'SQL Databases',
+            skillJS: 'Basic JavaScript',
+            skillICT: 'ICT Management',
+            scanTitle: 'Scan to see my Portfolio!',
+            footerText: '&copy; 2025 Leandro Maciel. All rights reserved.'
+        },
+        it: {
+            dossierTitle: 'Dossier - Leandro Maciel',
+            navAbout: 'Chi sono',
+            navExamples: 'Esempi',
+            navContact: 'Contatti',
+            navCode: '💻 Vedi Codice',
+            navCV: '📄 Curriculum',
+            headerTitle: '👋 Ciao, sono Leandro Maciel!',
+            headerSubtitle: 'Educatore che usa le TIC in classe e in tutti i campi possibili. Eterno studente.',
+            aboutTitle: '🧑‍🎓 Chi sono',
+            aboutText1: 'Sono un pedagogo appassionato di educazione e progresso. Il mio obiettivo principale è l\'integrazione delle Tecnologie dell\'Informazione e della Comunicazione (TIC) in classe per arricchire il processo di apprendimento.',
+            aboutText2: 'Ho una certificazione di **Inglese B2+** 🇬🇧 e sono competente in **Excel** 📊. Mi considero un **eterno studente** 📚, sempre alla ricerca di avanzamenti professionali.',
+            badgePedagogy: 'Pedagogia',
+            badgeICT: 'TIC in Classe',
+            badgeEnglish: 'Inglese B2+',
+            badgeExcel: 'Excel',
+            languagesTitle: '🌐 Lingue',
+            langSpanish: 'Spagnolo: Madrelingua',
+            langEnglish: 'Inglese: Intermedio-alto (B2+)',
+            langItalian: 'Italiano: Conversazionale',
+            examplesTitle: '📝 Esempi di progetti',
+            btnSQL: '📊 Esplora Database SQL',
+            btnDashboard: '📈 Vedi Dashboard Educativo',
+            btnCalculator: '➕ Prova Calcolatrice',
+            btnExcelLessons: '📚💡 Impara Excel/Sheets',
+            btnDownloadPortfolio: '⬇️🌐 Salva il mio Portfolio',
+            btnGaming: '🎮 Gameplays di Mech Arena',
+            btnDuolingo: '🦉 Duolingo: Lezioni di Italiano',
+            contactTitle: '✉️ Contatti',
+            contactText: 'Puoi contattarmi tramite questi mezzi:',
+            contactPhone: '📱 Chiama: 3777416857',
+            btnViewCV: '📄 Vedi Curriculum',
+            btnDownloadPDF: '📄 Curriculum in PDF',
+            siteHowItWorksTitle: 'Come funziona questo sito?',
+            btnViewReadme: '📖 Vedi Documentazione del Sito (README)',
+            btnDownloadReadme: '⬇️ Scarica README in Markdown',
+            cvTitle: 'Curriculum Vitae - Leandro Maciel',
+            cvNavPortfolio: '🧑‍🎓 Portfolio di Leandro',
+            cvSubtitle: 'Educatore e Appassionato di Tecnologia',
+            personalInfoTitle: 'Informazioni Personali',
+            personalInfoName: 'Nome:',
+            personalInfoEmail: 'Email:',
+            personalInfoPhone: 'Telefono:',
+            personalInfoLocation: 'Posizione:',
+            professionalSummaryTitle: 'Riepilogo Professionale',
+            professionalSummaryText: 'Sono un pedagogo con una solida formazione ed esperienza nell\'integrazione delle TIC in classe. Il mio obiettivo è arricchire il processo di apprendimento attraverso strumenti digitali e metodologie innovative. Ho una certificazione B2+ in inglese e competenze avanzate in Excel, oltre a essere un autodidatta di tecnologie web come HTML, CSS e Bootstrap.',
+            academicTitle: 'Formazione Accademica',
+            academicDegree: 'Titolo di Pedagogo',
+            academicCert: 'Certificazione Inglese B2+',
+            skillsTitle: 'Competenze Tecniche',
+            skillExcel: 'Excel Avanzato',
+            skillSQL: 'Database SQL',
+            skillJS: 'JavaScript Base',
+            skillICT: 'Gestione delle TIC',
+            scanTitle: 'Scansiona per vedere il mio Portfolio!',
+            footerText: '&copy; 2025 Leandro Maciel. Tutti i diritti riservati.'
+        }
+    };
 
-  // Revisa si hay un tema guardado en localStorage
-  const savedTheme = localStorage.getItem('theme');
+    // Función para traducir la página
+    const setLanguage = (lang) => {
+        document.documentElement.lang = lang;
+        const elements = document.querySelectorAll('[data-translate]');
+        elements.forEach(element => {
+            const key = element.getAttribute('data-translate');
+            if (translations[lang] && translations[lang][key]) {
+                element.innerHTML = translations[lang][key];
+            }
+        });
+        localStorage.setItem('lang', lang);
+    };
 
-  // Si hay un tema guardado, lo aplica. De lo contrario, revisa la preferencia del sistema.
-  if (savedTheme) {
-    html.setAttribute('data-bs-theme', savedTheme);
-    themeToggleBtn.textContent = savedTheme === 'dark' ? '🌙' : '☀️';
-  } else {
-    // Revisa la preferencia de tema del sistema
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const initialTheme = prefersDark ? 'dark' : 'light';
-    html.setAttribute('data-bs-theme', initialTheme);
-    themeToggleBtn.textContent = initialTheme === 'dark' ? '🌙' : '☀️';
-  }
+    // Event listeners para los botones de cambio de idioma
+    const langButtons = document.querySelectorAll('.lang-switch-btn');
+    langButtons.forEach(button => {
+        button.addEventListener('click', (event) => {
+            const newLang = event.currentTarget.getAttribute('data-lang');
+            setLanguage(newLang);
+        });
+    });
 
-  // Agrega el 'event listener' al botón
-  themeToggleBtn.addEventListener('click', () => {
-    const currentTheme = html.getAttribute('data-bs-theme');
-    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-    
-    // Establece el nuevo tema
-    html.setAttribute('data-bs-theme', newTheme);
-    
-    // Actualiza el ícono del botón
-    themeToggleBtn.textContent = newTheme === 'dark' ? '🌙' : '☀️';
-
-    // Guarda el nuevo tema en localStorage
-    localStorage.setItem('theme', newTheme);
-  });
+    // Cargar el idioma guardado o el español por defecto al cargar la página
+    const savedLang = localStorage.getItem('lang') || 'es';
+    setLanguage(savedLang);
 });
