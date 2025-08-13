@@ -1,15 +1,4 @@
-:root {
-  --body-bg: #f8f9fa;
-  --text-color: #212529;
-  --header-bg: #0d6efd;
-  --header-text: #ffffff;
-  --navbar-bg: #343a40;
-  --navbar-link: rgba(255, 255, 255, 0.55);
-  --section-bg: #ffffff;
-  --footer-bg: #212529;
-  --footer-text: #ffffff;
-}
-
+:root,
 [data-bs-theme="dark"] {
   --body-bg: #212529;
   --text-color: #f8f9fa;
@@ -20,6 +9,9 @@
   --section-bg: #2b3035;
   --footer-bg: #1a1e21;
   --footer-text: #ffffff;
+  --bs-body-bg: #212529;
+  --bs-body-color: #f8f9fa;
+  --bs-heading-color: #f8f9fa;
 }
 
 body {
@@ -31,12 +23,6 @@ body {
 #inicio {
   background-color: var(--header-bg) !important;
   color: var(--header-text) !important;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-#sobre-mi {
-  background-color: var(--section-bg);
-  color: var(--text-color);
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
@@ -61,15 +47,10 @@ footer {
 
 .badge {
   background-color: var(--navbar-bg) !important;
-  color: var(--navbar-link) !important;
+  color: var(--header-text) !important;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-[data-bs-theme="dark"] .badge {
-  color: var(--header-text) !important;
-}
-
-/* Nuevas reglas para cvleandromaciel.html */
 .cv-container {
     background-color: var(--section-bg);
     color: var(--text-color);
