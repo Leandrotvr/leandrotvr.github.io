@@ -1,125 +1,212 @@
-<!DOCTYPE html>
-<html lang="es" data-bs-theme="dark">
+<!doctype html>
+<html lang="es" data-bs-theme="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-translate="dossierTitle">Dossier - Leandro Maciel</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css"> 
-    
-    <meta property="og:title" content="Dossier - Leandro Maciel">
-    <meta property="og:description" content="Educador, experto en TICs y desarrollador web autodidacta.">
-    <meta property="og:image" content="https://leandrotvr.github.io/cvfoto.jpg">
-    <meta property="og:url" content="https://leandrotvr.github.io">
-    <meta property="og:type" content="website">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CV — Leandro Maciel</title>
+  <meta name="description" content="Currículum de Leandro Maciel — Asistente Virtual, Soporte al Cliente, Data Entry, Redacción.">
+  <!-- Bootstrap 5.3 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    /* Ajustes finos */
+    :root { --cv-accent: #0d6efd; }
+    .avatar {
+      width: 72px; height: 72px; border-radius: 16px;
+      background: linear-gradient(135deg, var(--cv-accent), #9333ea);
+      color: #fff; font-weight: 800; font-size: 26px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .chip { border: 1px solid var(--bs-border-color); border-radius: 999px; padding: .3rem .6rem; }
+    .tool  { border: 1px dashed var(--bs-border-color); border-radius: .6rem; padding: .3rem .6rem; }
+    .card { box-shadow: 0 6px 24px rgba(0,0,0,.06), 0 2px 8px rgba(0,0,0,.05); }
+    /* Imprimir en PDF */
+    @media print {
+      .no-print { display: none !important; }
+      a { color: inherit; text-decoration: none; }
+      .card { box-shadow: none; border: none; }
+    }
+  </style>
 </head>
-<body class="scrollspy-example bg-body-tertiary" tabindex="0">
+<body class="bg-body-tertiary">
+  <div class="container py-4">
+    <div class="card">
+      <div class="card-header py-3">
+        <div class="d-flex align-items-start gap-3 justify-content-between flex-wrap">
+          <div class="d-flex align-items-start gap-3">
+            <div class="avatar">LM</div>
+            <div>
+              <h1 class="h3 mb-1">Leandro Maciel</h1>
+              <div class="d-flex flex-wrap gap-2">
+                <span class="chip bg-body-secondary">Asistente Virtual</span>
+                <span class="chip bg-body-secondary">Soporte al Cliente</span>
+                <span class="chip bg-body-secondary">Data Entry</span>
+                <span class="chip bg-body-secondary">Contenido / Redacción</span>
+              </div>
+              <ul class="list-unstyled mb-0 mt-2 small text-body-secondary">
+                <li>📍 Mercedes, Corrientes — Argentina</li>
+                <li>✉️ <a href="mailto:leandrotvr@gmail.com" id="emailLink">leandrotvr@gmail.com</a>
+                  <button class="btn btn-sm btn-outline-secondary ms-2 no-print" id="copyEmail" aria-label="Copiar email">Copiar</button>
+                </li>
+              </ul>
+            </div>
+          </div>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
-        <div class="container">
-            <a class="navbar-brand" href="#inicio">🧑‍🎓 Leandro Maciel</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="#sobre-mi" data-translate="navAbout">Acerca de mí</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#ejemplos" data-translate="navExamples">Ejemplos</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#contacto" data-translate="navContact">Contacto</a></li>
-                    <li class="nav-item"><a class="nav-link" href="https://github.com/Leandrotvr/leandrotvr.github.io" target="_blank" rel="noopener noreferrer" data-translate="navCode">💻 Ver Código</a></li>
-                    <li class="nav-item"><a class="nav-link" href="cvleandromaciel.html" target="_blank" rel="noopener noreferrer" data-translate="navCV">📄 Currículum</a></li>
+          <div class="d-flex gap-2 no-print">
+            <button class="btn btn-outline-secondary" id="themeToggle" aria-label="Cambiar tema">🌗 Tema</button>
+            <button class="btn btn-primary" id="printBtn" aria-label="Descargar PDF">⬇️ PDF</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="row g-3">
+          <!-- Columna principal -->
+          <div class="col-lg-8">
+            <section class="mb-4">
+              <h2 class="h6 text-uppercase text-body-secondary mb-2">Perfil Profesional</h2>
+              <p class="mb-2">
+                Profesional en Geografía y Ciencias Sociales con sólida experiencia docente, gestión de grupos y producción de materiales digitales.
+                Orientado a roles remotos no técnicos (asistencia virtual, soporte al cliente, entrada de datos y redacción).
+                Enfoque en comunicación clara, organización, confiabilidad y servicio al usuario. 
+                Autonomía, criterio y aprendizaje continuo (formación en Desarrollo Web en curso).
+              </p>
+            </section>
+
+            <section class="mb-4">
+              <h2 class="h6 text-uppercase text-body-secondary mb-2">Experiencia Laboral</h2>
+
+              <article class="mb-3">
+                <h3 class="h6 mb-1">Profesor de Geografía y Ciencias Sociales</h3>
+                <div class="small text-body-secondary mb-1">
+                  Ministerio de Educación de Corrientes · 2015 — Actualidad · Mercedes, Corrientes
+                </div>
+                <ul class="mb-2">
+                  <li>Planificación, impartición y evaluación de clases presenciales y virtuales.</li>
+                  <li>Creación de contenidos didácticos digitales y guías autoexplicativas.</li>
+                  <li>Gestión de grupos, comunicación con familias y resolución de incidencias.</li>
+                  <li>Integración de herramientas digitales para seguimiento y reportes.</li>
                 </ul>
-                <div class="ms-lg-3 d-flex gap-2">
-                    <button class="lang-switch-btn" data-lang="es" aria-label="Cambiar a español"><img src="flags/es.ico" alt="Spanish Flag"></button>
-                    <button class="lang-switch-btn" data-lang="en" aria-label="Switch to English"><img src="flags/us.ico" alt="US Flag"></button>
-                    <button class="lang-switch-btn" data-lang="it" aria-label="Passa a italiano"><img src="flags/it.ico" alt="Italian Flag"></button>
+              </article>
+
+              <article>
+                <h3 class="h6 mb-1">Asistente Virtual (Freelance)</h3>
+                <div class="small text-body-secondary mb-1">
+                  Proyectos independientes · 2022 — Actualidad · Remoto
                 </div>
-            </div>
+                <ul class="mb-0">
+                  <li>Gestión de correos, calendarios y agendas; priorización y recordatorios.</li>
+                  <li>Redacción/corrección de textos; estandarización de plantillas y respuestas.</li>
+                  <li>Investigación en línea y verificación básica de fuentes.</li>
+                  <li>Soporte al cliente por email/chat y reportes en hojas de cálculo.</li>
+                </ul>
+              </article>
+            </section>
+          </div>
+
+          <!-- Columna lateral -->
+          <aside class="col-lg-4">
+            <section class="mb-4">
+              <h2 class="h6 text-uppercase text-body-secondary mb-2">Competencias Clave</h2>
+              <div class="d-flex flex-wrap gap-2">
+                <span class="chip bg-body-secondary">Comunicación clara</span>
+                <span class="chip bg-body-secondary">Gestión del tiempo</span>
+                <span class="chip bg-body-secondary">Atención al cliente</span>
+                <span class="chip bg-body-secondary">Redacción y edición</span>
+                <span class="chip bg-body-secondary">Investigación en línea</span>
+                <span class="chip bg-body-secondary">Trabajo remoto</span>
+                <span class="chip bg-body-secondary">Autonomía</span>
+                <span class="chip bg-body-secondary">Trabajo en equipo</span>
+              </div>
+              <hr class="my-3">
+              <div class="d-flex flex-wrap gap-2">
+                <span class="tool">Google Workspace</span>
+                <span class="tool">Microsoft Office</span>
+                <span class="tool">Sheets / Excel</span>
+                <span class="tool">Trello</span>
+                <span class="tool">Notion</span>
+                <span class="tool">Slack</span>
+                <span class="tool">Zoom</span>
+              </div>
+            </section>
+
+            <section class="mb-4">
+              <h2 class="h6 text-uppercase text-body-secondary mb-2">Formación Académica</h2>
+              <ul class="mb-0">
+                <li><strong>Profesor en Geografía y Ciencias Sociales</strong> — Institución: <em>[Completar]</em> — Año: <em>[Completar]</em></li>
+                <li><strong>Desarrollo Web (en curso)</strong> — Institución/Plataforma: <em>[Completar]</em></li>
+              </ul>
+            </section>
+
+            <section>
+              <h2 class="h6 text-uppercase text-body-secondary mb-2">Idiomas</h2>
+              <ul class="mb-0">
+                <li>Español — Nativo</li>
+                <li>Inglés — Intermedio (lectura y escritura)</li>
+                <li>Italiano — A1 (básico)</li>
+              </ul>
+            </section>
+          </aside>
         </div>
-    </nav>
+      </div>
 
-    <header id="inicio" class="bg-primary text-white text-center py-5">
-        <div class="container">
-            <h1 class="display-4" data-translate="headerTitle">👋 ¡Hola, soy Leandro Maciel!</h1>
-            <p class="lead" data-translate="headerSubtitle">Educador que maneja TICs en el aula y todos los campos posibles. Eterno aprendiz.</p>
-        </div>
-    </header>
-
-    <main>
-        <section id="sobre-mi" class="container my-5">
-            <h2 class="text-center mb-4" data-translate="aboutTitle">🧑‍🎓 Sobre mí</h2>
-            <div class="row justify-content-center text-center">
-                <img src="cvfoto.jpg" alt="Foto carnet de Leandro Maciel" class="foto-carnet" loading="lazy">
-                <div class="col-lg-8">
-                    <p data-translate="aboutText1">Soy un pedagogo entusiasta de la educación y el progreso. Mi principal enfoque es la inserción de las Tecnologías de la Información y la Comunicación (TICs) en el aula para enriquecer el proceso de aprendizaje.</p>
-                    <p data-translate="aboutText2">Dispongo de una certificación de <strong>Inglés B2+</strong> 🇬🇧 y tengo habilidad en <strong>Excel</strong> 📊. Me considero un <strong>eterno aprendiz</strong> 📚, siempre buscando avanzar profesionalmente.</p>
-
-                    <div class="d-flex justify-content-center flex-wrap gap-2 mt-4">
-                        <span class="badge bg-secondary text-white" data-translate="badgePedagogy">Pedagogía</span>
-                        <span class="badge bg-secondary text-white" data-translate="badgeICT">TICs en el Aula</span>
-                        <span class="badge bg-secondary text-white" data-translate="badgeEnglish">Inglés B2+</span>
-                        <span class="badge bg-secondary text-white" data-translate="badgeExcel">Excel</span>
-                        <span class="badge bg-secondary text-white">HTML</span>
-                        <span class="badge bg-secondary text-white">CSS</span>
-                        <span class="badge bg-secondary text-white">Bootstrap</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <section id="idiomas" class="container my-5">
-            <h2 class="text-center mb-4" data-translate="languagesTitle">🌐 Idiomas</h2>
-            <div class="d-flex justify-content-center flex-wrap gap-2">
-                <span class="badge bg-secondary text-white" data-translate="langSpanish">Español: Nativo</span>
-                <span class="badge bg-secondary text-white" data-translate="langEnglish">Inglés: Medio alto (B2+)</span>
-                <span class="badge bg-secondary text-white" data-translate="langItalian">Italiano: Conversacional</span>
-            </div>
-        </section>
-
-        <section id="ejemplos" class="container my-5 text-center">
-            <h2 class="text-center mb-4" data-translate="examplesTitle">📝 Ejemplos de proyectos</h2>
-            <div class="d-flex flex-column flex-md-row justify-content-center align-items-center gap-3">
-                <a href="https://drive.google.com/drive/u/0/folders/1nZ4Qbqqflk_B1tJAjOlGlamHVUdOjgsE" target="_blank" rel="noopener noreferrer" class="btn btn-secondary highlight-sql" data-translate="btnSQL">📊 Explorar Base de Datos SQL</a>
-                <a href="https://docs.google.com/spreadsheets/d/1xEXDKMMkslKKaPFpcegfuPu1f8c-ZnLD4HwbE3RlJC8/edit?gid=0#gid=0" target="_blank" rel="noopener noreferrer" class="btn btn-secondary highlight-dashboard" data-translate="btnDashboard">📈 Ver Dashboard Educativo</a>
-                <a href="calculadora.html" target="_blank" rel="noopener noreferrer" class="btn btn-secondary highlight-calc" data-translate="btnCalculator">➕ Probar Calculadora</a>
-                <a href="https://youtu.be/rK7Ctl4bcks?si=CC_8QHX3Zdq-zTlt" target="_blank" rel="noopener noreferrer" class="btn btn-danger highlight-red" data-translate="btnExcelLessons">📚💡 Aprende Excel/Sheets</a>
-                <a href="index.html" download="portfolioleandromaciel.html" class="btn btn-warning highlight-gold" data-translate="btnDownloadPortfolio">⬇️🌐 Guardar Mi Portfolio</a>
-                <a href="https://www.youtube.com/playlist?list=PLJHnCdxT4yfHNVQ7I_TStOEQFxrMmqndV" target="_blank" rel="noopener noreferrer" class="btn btn-info highlight-duolingo" data-translate="btnDuolingo">🦉 Duolingo: Lecciones de Italiano</a>
-            </div>
-        </section>
-    </main>
-
-    <footer id="contacto" class="bg-dark text-white text-center py-4">
-        <div class="container">
-            <h2 data-translate="contactTitle">✉️ Contacto</h2>
-            <p data-translate="contactText">Puedes contactarme a través de estos medios:</p>
-            <div class="d-flex justify-content-center flex-column align-items-center gap-2">
-                <a href="mailto:leandrotvr@gmail.com" class="text-white">📧 Enviar Email</a>
-                <span class="text-white" data-translate="contactPhone">📱 Llamar al: 3777416857</span>
-            </div>
-        </div>
-    </footer>
-
-    <div class="container my-5 text-center">
-        <div class="d-flex flex-row justify-content-center align-items-center gap-2">
-            <img src="cvleandromaciel.png" alt="Vista previa del currículum" class="cv-image" loading="lazy">
-            <a href="cvleandromaciel.html" class="btn btn-secondary highlight-dashboard" data-translate="btnViewCV">📄 Ver Currículum</a>
-            <a href="CVLeandroMacielQR.pdf" class="btn btn-secondary highlight-blue" download data-translate="btnDownloadPDF">📄 Currículum en PDF</a>
-        </div>
+      <div class="card-footer text-center small text-body-secondary">
+        CV semántico y apto ATS. Usa Imprimir para exportar a PDF.
+      </div>
     </div>
-    
-    <section id="sobre-el-sitio" class="container my-5 text-center">
-        <h2 class="text-center mb-4" data-translate="siteHowItWorksTitle">¿Cómo funciona este sitio?</h2>
-        <div class="d-flex justify-content-center flex-column align-items-center gap-3">
-            <a href="https://github.com/Leandrotvr/leandrotvr.github.io/blob/main/README.md" target="_blank" rel="noopener noreferrer" class="btn btn-primary highlight-blue" data-translate="btnViewReadme">📖 Ver Documentación del Sitio (README)</a>
-            <a href="README.md" class="btn btn-primary highlight-blue" download="README_Portfolio_LeandroMaciel.md" data-translate="btnDownloadReadme">⬇️ Descargar README en Markdown</a>
-        </div>
-    </section>
+  </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
-    <script src="script.js" defer></script> 
+  <!-- JSON-LD opcional -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Leandro Maciel",
+    "email": "mailto:leandrotvr@gmail.com",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Mercedes",
+      "addressRegion": "Corrientes",
+      "addressCountry": "AR"
+    },
+    "jobTitle": "Asistente Virtual, Soporte al Cliente, Data Entry"
+  }
+  </script>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Persistir tema (claro/oscuro)
+    (function(){
+      const root = document.documentElement;
+      const key = "cv-theme";
+      const saved = localStorage.getItem(key);
+      if(saved) document.documentElement.setAttribute("data-bs-theme", saved);
+      document.getElementById("themeToggle").addEventListener("click", () => {
+        const now = root.getAttribute("data-bs-theme")==="dark" ? "light" : "dark";
+        root.setAttribute("data-bs-theme", now);
+        localStorage.setItem(key, now);
+      });
+    })();
+
+    // Descargar como PDF (Imprimir)
+    document.getElementById("printBtn").addEventListener("click", () => window.print());
+
+    // Copiar email
+    document.getElementById("copyEmail").addEventListener("click", async () => {
+      try{
+        await navigator.clipboard.writeText("leandrotvr@gmail.com");
+        const b = document.getElementById("copyEmail");
+        const old = b.textContent;
+        b.textContent = "¡Copiado!";
+        setTimeout(()=> b.textContent = old, 1500);
+      }catch(e){ alert("No se pudo copiar el email."); }
+    });
+  </script>
 </body>
 </html>
+
+
 
 
 
