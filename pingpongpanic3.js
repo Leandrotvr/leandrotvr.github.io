@@ -3,16 +3,29 @@ const W=900,H=520;
 const PADDLE_H=110,PADDLE_W=14;
 const PADDLE_BOTTOM_W=120,PADDLE_BOTTOM_H=14;
 const PADDLE_SPEED=6;
-let   BALL_SPEED=5.2;
+const BALL_SPEED_BASE=5.2; // base fija (se reinicia en cada gol)
+let   BALL_SPEED=BALL_SPEED_BASE;
 const BALL_MAX_SPEED=15;
 const BALL_ACCEL=1.045;
 const ROUND_TIME=60_000;
+
+// Huecos (porterías) = 3× la pala correspondiente
+const GATE_LR_LEN = PADDLE_H * 3;          // izquierda/derecha (vertical)
+const GATE_BOT_LEN = PADDLE_BOTTOM_W * 3;  // abajo (horizontal)
 
 /* ===== DOM ===== */
 const canvas=document.getElementById('game');
 const ctx=canvas.getContext('2d');
 const hud={s1:byId('s1'),s2:byId('s2'),s3:byId('s3'),t:byId('time'),status:byId('status')};
 function byId(id){return document.getElementById(id)}
+
+// Overlays visuales para porterías (definidos en tu HTML)
+const goalLeftEl   = byId('goal-left');
+const goalRightEl  = byId('goal-right');
+const goalBottomEl = byId('goal-bottom');
+// 20 estilos CSS ya definidos en tu <style> del HTML
+const GOAL_STYLES = Array.from({length:20}, (_,i)=>`goal-style-${i+1}`);
+function randomStyle(){ return GOAL_STYLES[(Math.random()*GOAL_STYLES.length)|0]; }
 
 /* ===== INPUT ===== */
 const keys=new Set();
@@ -90,7 +103,6 @@ const SOUND_FUNS=[
  ()=>beep({type:'triangle',f:260,d:0.09,slide:0.7}),
  ()=>beep({type:'square',f:360,d:0.09,slide:0.5})
 ];
-// ambiente cada 6–12 s
 let nextAmbience=Date.now()+rnd(6000,12000);
 
 /* ===== DISEÑOS (20/20/20) ===== */
@@ -150,18 +162,30 @@ function update(dt){
   // pelota
   ball.x+=ball.vx; ball.y+=ball.vy;
 
-  // pared superior
+  // pared superior (rebota siempre)
   if(ball.y<=12){ ball.y=12; ball.vy*=-1; playHitWall(); }
 
-  // goles
-  if(ball.x<0){ scores.p1++; actualizarScores(); punto('P1',p1); return; }
-  if(ball.x>W){ scores.p2++; actualizarScores(); punto('P2',p2); return; }
-  if(ball.y>H){ scores.p3++; actualizarScores(); punto('P3',p3); return; }
+  // GOLES / REBOTES con porterías pequeñas
+  if(ball.x<0){
+    if(inGateLR(ball.y, p1)) { scores.p1++; actualizarScores(); punto('P1',p1); return; }
+    ball.x = 12; ball.vx = Math.abs(ball.vx); playHitWall();
+  }
+  if(ball.x>W){
+    if(inGateLR(ball.y, p2)) { scores.p2++; actualizarScores(); punto('P2',p2); return; }
+    ball.x = W-12; ball.vx = -Math.abs(ball.vx); playHitWall();
+  }
+  if(ball.y>H){
+    if(inGateBottom(ball.x, p3)) { scores.p3++; actualizarScores(); punto('P3',p3); return; }
+    ball.y = H-12; ball.vy = -Math.abs(ball.vy); playHitWall();
+  }
 
-  // colisiones
+  // colisiones con palas
   if(collides(ball,p1)){ reflectFromVerticalPaddle(ball,p1); playHitPaddle(); }
   if(collides(ball,p2)){ reflectFromVerticalPaddle(ball,p2); playHitPaddle(); }
   if(collides(ball,p3)){ reflectFromHorizontalPaddle(ball,p3); playHitPaddle(); }
+
+  // overlays: sincronizar posición/tamaño de porterías con palas (cada frame)
+  syncGoalOverlays();
 
   // taunt vida
   if(taunt && Date.now()-taunt.t0>taunt.ttl) taunt=null;
@@ -183,11 +207,50 @@ function draw(){
   // pelota
   drawBall(ball,ballSkin);
 
-  // zona P3
-  ctx.strokeStyle='#ffffff22'; ctx.lineWidth=2; ctx.strokeRect(12,H-120,W-24,108);
-
   // burla
   if(taunt) drawTaunt();
+}
+
+/* ===== OVERLAYS DE PORTERÍAS ===== */
+function syncGoalOverlays(){
+  // izquierda (vertical)
+  const cy1 = p1.y + p1.h/2;
+  goalLeftEl.style.top  = px(clamp(cy1 - GATE_LR_LEN/2, 0, H - GATE_LR_LEN));
+  goalLeftEl.style.left = '0px';
+  goalLeftEl.style.height = px(GATE_LR_LEN);
+  goalLeftEl.style.width  = '40px';
+
+  // derecha (vertical)
+  const cy2 = p2.y + p2.h/2;
+  goalRightEl.style.top   = px(clamp(cy2 - GATE_LR_LEN/2, 0, H - GATE_LR_LEN));
+  goalRightEl.style.right = '0px';
+  goalRightEl.style.height = px(GATE_LR_LEN);
+  goalRightEl.style.width  = '40px';
+
+  // abajo (horizontal)
+  const cx3 = p3.x + p3.w/2;
+  goalBottomEl.style.left   = px(clamp(cx3 - GATE_BOT_LEN/2, 0, W - GATE_BOT_LEN));
+  goalBottomEl.style.bottom = '0px';
+  goalBottomEl.style.width  = px(GATE_BOT_LEN);
+  goalBottomEl.style.height = '40px';
+}
+function px(v){ return `${Math.round(v)}px`; }
+
+// Cambia aleatoriamente el estilo CSS de cada portería
+function randomizeGoalStyles(){
+  goalLeftEl.className   = 'goal ' + randomStyle();
+  goalRightEl.className  = 'goal ' + randomStyle();
+  goalBottomEl.className = 'goal bottom ' + randomStyle();
+}
+
+/* ===== GATES logic ===== */
+function inGateLR(y, paddle){
+  const cy = paddle.y + paddle.h/2;
+  return Math.abs(y - cy) <= GATE_LR_LEN/2;
+}
+function inGateBottom(x, paddle){
+  const cx = paddle.x + paddle.w/2;
+  return Math.abs(x - cx) <= GATE_BOT_LEN/2;
 }
 
 /* ===== COLLISION ===== */
@@ -209,7 +272,12 @@ function limitBallSpeed(b){
 
 /* ===== GOAL ===== */
 function punto(player,paddle){
-  BALL_SPEED*=1.08;
+  // Reiniciar la velocidad en cada gol
+  BALL_SPEED = BALL_SPEED_BASE;
+
+  // Cambiar estilos de porterías en cada gol (pedido)
+  randomizeGoalStyles();
+
   hud.status.textContent=`Afuera los que no sirven (${player})`;
   const texto=rand(TAUNTS);
   taunt={texto,x:paddle.x+paddle.w/2,y:paddle.y-12,t0:Date.now(),ttl:1500,anim:rand(TAUNT_ANIMS),color:'#ff4b82'};
@@ -218,7 +286,6 @@ function punto(player,paddle){
   if(player==='P3') taunt.y=paddle.y-20;
 
   rand(SOUND_FUNS)(); setTimeout(()=>rand(SOUND_FUNS)(),100);
-
   ball=resetBall();
 }
 
@@ -231,10 +298,15 @@ function resetAll(){
   scores={p1:0,p2:0,p3:0}; actualizarScores();
   timeLeft=ROUND_TIME; hud.t.textContent=(timeLeft/1000).toFixed(1);
   hud.status.textContent='Listo';
-  last=0; running=false; ball=resetBall(); BALL_SPEED=5.2; taunt=null;
+  last=0; running=false; ball=resetBall(); BALL_SPEED=BALL_SPEED_BASE; taunt=null;
   p1.y=H/2-PADDLE_H/2; p2.y=H/2-PADDLE_H/2; p3.x=W/2-PADDLE_BOTTOM_W/2;
+  // skins aleatorios
   fieldTheme=rand(FIELD_THEMES); ballSkin=rand(BALL_SKINS);
   caric1=rand(CARICATURES); caric2=rand(CARICATURES); caric3=rand(CARICATURES);
+  // estilos de porterías al inicio
+  randomizeGoalStyles();
+  // sync inicial
+  syncGoalOverlays();
   draw();
 }
 
@@ -297,12 +369,9 @@ function drawFieldTheme(theme){
   ctx.strokeStyle=border; ctx.lineWidth=8; ctx.strokeRect(8,8,W-16,H-16);
   ctx.setLineDash([10,14]); ctx.strokeStyle=line; ctx.lineWidth=3;
   ctx.beginPath(); ctx.moveTo(W/2,16); ctx.lineTo(W/2,H-16-120); ctx.stroke(); ctx.setLineDash([]);
-  ctx.globalAlpha=0.12; ctx.fillStyle=line;
-  for(let i=0;i<6;i++){ ctx.beginPath(); ctx.arc(rnd(40,W-40),rnd(40,H-160),rnd(10,40),0,Math.PI*2); ctx.fill(); }
-  ctx.globalAlpha=1;
 }
 
-/* ===== TAUNT DRAW (20 anims) ===== */
+/* ===== TAUNT DRAW ===== */
 function drawTaunt(){
   ctx.save();
   const k=(Date.now()-taunt.t0)/taunt.ttl; const e=Math.max(0,1-k);
@@ -337,13 +406,6 @@ function drawTaunt(){
   ctx.globalAlpha=0.85*e+0.15;
   ctx.fillStyle='#000c'; roundRect(ctx,-w/2,-h-6,w,h,10,true,false);
   ctx.fillStyle=color; ctx.fillText(text,0,-h/2-6+6);
-  if(taunt.anim==='spark'){
-    ctx.globalAlpha=0.6*e;
-    for(let i=0;i<8;i++){ ctx.fillStyle=hsl((perf()+i*40)%360,90,60);
-      const a=i*Math.PI/4, rr=18+Math.sin(perf()*0.03+i)*6;
-      ctx.fillRect(Math.cos(a)*rr, -h-6+Math.sin(a)*rr, 3,3);
-    }
-  }
   ctx.restore();
 }
 
@@ -423,3 +485,4 @@ function hsl(h,s,l){ return `hsl(${h},${s}%,${l}%)`; }
 /* ===== INIT ===== */
 resetAll(); draw();
 // corre sólo tras botón iniciar por políticas de audio del navegador
+
