@@ -41,11 +41,15 @@ button:active{transform:translateY(1px)}
 
 .rules{opacity:.8;font-size:13px}
 
-/* -------- Porterías caricaturescas -------- */
+.games{max-width:980px;margin:24px auto;padding:0 12px;text-align:center}
+.games h2{margin:0 0 8px}
+.games ul{list-style:none;padding:0;margin:0}
+.games a{color:#a8dadc}
+
+/* -------- Porterías caricaturescas (20 estilos) -------- */
 .goal{position:absolute; pointer-events:none; opacity:.85; border-radius:12px}
 .goal.bottom{height:40px}
 
-/* 20 estilos (puedes tunear colores sin romper nada) */
 .goal-style-1 { border: 4px dashed #ff6b6b; border-radius: 10px; }
 .goal-style-2 { border: 4px dotted #ffd166; background: repeating-linear-gradient(45deg,#ffd166,#ffd166 10px,#fff 10px,#fff 20px); }
 .goal-style-3 { border: 4px solid #06d6a0; box-shadow: 0 0 10px #06d6a0 inset; }
