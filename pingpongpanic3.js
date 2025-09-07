@@ -4,11 +4,13 @@ const PADDLE_H=110,PADDLE_W=14;
 const PADDLE_BOTTOM_W=120,PADDLE_BOTTOM_H=14;
 const PADDLE_SPEED=6;
 
-const BALL_SPEED_BASE=5.2; let BALL_SPEED=BALL_SPEED_BASE;
-const BALL_MAX_SPEED=15, BALL_ACCEL=1.045;
+const BALL_SPEED_BASE=5.2;          // velocidad inicial por jugada
+let   BALL_SPEED=BALL_SPEED_BASE;    // se reinicia tras cada gol
+const BALL_MAX_SPEED=15;             // límite superior
+const BALL_ACCEL=1.045;              // aumento paulatino en cada rebote con pala
 const ROUND_TIME=60_000;
 
-// Huecos válidos = 3× la pala (centrados en cada pala)
+/* Huecos válidos = 3× la pala (FIJOS en el centro del borde) */
 const GATE_LR_LEN = PADDLE_H * 3;          // izq/der (vertical)
 const GATE_BOT_LEN = PADDLE_BOTTOM_W * 3;  // abajo (horizontal)
 
@@ -42,7 +44,7 @@ byId('btnStart').onclick=()=>{ if(!running){ running=true; hud.status.textConten
 byId('btnPause').onclick =()=>{ running=false; hud.status.textContent='Pausa'; };
 byId('btnReset').onclick =()=> resetAll();
 
-/* ===== TAUNTS ===== */
+/* ===== TAUNTS / AUDIO (igual que antes) ===== */
 const TAUNTS=[
  "¡Afuera los que no sirven!","¿Otra vez? 😂","¡Poné las pilas! 😜","Manos de manteca 🧈",
  "Eso fue triste… 😢","Te durmieron 😴","Sin manos 🤲","Qué nivel, eh… 👀",
@@ -53,21 +55,20 @@ const TAUNTS=[
 const TAUNT_ANIMS=["shake","wiggle","bounce","pop","spin","wobble","slideL","slideR","slideU","slideD","jelly","pulse","skew","flipX","flipY","swing","breath","rainbow","spark","zoom"];
 let taunt=null;
 
-/* ===== AUDIO SFX ===== */
 const AudioCtx=window.AudioContext||window.webkitAudioContext;
 const actx=new AudioCtx();
 function beep({type='sine',f=440,d=0.08,g=0.2,slide=0}={}){const o=actx.createOscillator(),v=actx.createGain();o.type=type;o.frequency.setValueAtTime(f,actx.currentTime);if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(50,f*slide),actx.currentTime+d);v.gain.setValueAtTime(0,actx.currentTime);v.gain.linearRampToValueAtTime(g,actx.currentTime+0.01);v.gain.exponentialRampToValueAtTime(0.0001,actx.currentTime+d);o.connect(v).connect(actx.destination);o.start();o.stop(actx.currentTime+d);}
-function noise({d=0.12,g=0.2,lp=1200}={}){const buffer=actx.createBuffer(1,actx.sampleRate*d,actx.sampleRate);const data=buffer.getChannelData(0);for(let i=0;i<data.length;i++)data[i]=Math.random()*2-1;const src=actx.createBufferSource();src.buffer=buffer;const biq=actx.createBiquadFilter();biq.type='lowpass';biq.frequency.value=lp;const v=actx.createGain();v.gain.value=g;src.connect(biq).connect(v).connect(actx.destination);src.start();}
+function noise({d=0.12,g=0.2,lp=1200}={}){const b=actx.createBuffer(1,actx.sampleRate*d,actx.sampleRate);const data=b.getChannelData(0);for(let i=0;i<data.length;i++)data[i]=Math.random()*2-1;const src=actx.createBufferSource();src.buffer=b;const biq=actx.createBiquadFilter();biq.type='lowpass';biq.frequency.value=lp;const v=actx.createGain();v.gain.value=g;src.connect(biq).connect(v).connect(actx.destination);src.start();}
 const SOUND_FUNS=[()=>beep({type:'square',f:520,slide:0.5}),()=>beep({type:'triangle',f:330,d:0.12}),()=>beep({type:'sawtooth',f:260,d:0.1}),()=>beep({type:'sine',f:880,d:0.06}),()=>{beep({type:'square',f:700,d:0.05});setTimeout(()=>beep({type:'square',f:500,d:0.05}),60);},()=>noise({d:0.08,lp:1000}),()=>{beep({type:'triangle',f:400,d:0.05});noise({d:0.05,lp:1800})},()=>beep({type:'sine',f:300,slide:0.6}),()=>beep({type:'sawtooth',f:200,slide:0.4}),()=>noise({d:0.12,lp:800}),()=>beep({type:'square',f:440,d:0.08}),()=>beep({type:'triangle',f:540,d:0.08}),()=>beep({type:'square',f:180,d:0.06}),()=>beep({type:'sine',f:650,d:0.07}),()=>beep({type:'sawtooth',f:900,d:0.04}),()=>noise({d:0.06,lp:500}),()=>{beep({type:'sine',f:500,d:0.03});setTimeout(()=>beep({type:'sine',f:600,d:0.03}),40);},()=>{noise({d:0.04,lp:1500});setTimeout(()=>beep({type:'triangle',f:700,d:0.04}),50);},()=>beep({type:'triangle',f:260,d:0.09,slide:0.7}),()=>beep({type:'square',f:360,d:0.09,slide:0.5})];
 let nextAmbience=Date.now()+rnd(6000,12000);
 
-/* ===== DISEÑOS PALA/PELOTA/CAMPO ===== */
+/* ===== DISEÑOS (campo/pelota/palas) ===== */
 const CARICATURES=[...Array(20)].map((_,i)=>({body:palette(i).body,eye:palette(i).eye,mouth:palette(i).mouth,hat:i%4===0,beard:i%5===0,blush:i%3===0,emoji:["😜","😏","🤪","😬","🤡","🧐","😈","😉","😂","🥴","🤭","😹","🙃","😎","😝","😛","🤠","🫠","😤","😇"][i]}));
 function palette(i){const bodies=['#ffb703','#90be6d','#ff6b6b','#ffd166','#4cc9f0','#f72585','#b5179e','#4361ee','#3a86ff','#06d6a0','#f94144','#90e0ef','#00b4d8','#ff9f1c','#d0ebff','#b8c0ff','#caffbf','#ffd6a5','#e9ff70','#ffadad'];const eyes=['#1b1b1b','#0f172a','#000','#222','#101010','#1a1a1a','#2b2b2b','#111','#050505','#000','#111','#1a1a1a','#151515','#000','#0a0a0a','#121212','#060606','#0e0e0e','#1d1d1d','#000'];const mouths=['#7c3f00','#6d6875','#7a1e00','#6a040f','#3a0ca3','#ff006e','#003566','#641220','#720026','#e85d04','#9d0208','#370617','#1b263b','#3a5a40','#001219','#3d405b','#1d3557','#5a189a','#8338ec','#2a9d8f'];return {body:bodies[i%20],eye:eyes[i%20],mouth:mouths[i%20]};}
 const BALL_SKINS=['classic','stripe','target','yin','tri','quad','emoji','star','soccer','beach','ring','dotgrid','candy','smile','bolt','moon','sun','checker','swirl','caps'];
 const FIELD_THEMES=[['#0c1530','#2b375a','#3b4a7a'],['#2b2a33','#7c7b86','#bcbad1'],['#1b2d2a','#3a5a40','#a3b18a'],['#2d132c','#801336','#c72c41'],['#1d3557','#457b9d','#a8dadc'],['#0b090a','#3a0ca3','#f72585'],['#0a0f0d','#0b6e4f','#6bbf59'],['#0b132b','#1c2541','#5bc0be'],['#331e36','#413c58','#a3c4f3'],['#201e1f','#5f0f40','#fb8b24'],['#080708','#3772ff','#df2935'],['#001219','#005f73','#94d2bd'],['#22162b','#451f55','#f6d743'],['#2f1d2e','#5c2751','#f7b2bd'],['#1a1423','#3d314a','#bfc0c0'],['#161a1d','#660708','#ba181b'],['#0f110c','#23231a','#8daa9d'],['#001233','#001845','#ffd60a'],['#111d4a','#06bcee','#ffd166'],['#1f2041','#ffc857','#e9724c']];
 
-/* ===== GOAL STYLES (CSS class names) ===== */
+/* ===== GOAL STYLES (clases CSS) ===== */
 const GOAL_STYLES = Array.from({length:20}, (_,i)=>`goal-style-${i+1}`);
 function randomStyle(){ return GOAL_STYLES[(Math.random()*GOAL_STYLES.length)|0]; }
 function randomizeGoalStyles(){
@@ -97,29 +98,30 @@ function update(dt){
 
   ball.x+=ball.vx; ball.y+=ball.vy;
 
-  // techo siempre rebota
+  // Techo: rebote
   if(ball.y<=12){ ball.y=12; ball.vy*=-1; playHitWall(); }
 
-  // goles / rebotes con hueco 3× centrado
+  // Goles / rebotes (porterías FIJAS centradas)
   if(ball.x<0){
-    if(inGateLR(ball.y,p1)){ scores.p1++; actualizarScores(); punto('P1',p1); return; }
+    if(inGateLR_FIJA(ball.y)){ scores.p1++; actualizarScores(); punto('P1',p1); return; }
     ball.x=12; ball.vx=Math.abs(ball.vx); playHitWall();
   }
   if(ball.x>W){
-    if(inGateLR(ball.y,p2)){ scores.p2++; actualizarScores(); punto('P2',p2); return; }
+    if(inGateLR_FIJA(ball.y)){ scores.p2++; actualizarScores(); punto('P2',p2); return; }
     ball.x=W-12; ball.vx=-Math.abs(ball.vx); playHitWall();
   }
   if(ball.y>H){
-    if(inGateBottom(ball.x,p3)){ scores.p3++; actualizarScores(); punto('P3',p3); return; }
+    if(inGateBottom_FIJA(ball.x)){ scores.p3++; actualizarScores(); punto('P3',p3); return; }
     ball.y=H-12; ball.vy=-Math.abs(ball.vy); playHitWall();
   }
 
+  // Colisiones con palas (aceleran paulatinamente)
   if(collides(ball,p1)){ reflectFromVerticalPaddle(ball,p1); playHitPaddle(); }
   if(collides(ball,p2)){ reflectFromVerticalPaddle(ball,p2); playHitPaddle(); }
   if(collides(ball,p3)){ reflectFromHorizontalPaddle(ball,p3); playHitPaddle(); }
 
-  // overlays siempre alineados al tamaño CSS del canvas
-  syncGoalOverlays();
+  // Overlays de porterías: centrados y escalados al tamaño CSS del canvas
+  syncGoalOverlays_FIJAS();
 
   if(taunt && Date.now()-taunt.t0>taunt.ttl) taunt=null;
   if(Date.now()>nextAmbience){ rand(SOUND_FUNS)(); nextAmbience=Date.now()+rnd(6000,12000); }
@@ -135,11 +137,16 @@ function draw(){
   if(taunt) drawTaunt();
 }
 
-/* ===== OVERLAYS PORTERÍAS ===== */
-function inGateLR(y,p){ const cy=p.y+p.h/2; return Math.abs(y-cy)<=GATE_LR_LEN/2; }
-function inGateBottom(x,p){ const cx=p.x+p.w/2; return Math.abs(x-cx)<=GATE_BOT_LEN/2; }
+/* ===== PORTERÍAS: lógica FIJA ===== */
+function inGateLR_FIJA(y){          // verticales (izq/der): centradas a H/2
+  const cy=H/2; return Math.abs(y - cy) <= GATE_LR_LEN/2;
+}
+function inGateBottom_FIJA(x){       // inferior: centrada a W/2
+  const cx=W/2; return Math.abs(x - cx) <= GATE_BOT_LEN/2;
+}
 
-function syncGoalOverlays(){
+// Overlays centrados y escalados
+function syncGoalOverlays_FIJAS(){
   if(!goalLeftEl||!goalRightEl||!goalBottomEl) return;
   const rect=canvas.getBoundingClientRect();
   const scaleX=rect.width/W, scaleY=rect.height/H;
@@ -148,47 +155,55 @@ function syncGoalOverlays(){
   const gateLRpx = GATE_LR_LEN*scaleY;
   const gateBotpx = GATE_BOT_LEN*scaleX;
 
-  // Izquierda
-  const cy1 = (p1.y+p1.h/2)*scaleY;
+  // Izquierda (centrada vertical)
   goalLeftEl.style.left='0px';
-  goalLeftEl.style.top = px(clamp(cy1 - gateLRpx/2, 0, rect.height-gateLRpx));
+  goalLeftEl.style.top = px(rect.height/2 - gateLRpx/2);
   goalLeftEl.style.width  = px(gateW);
   goalLeftEl.style.height = px(gateLRpx);
 
-  // Derecha
-  const cy2 = (p2.y+p2.h/2)*scaleY;
+  // Derecha (centrada vertical)
   goalRightEl.style.left = px(rect.width - gateW);
-  goalRightEl.style.top  = px(clamp(cy2 - gateLRpx/2, 0, rect.height-gateLRpx));
+  goalRightEl.style.top  = px(rect.height/2 - gateLRpx/2);
   goalRightEl.style.width  = px(gateW);
   goalRightEl.style.height = px(gateLRpx);
 
-  // Abajo
-  const cx3 = (p3.x+p3.w/2)*scaleX;
+  // Abajo (centrada horizontal)
   goalBottomEl.style.top   = px(rect.height - gateH);
-  goalBottomEl.style.left  = px(clamp(cx3 - gateBotpx/2, 0, rect.width-gateBotpx));
+  goalBottomEl.style.left  = px(rect.width/2 - gateBotpx/2);
   goalBottomEl.style.width  = px(gateBotpx);
   goalBottomEl.style.height = px(gateH);
 }
-addEventListener('resize', syncGoalOverlays);
+addEventListener('resize', syncGoalOverlays_FIJAS);
 function px(v){ return `${Math.round(v)}px`; }
 
-/* ===== COLLISION ===== */
+/* ===== COLISIONES / REFLECT ===== */
 function collides(b,p){ return b.x+b.r>p.x && b.x-b.r<p.x+p.w && b.y+b.r>p.y && b.y-b.r<p.y+p.h; }
-function reflectFromVerticalPaddle(b,p){ if(b.vx<0) b.x=p.x+p.w+b.r; else b.x=p.x-b.r; const hit=(b.y-(p.y+p.h/2))/(p.h/2); b.vx=-b.vx*BALL_ACCEL; b.vy+=hit*2.2; limitBallSpeed(b); }
-function reflectFromHorizontalPaddle(b,p){ if(b.vy>0) b.y=p.y-b.r; else b.y=p.y+p.h+b.r; const hit=(b.x-(p.x+p.w/2))/(p.w/2); b.vy=-b.vy*BALL_ACCEL; b.vx+=hit*2.2; limitBallSpeed(b); }
-function limitBallSpeed(b){ const s=Math.hypot(b.vx,b.vy); if(s>BALL_MAX_SPEED){ b.vx*=BALL_MAX_SPEED/s; b.vy*=BALL_MAX_SPEED/s; } }
+function reflectFromVerticalPaddle(b,p){
+  if(b.vx<0) b.x=p.x+p.w+b.r; else b.x=p.x-b.r;
+  const hit=(b.y-(p.y+p.h/2))/(p.h/2);
+  b.vx=-b.vx*BALL_ACCEL; b.vy+=hit*2.2; limitBallSpeed(b);
+}
+function reflectFromHorizontalPaddle(b,p){
+  if(b.vy>0) b.y=p.y-b.r; else b.y=p.y+p.h+b.r;
+  const hit=(b.x-(p.x+p.w/2))/(p.w/2);
+  b.vy=-b.vy*BALL_ACCEL; b.vx+=hit*2.2; limitBallSpeed(b);
+}
+function limitBallSpeed(b){
+  const s=Math.hypot(b.vx,b.vy);
+  if(s>BALL_MAX_SPEED){ b.vx*=BALL_MAX_SPEED/s; b.vy*=BALL_MAX_SPEED/s; }
+}
 
 /* ===== GOL ===== */
 function punto(player,paddle){
-  // 1) Reinicia velocidad base
+  // 1) Reinicia la velocidad base de la siguiente salida
   BALL_SPEED = BALL_SPEED_BASE;
 
-  // 2) Cambia estilos de porterías, campo y pelota (pedido)
+  // 2) Cambia estilos de porterías, campo y pelota
   randomizeGoalStyles();
   fieldTheme=rand(FIELD_THEMES);
   ballSkin = rand(BALL_SKINS);
 
-  // 3) Mensaje y burla
+  // 3) Mensaje + burla
   hud.status.textContent=`Afuera los que no sirven (${player})`;
   const texto=rand(TAUNTS);
   taunt={texto,x:paddle.x+paddle.w/2,y:paddle.y-12,t0:Date.now(),ttl:1500,anim:rand(TAUNT_ANIMS),color:'#ff4b82'};
@@ -196,16 +211,20 @@ function punto(player,paddle){
   if(player==='P2') taunt.x=paddle.x-60;
   if(player==='P3') taunt.y=paddle.y-20;
 
-  // 4) Sonidos y reinicio de pelota
   rand(SOUND_FUNS)(); setTimeout(()=>rand(SOUND_FUNS)(),100);
+
+  // 4) Nueva pelota con velocidad base y ángulo aleatorio
   ball=resetBall();
 
-  // 5) Evento por si quieres enganchar otras reacciones
+  // 5) Aviso para HTML (re-random de marcos)
   window.dispatchEvent(new Event('goalScored'));
 }
 
 /* ===== RESET / INIT ===== */
-function resetBall(){ const a=randomAngle(); return {x:W/2,y:H/2-40,r:8,vx:Math.cos(a)*BALL_SPEED,vy:Math.sin(a)*BALL_SPEED}; }
+function resetBall(){
+  const a=randomAngle();
+  return {x:W/2,y:H/2-40,r:8,vx:Math.cos(a)*BALL_SPEED,vy:Math.sin(a)*BALL_SPEED};
+}
 function resetAll(){
   scores={p1:0,p2:0,p3:0}; actualizarScores();
   timeLeft=ROUND_TIME; hud.t.textContent=(timeLeft/1000).toFixed(1);
@@ -214,17 +233,15 @@ function resetAll(){
   ball=resetBall();
   p1.y=H/2-PADDLE_H/2; p2.y=H/2-PADDLE_H/2; p3.x=W/2-PADDLE_BOTTOM_W/2;
 
-  // skins aleatorios de inicio
   fieldTheme=rand(FIELD_THEMES); ballSkin=rand(BALL_SKINS);
   caric1=rand(CARICATURES); caric2=rand(CARICATURES); caric3=rand(CARICATURES);
 
-  // estilos porterías + sync inicial
   randomizeGoalStyles();
-  syncGoalOverlays();
+  syncGoalOverlays_FIJAS();
   draw();
 }
 
-/* ===== DRAW PADDLES (caricaturas), BALL, FIELD, TAUNT ===== */
+/* ===== RENDER PADDLES / BALL / FIELD / TAUNT ===== */
 function drawCaricaturePaddle(p,face,side){
   ctx.save();
   ctx.fillStyle=face.body; roundRect(ctx,p.x,p.y,p.w,p.h,8,true,false);
@@ -308,6 +325,5 @@ function yinYang(r){ fillCircle('#fff',r); ctx.fillStyle='#000'; ctx.beginPath()
 
 /* ===== START ===== */
 resetAll(); draw();
-// Audio Web: recuerda pulsar “Iniciar” primero para habilitar sonido.
-
+// Recuerda: pulsa “Iniciar” para habilitar audio Web.
 
