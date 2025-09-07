@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>PingPong Panic 3 — qa / pñ / vb</title>
-  <link rel="stylesheet" href="pingpongpanic3.css"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PingPongPanic3</title>
+  <link rel="stylesheet" href="pingpongpanic3.css" />
 </head>
 <body>
   <div class="wrap">
@@ -18,7 +18,13 @@
       <div class="badge" id="status">Listo</div>
     </div>
 
-    <canvas id="game" width="900" height="520" aria-label="Pong 3 jugadores"></canvas>
+    <div class="stage">
+      <canvas id="game" width="900" height="520" aria-label="Pong 3 jugadores"></canvas>
+      <!-- Porterías (hueco válido) con estilos caricaturescos -->
+      <div id="goal-left" class="goal"></div>
+      <div id="goal-right" class="goal"></div>
+      <div id="goal-bottom" class="goal bottom"></div>
+    </div>
 
     <div class="controls">
       <button id="btnStart">▶️ Iniciar / Reanudar</button>
@@ -26,9 +32,13 @@
       <button id="btnReset">⟲ Reiniciar</button>
     </div>
 
-    <small>Reglas: la pelota que pasa por tu lado es gol en contra. Gana quien reciba <b>menos</b> goles en 60s. P1=izquierda (q/a), P2=derecha (p/ñ), P3=abajo (v/b).</small>
+    <p class="rules">
+      Reglas: la pelota que pasa por tu lado es gol en contra. Gana quien reciba <b>menos</b> goles en 60s.
+      P1=izquierda (q/a), P2=derecha (p/ñ), P3=abajo (v/b).
+    </p>
   </div>
 
   <script src="pingpongpanic3.js"></script>
 </body>
 </html>
+
