@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>PingPong Panic 3 — qa / pñ / vb</title>
+  <link rel="stylesheet" href="pingpongpanic3.css"/>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Pong 3 jugadores — <span class="p1">P1: q/a</span> · <span class="p2">P2: p/ñ</span> · <span class="p3">P3: v/b</span></h1>
+
+    <div class="hud">
+      <div class="badge p1">Goles P1: <span id="s1">0</span></div>
+      <div class="badge p2">Goles P2: <span id="s2">0</span></div>
+      <div class="badge p3">Goles P3: <span id="s3">0</span></div>
+      <div class="badge">Tiempo: <span id="time">60.0</span>s</div>
+      <div class="badge" id="status">Listo</div>
+    </div>
+
+    <canvas id="game" width="900" height="520" aria-label="Pong 3 jugadores"></canvas>
+
+    <div class="controls">
+      <button id="btnStart">▶️ Iniciar / Reanudar</button>
+      <button id="btnPause">⏸️ Pausa</button>
+      <button id="btnReset">⟲ Reiniciar</button>
+    </div>
+
+    <small>Reglas: la pelota que pasa por tu lado es gol en contra. Gana quien reciba <b>menos</b> goles en 60s. P1=izquierda (q/a), P2=derecha (p/ñ), P3=abajo (v/b).</small>
+  </div>
+
+  <script src="pingpongpanic3.js"></script>
+</body>
+</html>
