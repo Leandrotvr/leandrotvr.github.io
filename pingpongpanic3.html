@@ -20,7 +20,8 @@
 
     <div class="stage">
       <canvas id="game" width="900" height="520" aria-label="Pong 3 jugadores"></canvas>
-      <!-- Porterías (hueco válido) con estilos caricaturescos -->
+
+      <!-- Porterías fijas en el centro (estilos aleatorios) -->
       <div id="goal-left" class="goal"></div>
       <div id="goal-right" class="goal"></div>
       <div id="goal-bottom" class="goal bottom"></div>
@@ -38,7 +39,28 @@
     </p>
   </div>
 
+  <section class="games">
+    <h2>🎮 Juegos</h2>
+    <ul>
+      <li><a href="pingpongpanic3.html">👉 Jugar PingPongPanic3</a></li>
+    </ul>
+  </section>
+
   <script src="pingpongpanic3.js"></script>
+  <script>
+    // CSS classes disponibles para los marcos de portería
+    const styles = Array.from({length:20}, (_,i)=>`goal-style-${i+1}`);
+    function randomStyle(){ return styles[Math.floor(Math.random()*styles.length)]; }
+    function setRandomGoals(){
+      ['goal-left','goal-right','goal-bottom'].forEach(id=>{
+        const el=document.getElementById(id);
+        el.className = 'goal ' + (id==='goal-bottom'?'bottom ':'') + randomStyle();
+      });
+    }
+    // Inicializa; también se vuelve a aplicar en cada gol desde el JS principal
+    setRandomGoals();
+    window.addEventListener('goalScored', setRandomGoals);
+  </script>
 </body>
 </html>
 
