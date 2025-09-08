@@ -1,9 +1,13 @@
 /* Pong4 — minimalista, 100% pantalla, 4 palas
    - Palas = 1/3 del lado. Controles: P1 QA, P2 XC, P3 NM, P4 PÑ(;).
    - Gol elimina ese lado; gana el último en pie (3 eliminados).
-   - Bola acelera poco a poco y SE REINICIA al mínimo TRAS CADA ELIMINACIÓN.
+   - Bola acelera poco a poco y se REINICIA al mínimo tras cada eliminación.
+   - FIX: warmupLeft -> warmLeft (causa del no-inicio).
 */
 (() => {
+  // === Config rápida ===
+  const WARMUP_SECONDS = 3; // pon 0 si quieres que empiece inmediatamente
+
   // Utilidades
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
   const rand=(a,b)=>a+Math.random()*(b-a);
@@ -42,7 +46,7 @@
   // Pelota
   const ball={x:0,y:0,r:0,dx:0,dy:0,speed:0};
   const center=()=>{ ball.x=W()/2; ball.y=H()/2; };
-  const serveSlow=()=>{ // === clave: reinicia velocidad tras cada eliminación
+  const serveSlow=()=>{ // reinicia aceleración para cada ronda
     const md=Math.min(W(),H());
     const v=unitVec(); ball.dx=v.x; ball.dy=v.y;
     ball.speed = BALL_V0_FR * md;
@@ -50,16 +54,18 @@
   };
 
   // Partida
-  let warmup=true, warmLeft=3, over=false, winner=null, eliminated=0, justScored=false;
+  let warmup=true, warmLeft=WARMUP_SECONDS, over=false, winner=null, eliminated=0, justScored=false;
 
   function resetRound(keep=true){
     const md=Math.min(W(),H());
     ball.r=Math.max(6,Math.round(md*BALL_R_FR));
-    serveSlow(); // siempre empezar lento
+    serveSlow();
     if(!keep){
       Object.values(players).forEach(p=>p.alive=true);
-      eliminated=0; over=false; winner=null; warmup=true; warmLeft=3;
-      setStatus('live','Preparados…'); timerEl.textContent='3'; updateAlive();
+      eliminated=0; over=false; winner=null; warmup=(WARMUP_SECONDS>0); warmLeft=WARMUP_SECONDS;
+      setStatus('live', warmup ? 'Preparados…' : '¡A jugar!');
+      timerEl.textContent = warmup ? String(WARMUP_SECONDS) : '—';
+      updateAlive();
     }
   }
   resetRound(false);
@@ -148,11 +154,10 @@
       over=true; setStatus('over',`¡Ganador: ${winner}! (R reinicia)`); timerEl.textContent='—';
       return true;
     }
-    // === clave: tras eliminar, saque lento (reinicia aceleración)
+    // Tras eliminar, saque lento -> reinicia aceleración
     setStatus('live',`Gol a ${pid}. ¡Sigue!`);
     serveSlow();
-    // evitar re-gol inmediato un frame
-    justScored=true;
+    justScored=true; // evita doble detección un frame
     return true;
   }
 
@@ -164,21 +169,22 @@
     if(over){ draw(); return requestAnimationFrame(loop); }
 
     if(warmup){
-      warmLeft-=dt; timerEl.textContent=String(Math.max(1,Math.ceil(warmLeft)));
-      if(warmLeft<=0){ warmup=false; setStatus('live','¡A jugar!'); timerEl.textContent='—'; }
-      center(); draw(); return requestAnimationFrame(loop);
+      if (WARMUP_SECONDS>0) {
+        warmLeft-=dt; timerEl.textContent=String(Math.max(1,Math.ceil(warmLeft)));
+        if(warmLeft<=0){ warmup=false; setStatus('live','¡A jugar!'); timerEl.textContent='—'; }
+        center(); draw(); return requestAnimationFrame(loop);
+      } else {
+        warmup=false; setStatus('live','¡A jugar!'); timerEl.textContent='—';
+      }
     }
 
     movePaddles(dt);
     if(!justScored){
-      // Acelera poco a poco hasta la siguiente eliminación
       const md=Math.min(W(),H());
-      ball.speed=Math.min(BALL_VMAX_FR*md, ball.speed*(1+BALL_GROWTH*dt));
+      ball.speed=Math.min(BALL_VMAX_FR*md, ball.speed*(1+BALL_GROWTH*dt)); // acelera suave
       ball.x+=ball.dx*ball.speed*dt; ball.y+=ball.dy*ball.speed*dt;
       collidePaddles(); wallsAndGoals();
-    } else {
-      justScored=false; // un frame de gracia
-    }
+    } else { justScored=false; }
 
     draw(); requestAnimationFrame(loop);
   }
@@ -206,7 +212,7 @@
     ctx.beginPath(); ctx.arc(ball.x,ball.y,ball.r,0,Math.PI*2); ctx.fillStyle='#fff'; ctx.fill();
 
     if(over) banner(`GANADOR: ${winner}`);
-    else if(warmup) banner(`Preparados… ${Math.max(1,Math.ceil(warmupLeft))}`);
+    else if(warmup) banner(`Preparados… ${Math.max(1,Math.ceil(warmLeft))}`); // <-- FIX aquí
   }
   function roundRect(x,y,w,h,r=6,fill=true){
     const rr=Math.min(r,w/2,h/2);
