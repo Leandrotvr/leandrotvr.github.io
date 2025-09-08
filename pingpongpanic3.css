@@ -1,72 +1,15 @@
-:root {
-  --bg: #0d0f12;
-  --fg: #e5e7eb;
-  --accent: #60a5fa;
-  --accent2: #34d399;
-  --danger: #f87171;
-  --muted: #94a3b8;
-}
-
+/* Pantalla completa sin scroll ni select */
 * { box-sizing: border-box; }
-html, body { height: 100%; }
+html, body { height: 100%; margin: 0; }
 body {
-  margin: 0;
-  background: radial-gradient(1200px 800px at 50% 20%, #12151a, var(--bg));
-  color: var(--fg);
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Noto Sans", Arial, "Apple Color Emoji", "Segoe UI Emoji";
-  display: grid;
-  place-items: center;
+  background: #0b1220; /* se ve detrás del borde del campo */
+  overscroll-behavior: none;
+  user-select: none;
 }
-
-.wrap {
-  width: min(92vw, 760px);
-}
-
-canvas#game {
-  width: 100%;
-  aspect-ratio: 1 / 1; /* cuadrado */
+#game {
+  width: 100vw;
+  height: 100vh;
   display: block;
-  background:
-    linear-gradient(transparent 49.5%, rgba(255,255,255,0.08) 49.5% 50.5%, transparent 50.5%),
-    linear-gradient(90deg, transparent 49.5%, rgba(255,255,255,0.08) 49.5% 50.5%, transparent 50.5%);
-  border: 2px solid rgba(255,255,255,0.15);
-  border-radius: 10px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.45), inset 0 0 0 1px rgba(255,255,255,0.04);
+  touch-action: none; /* evita zoom/pan accidental en móvil */
+  cursor: default;
 }
-
-/* HUD */
-.hud {
-  margin-top: 10px;
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.badge {
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: rgba(255,255,255,0.06);
-  color: var(--fg);
-  font-size: 12px;
-  letter-spacing: .3px;
-  border: 1px solid rgba(255,255,255,0.08);
-}
-
-#status.warmup { background: rgba(96,165,250,.15); border-color: rgba(96,165,250,.25); color: #cfe3ff; }
-#status.live   { background: rgba(52,211,153,.15); border-color: rgba(52,211,153,.25); color: #d9fff1; }
-#status.over   { background: rgba(248,113,113,.15); border-color: rgba(248,113,113,.25); color: #ffe3e3; }
-
-.help {
-  margin-top: 8px;
-  color: var(--muted);
-  font-size: 12px;
-}
-.help kbd {
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.15);
-  padding: 2px 6px;
-  border-radius: 6px;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-}
-.help ul { margin: 6px 0; padding-left: 18px; }
-.help li { margin: 3px 0; }
