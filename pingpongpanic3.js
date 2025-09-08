@@ -1,7 +1,7 @@
-/* PING PONG PANIC 3 - Minimalista, 3 jugadores
+/* PING PONG PANIC 3 - 3 jugadores (fix: ganador no se anuncia en el 1er gol)
    Reglas: el que recibe un gol queda eliminado; gana el último en pie.
-   Calentamiento: 15 s (no elimina ni puntúa).
-   Velocidad de la bola: empieza muy lenta y sube de forma MUY gradual.
+   Calentamiento: 15 s.
+   Velocidad: arranca muy lenta y sube de forma MUY gradual.
    Controles:
      - P1 (izq): Q (arriba), A (abajo)
      - P2 (der): P (arriba), Ñ (abajo)  | alternativa para Ñ: ';'
@@ -13,7 +13,6 @@
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const rand = (a, b) => a + Math.random() * (b - a);
 
-  // dir aleatoria no muy plana
   function randomUnitVector() {
     let x, y, m;
     do {
@@ -21,7 +20,7 @@
       x = Math.cos(ang);
       y = Math.sin(ang);
       m = Math.hypot(x, y);
-    } while (Math.abs(x) < 0.35 && Math.abs(y) < 0.35); // evita ángulos sosos
+    } while (Math.abs(x) < 0.35 && Math.abs(y) < 0.35);
     return { x: x / m, y: y / m };
   }
 
@@ -29,11 +28,9 @@
   const canvas = document.getElementById('game');
   const ctx = canvas.getContext('2d');
 
-  // Mantener resolución interna cuadrada en función del tamaño CSS:
   function fitInternalResolution() {
     const rect = canvas.getBoundingClientRect();
     const size = Math.round(Math.min(rect.width, rect.height));
-    // resolución "real" más alta para nitidez
     const scale = window.devicePixelRatio || 1;
     const px = Math.max(480, Math.min(900, Math.floor(size * scale)));
     canvas.width = px;
@@ -49,11 +46,11 @@
   const elTimer  = document.getElementById('timer');
   const elAlive  = document.getElementById('alive');
 
-  function setStatus(mode, text) {
+  const setStatus = (mode, text) => {
     elStatus.classList.remove('warmup', 'live', 'over');
     elStatus.classList.add(mode);
     elStatus.textContent = text;
-  }
+  };
 
   function updateAliveBadge() {
     const vivos = [];
@@ -64,87 +61,62 @@
   }
 
   // === Entidades ============================================================
-  const paddleThickness = 14; // grosor
-  const paddleLen = 0.22;     // % del lado
-  const paddleSpeed = 480;    // px/s
+  const paddleThickness = 14;
+  const paddleLen = 0.22;
+  const paddleSpeed = 480;
 
   const players = {
-    P1: { // izquierda (vertical)
-      side: 'left',
-      alive: true,
-      y: 0.5,
-      len: paddleLen,
-      up: false,
-      down: false
-    },
-    P2: { // derecha (vertical)
-      side: 'right',
-      alive: true,
-      y: 0.5,
-      len: paddleLen,
-      up: false,
-      down: false
-    },
-    P3: { // abajo (horizontal)
-      side: 'bottom',
-      alive: true,
-      x: 0.5,
-      len: paddleLen,
-      left: false,
-      right: false
-    }
+    P1: { side: 'left',   alive: true, y: 0.5, len: paddleLen, up: false,  down: false },
+    P2: { side: 'right',  alive: true, y: 0.5, len: paddleLen, up: false,  down: false },
+    P3: { side: 'bottom', alive: true, x: 0.5, len: paddleLen, left: false, right: false }
   };
 
   const ball = {
-    x: 0.5,
-    y: 0.5,
-    r: 8,
-    dirx: 0,
-    diry: 0,
-    speed: 80,           // muy lenta al inicio (px/s)
-    speedGrowth: 0.005,  // +0.5% por segundo (MUY paulatina)
+    x: 0.5, y: 0.5, r: 8,
+    dirx: 0, diry: 0,
+    speed: 80,            // muy lenta al inicio
+    speedGrowth: 0.005,   // +0.5% por segundo
     maxSpeed: 950
   };
 
-  // estados de juego
+  // estados
   let warmup = true;
   let warmupLeft = 15.0; // s
   let gameOver = false;
   let winner = null;
+  let eliminatedCount = 0;     // <--- NUEVO
+  let goalJustHappened = false; // <--- evita doble proceso en el mismo frame
 
   function resetRound(keepEliminations = true) {
-    // bola al centro y velocidad reiniciada (súper lenta)
-    ball.x = 0.5;
-    ball.y = 0.5;
-    ball.speed = 80;
+    // bola al centro, velocidad reiniciada, dirección aleatoria
+    ball.x = 0.5; ball.y = 0.5; ball.speed = 80;
     const v = randomUnitVector();
-    ball.dirx = v.x;
-    ball.diry = v.y;
-    // recolocar palas
+    ball.dirx = v.x; ball.diry = v.y;
+
+    // reset completo (para tecla R)
     if (!keepEliminations) {
       players.P1.alive = players.P2.alive = players.P3.alive = true;
+      eliminatedCount = 0;
       winner = null;
       gameOver = false;
       warmup = true;
       warmupLeft = 15.0;
       setStatus('warmup', 'Calentamiento…');
-      elTimer.textContent = Math.ceil(warmupLeft).toString();
+      elTimer.textContent = String(Math.ceil(warmupLeft));
     }
     updateAliveBadge();
+    goalJustHappened = false;
   }
   resetRound();
 
   // === Controles ============================================================
   const down = new Set();
   const keymap = {
-    // P1
     q: () => { players.P1.up = true; },
     a: () => { players.P1.down = true; },
-    // P2
     p: () => { players.P2.up = true; },
     'ñ': () => { players.P2.down = true; },
-    ';': () => { players.P2.down = true; }, // alternativa por layouts
-    // P3
+    ';': () => { players.P2.down = true; },
     v: () => { players.P3.left = true; },
     b: () => { players.P3.right = true; }
   };
@@ -156,7 +128,6 @@
     ';': () => { players.P2.down = false; },
     v: () => { players.P3.left = false; },
     b: () => { players.P3.right = false; },
-    // reset
     r: () => { if (gameOver) resetRound(false); }
   };
 
@@ -172,9 +143,9 @@
     (keyupmap[k] || (()=>{}))();
   });
 
-  // === Física y colisiones ==================================================
+  // === Geometría palas ======================================================
   function paddleRect(p, w, h) {
-    const L = Math.floor((p.len * h)); // longitud real en px (para verticales)
+    const L = Math.floor(p.len * h);
     if (p.side === 'left') {
       const cy = Math.floor(p.y * h);
       return { x: 0, y: clamp(cy - L/2, 0, h - L), w: paddleThickness, h: L };
@@ -183,8 +154,7 @@
       const cy = Math.floor(p.y * h);
       return { x: w - paddleThickness, y: clamp(cy - L/2, 0, h - L), w: paddleThickness, h: L };
     }
-    // bottom (horizontal)
-    const Lx = Math.floor((p.len * w));
+    const Lx = Math.floor(p.len * w);
     const cx = Math.floor(p.x * w);
     return { x: clamp(cx - Lx/2, 0, w - Lx), y: h - paddleThickness, w: Lx, h: paddleThickness };
   }
@@ -211,29 +181,23 @@
     }
   }
 
-  function reflectOnPaddle(rect, normalX, normalY, hitOffset = 0) {
-    // proyección y rebote con pequeño desvío según dónde golpee
-    // normalX/Y define la normal de la superficie (e.g., izquierda/derecha: ±1,0; abajo: 0,-1)
+  function reflectOnPaddle(normalX, normalY, hitOffset = 0) {
     const dot = ball.dirx * normalX + ball.diry * normalY;
-    // reflejo ideal
     ball.dirx = ball.dirx - 2 * dot * normalX;
     ball.diry = ball.diry - 2 * dot * normalY;
-    // rotación leve en función del offset (para evitar ciclos perfectos)
-    const tilt = clamp(hitOffset, -1, 1) * 0.35; // ±0.35 rad aprox
+    const tilt = clamp(hitOffset, -1, 1) * 0.35;
     const cos = Math.cos(tilt), sin = Math.sin(tilt);
     const rx = ball.dirx * cos - ball.diry * sin;
     const ry = ball.dirx * sin + ball.diry * cos;
     const m = Math.hypot(rx, ry) || 1;
-    ball.dirx = rx / m;
-    ball.diry = ry / m;
+    ball.dirx = rx / m; ball.diry = ry / m;
   }
 
-  // Devuelve true si fue gol contra un jugador vivo
-  function handleWallsAndGoals(dt) {
-    const w = W(), h = H();
-    const r = ball.r;
+  // === Goles / paredes ======================================================
+  function handleWallsAndGoals() {
+    const w = W(), h = H(), r = ball.r;
 
-    // Top: siempre pared
+    // Top: pared
     if (ball.y - r <= 0) {
       ball.y = r;
       ball.diry = Math.abs(ball.diry);
@@ -278,72 +242,68 @@
   function handlePaddleCollisions() {
     const w = W(), h = H(), r = ball.r;
 
-    // P1 (left)
     if (players.P1.alive) {
       const pr = paddleRect(players.P1, w, h);
       if (ball.x - r <= pr.x + pr.w && ball.y >= pr.y && ball.y <= pr.y + pr.h && ball.dirx < 0) {
-        ball.x = pr.x + pr.w + r; // reubicar fuera de la pala
-        const offset = ((ball.y - pr.y) / pr.h) * 2 - 1; // [-1,1]
-        reflectOnPaddle(pr, 1, 0, offset);
+        ball.x = pr.x + pr.w + r;
+        const offset = ((ball.y - pr.y) / pr.h) * 2 - 1;
+        reflectOnPaddle(1, 0, offset);
       }
     }
-
-    // P2 (right)
     if (players.P2.alive) {
       const pr = paddleRect(players.P2, w, h);
       if (ball.x + r >= pr.x && ball.y >= pr.y && ball.y <= pr.y + pr.h && ball.dirx > 0) {
         ball.x = pr.x - r;
         const offset = ((ball.y - pr.y) / pr.h) * 2 - 1;
-        reflectOnPaddle(pr, -1, 0, offset);
+        reflectOnPaddle(-1, 0, offset);
       }
     }
-
-    // P3 (bottom)
     if (players.P3.alive) {
       const pr = paddleRect(players.P3, w, h);
       if (ball.y + r >= pr.y && ball.x >= pr.x && ball.x <= pr.x + pr.w && ball.diry > 0) {
         ball.y = pr.y - r;
         const offset = ((ball.x - pr.x) / pr.w) * 2 - 1;
-        reflectOnPaddle(pr, 0, -1, offset);
+        reflectOnPaddle(0, -1, offset);
       }
     }
   }
 
+  // Declarar eliminación segura y ganar solo con 2 eliminados
   function eliminate(pid) {
+    if (!players[pid].alive) return; // idempotente
     players[pid].alive = false;
+    eliminatedCount += 1;
     updateAliveBadge();
 
-    // ¿quién queda?
-    const aliveList = Object.keys(players).filter(k => players[k].alive);
-    if (aliveList.length === 1) {
-      winner = aliveList[0];
+    if (eliminatedCount >= 2) {
+      // Hay solo 1 vivo -> ganador
+      winner = Object.keys(players).find(k => players[k].alive) || '—';
       gameOver = true;
       setStatus('over', `¡Ganador: ${winner}! (R para reiniciar)`);
       elTimer.textContent = '—';
       return;
     }
 
-    // Seguir jugando: reiniciar bola con random
+    // Si aún quedan 2 o más vivos, nueva salida de balón
     resetRound(true);
+    setStatus(warmup ? 'warmup' : 'live', warmup ? 'Calentamiento…' : '¡Partido en serio!');
   }
 
   // === Bucle ================================================================
   let last = performance.now();
 
   function frame(now) {
-    const dt = Math.min(0.033, (now - last) / 1000); // clamp dt
+    const dt = Math.min(0.033, (now - last) / 1000);
     last = now;
 
     step(dt);
     draw();
-
     requestAnimationFrame(frame);
   }
 
   function step(dt) {
     if (gameOver) return;
 
-    // Calentamiento
     if (warmup) {
       warmupLeft -= dt;
       if (warmupLeft <= 0) {
@@ -357,72 +317,54 @@
 
     movePaddles(dt);
 
-    // mover bola
-    ball.speed = Math.min(ball.maxSpeed, ball.speed * (1 + ball.speedGrowth * dt)); // subida paulatina
-    const w = W(), h = H();
-    ball.x += ball.dirx * ball.speed * dt;
-    ball.y += ball.diry * ball.speed * dt;
+    // mover bola y colisiones solo si no acaba de haber gol en este frame
+    if (!goalJustHappened) {
+      ball.speed = Math.min(ball.maxSpeed, ball.speed * (1 + ball.speedGrowth * dt));
+      ball.x += ball.dirx * ball.speed * dt;
+      ball.y += ball.diry * ball.speed * dt;
 
-    // colisiones
-    handlePaddleCollisions();
+      handlePaddleCollisions();
 
-    // paredes / goles
-    const goal = handleWallsAndGoals(dt);
-    if (goal) {
-      // si no terminó el juego, ya se hizo resetRound(true)
-      // durante calentamiento, no elimina, así que nunca entra aquí
+      if (handleWallsAndGoals()) {
+        goalJustHappened = true; // evita doble proceso
+      }
+    } else {
+      // limpiamos el flag tras aplicar resetRound() en eliminate()
+      goalJustHappened = false;
     }
   }
 
   // === Render ===============================================================
   function draw() {
     const w = W(), h = H();
-
-    // fondo
     ctx.clearRect(0, 0, w, h);
 
-    // líneas sutiles ya están vía CSS; dibujamos límites más claros:
     ctx.strokeStyle = 'rgba(255,255,255,0.15)';
     ctx.lineWidth = 2;
     ctx.strokeRect(1, 1, w-2, h-2);
 
-    // palas
     ctx.fillStyle = '#e5e7eb';
     if (players.P1.alive) {
       const r1 = paddleRect(players.P1, w, h);
       roundRect(ctx, r1.x, r1.y, r1.w, r1.h, 6, true);
-    } else {
-      // indicar pared sólida donde estaba P1
-      drawSideGlow('left');
-    }
+    } else drawSideGlow('left');
 
     if (players.P2.alive) {
       const r2 = paddleRect(players.P2, w, h);
       roundRect(ctx, r2.x, r2.y, r2.w, r2.h, 6, true);
-    } else {
-      drawSideGlow('right');
-    }
+    } else drawSideGlow('right');
 
     if (players.P3.alive) {
       const r3 = paddleRect(players.P3, w, h);
       roundRect(ctx, r3.x, r3.y, r3.w, r3.h, 6, true);
-    } else {
-      drawSideGlow('bottom');
-    }
+    } else drawSideGlow('bottom');
 
-    // bola
     ctx.beginPath();
     ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI*2);
     ctx.fill();
 
-    // rótulos estado
-    if (warmup) {
-      drawBanner('CALENTAMIENTO', '#60a5fa');
-    } else if (gameOver) {
-      drawBanner(`GANADOR: ${winner}`, '#f87171');
-    } else {
-      // discreto: partido en serio ya está en el badge
-    }
+    if (warmup) drawBanner('CALENTAMIENTO', '#60a5fa');
+    else if (gameOver) drawBanner(`GANADOR: ${winner}`, '#f87171');
   }
 
   function roundRect(ctx, x, y, w, h, r = 6, fill = true) {
@@ -441,7 +383,6 @@
     ctx.save();
     ctx.globalAlpha = 0.85;
     ctx.fillStyle = 'rgba(0,0,0,0.35)';
-    const pad = 12;
     ctx.fillRect(0, h*0.42, w, h*0.16);
     ctx.globalAlpha = 1;
     ctx.fillStyle = color;
@@ -472,15 +413,9 @@
   // iniciar bucle
   requestAnimationFrame(frame);
 
-  // === Validación mínima (evitar errores comunes) ===========================
-  // Si el usuario no tiene layout español, ofrecer tecla alternativa para Ñ.
-  // (No interrumpe el juego.)
+  // Aviso de teclado sin Ñ
   setTimeout(() => {
     const isSpanish = Intl.DateTimeFormat().resolvedOptions().locale.toLowerCase().includes('es');
-    if (!isSpanish) {
-      console.info('Sugerencia: si tu teclado no tiene "Ñ", usa ";" para bajar P2.');
-    }
+    if (!isSpanish) console.info('Sugerencia: si tu teclado no tiene "Ñ", usa ";" para P2 abajo.');
   }, 0);
 })();
-
-
