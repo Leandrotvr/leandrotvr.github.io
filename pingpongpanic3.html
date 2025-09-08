@@ -3,64 +3,32 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>PingPongPanic3</title>
+  <title>PING PONG PANIC 3</title>
   <link rel="stylesheet" href="pingpongpanic3.css" />
 </head>
 <body>
   <div class="wrap">
-    <h1>Pong 3 jugadores — <span class="p1">P1: q/a</span> · <span class="p2">P2: p/ñ</span> · <span class="p3">P3: v/b</span></h1>
+    <canvas id="game" width="640" height="640" aria-label="Pong 3 jugadores"></canvas>
 
     <div class="hud">
-      <div class="badge p1">Goles P1: <span id="s1">0</span></div>
-      <div class="badge p2">Goles P2: <span id="s2">0</span></div>
-      <div class="badge p3">Goles P3: <span id="s3">0</span></div>
-      <div class="badge">Tiempo: <span id="time">60.0</span>s</div>
-      <div class="badge" id="status">Listo</div>
+      <div id="status" class="badge">Calentamiento…</div>
+      <div id="timer" class="badge">15</div>
+      <div id="alive" class="badge">Vivos: P1,P2,P3</div>
     </div>
 
-    <div class="stage">
-      <canvas id="game" width="900" height="520" aria-label="Pong 3 jugadores"></canvas>
-
-      <!-- Porterías fijas en el centro (estilos aleatorios) -->
-      <div id="goal-left" class="goal"></div>
-      <div id="goal-right" class="goal"></div>
-      <div id="goal-bottom" class="goal bottom"></div>
+    <div class="help">
+      <strong>Controles</strong>
+      <ul>
+        <li>P1 (izquierda): <kbd>Q</kbd> ↑ / <kbd>A</kbd> ↓</li>
+        <li>P2 (derecha): <kbd>P</kbd> ↑ / <kbd>Ñ</kbd> ↓ <em>(alternativa ↓: <kbd>;</kbd>)</em></li>
+        <li>P3 (abajo): <kbd>V</kbd> ← / <kbd>B</kbd> →</li>
+      </ul>
+      <small>Tras un ganador: pulsa <kbd>R</kbd> para reiniciar.</small>
     </div>
-
-    <div class="controls">
-      <button id="btnStart">▶️ Iniciar / Reanudar</button>
-      <button id="btnPause">⏸️ Pausa</button>
-      <button id="btnReset">⟲ Reiniciar</button>
-    </div>
-
-    <p class="rules">
-      Reglas: la pelota que pasa por tu lado es gol en contra. Gana quien reciba <b>menos</b> goles en 60s.
-      P1=izquierda (q/a), P2=derecha (p/ñ), P3=abajo (v/b).
-    </p>
   </div>
 
-  <section class="games">
-    <h2>🎮 Juegos</h2>
-    <ul>
-      <li><a href="pingpongpanic3.html">👉 Jugar PingPongPanic3</a></li>
-    </ul>
-  </section>
-
   <script src="pingpongpanic3.js"></script>
-  <script>
-    // CSS classes disponibles para los marcos de portería
-    const styles = Array.from({length:20}, (_,i)=>`goal-style-${i+1}`);
-    function randomStyle(){ return styles[Math.floor(Math.random()*styles.length)]; }
-    function setRandomGoals(){
-      ['goal-left','goal-right','goal-bottom'].forEach(id=>{
-        const el=document.getElementById(id);
-        el.className = 'goal ' + (id==='goal-bottom'?'bottom ':'') + randomStyle();
-      });
-    }
-    // Inicializa; también se vuelve a aplicar en cada gol desde el JS principal
-    setRandomGoals();
-    window.addEventListener('goalScored', setRandomGoals);
-  </script>
 </body>
 </html>
+
 
