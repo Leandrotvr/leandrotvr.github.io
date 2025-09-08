@@ -1,7 +1,10 @@
-/* PING PONG PANIC 3 - 4 jugadores
-   Novedad: P4 en la PARTE SUPERIOR (flechas ← y →).
-   Reglas: gol elimina SOLO a ese lado; gana el último en pie (3 eliminados).
-   Mantiene: emoji, sonidos aleatorios, warmup con bola en movimiento, 3–2–1, silbato.
+/* PING PONG PANIC 3 - 4 jugadores (fix carga + overlay audio)
+   - Arreglo crítico: no se referencian variables antes de declararlas.
+   - Jugador 4 (arriba) con ← / →.
+   - Warmup con bola en movimiento; luego 3–2–1 + silbato.
+   - Goles eliminan SOLO a ese lado; gana el último en pie (3 eliminados).
+   - Emoji de pelota aleatorio; sonidos aleatorios rebote/gol.
+   - Overlay “Pulsa cualquier tecla para activar audio”.
 */
 (() => {
   // === Utiles ===============================================================
@@ -15,54 +18,41 @@
     return { x: x / m, y: y / m };
   }
 
-  // === Lienzo ===============================================================
+  // === Lienzo / DOM =========================================================
   const canvas = document.getElementById('game');
   const ctx = canvas.getContext('2d');
-
-  function fitInternalResolution() {
-    const rect = canvas.getBoundingClientRect();
-    const size = Math.round(Math.min(rect.width, rect.height));
-    const scale = window.devicePixelRatio || 1;
-    const px = Math.max(480, Math.min(900, Math.floor(size * scale)));
-    canvas.width = px; canvas.height = px;
-    if (!startedInSerious && !gameOver) centerBall();
-  }
-  window.addEventListener('resize', fitInternalResolution);
-  fitInternalResolution();
-
-  const W = () => canvas.width, H = () => canvas.height;
-
-  // === HUD ==================================================================
   const elStatus = document.getElementById('status');
   const elTimer  = document.getElementById('timer');
   const elAlive  = document.getElementById('alive');
-  const setStatus = (mode, text) => { elStatus.className = `badge ${mode}`; elStatus.textContent = text; };
-  function updateAliveBadge() {
-    const vivos = [];
-    if (players.P1.alive) vivos.push('P1');
-    if (players.P2.alive) vivos.push('P2');
-    if (players.P3.alive) vivos.push('P3');
-    if (players.P4.alive) vivos.push('P4');
-    elAlive.textContent = `Vivos: ${vivos.join(',') || '—'}`;
-  }
 
-  // === Entidades ============================================================
+  const W = () => canvas.width, H = () => canvas.height;
+  const setStatus = (mode, text) => { elStatus.className = `badge ${mode}`; elStatus.textContent = text; };
+
+  // === Estado global (DECLARADO ANTES DE USO) ===============================
+  // Jugadores / reglas
   const paddleThickness = 14, paddleLen = 0.22, paddleSpeed = 480;
+
   const players = {
     P1: { side:'left',   alive:true, y:0.5, len:paddleLen, up:false,  down:false },
     P2: { side:'right',  alive:true, y:0.5, len:paddleLen, up:false,  down:false },
     P3: { side:'bottom', alive:true, x:0.5, len:paddleLen, left:false, right:false },
-    P4: { side:'top',    alive:true, x:0.5, len:paddleLen, left:false, right:false } // NUEVO
+    P4: { side:'top',    alive:true, x:0.5, len:paddleLen, left:false, right:false },
   };
 
+  function updateAliveBadge() {
+    const vivos = Object.keys(players).filter(k => players[k].alive);
+    elAlive.textContent = `Vivos: ${vivos.join(',') || '—'}`;
+  }
+
+  // Pelota y emoji
   const EMOJIS = ['⚽','🏀','🏐','🎾','⚾','🏉','🥎','🏈'];
   let currentEmoji = EMOJIS[Math.floor(Math.random()*EMOJIS.length)];
   function rollEmoji(){ let e; do { e = EMOJIS[Math.floor(Math.random()*EMOJIS.length)]; } while (e === currentEmoji); currentEmoji = e; }
 
   const ball = { x: 0, y: 0, r: 10, dirx: 0, diry: 0, speed: 80, speedGrowth: 0.005, maxSpeed: 950 };
-  function centerBall(){ ball.x = W()/2; ball.y = H()/2; }
+  const centerBall = () => { ball.x = W()/2; ball.y = H()/2; };
 
-  // estados
+  // Flags
   let warmup = true, warmupLeft = 15.0;
   let countdownActive = false, countdownLeft = 0;
   let startedInSerious = false;
@@ -70,46 +60,60 @@
   let eliminatedCount = 0, goalJustHappened = false;
   let emojiChangePending = false;
 
-  function resetRound(keepEliminations = true) {
-    if (!keepEliminations && emojiChangePending) { rollEmoji(); emojiChangePending = false; }
-    centerBall();
-    ball.speed = 80;
-    const v = randomUnitVector(); ball.dirx = v.x; ball.diry = v.y;
-
-    if (!keepEliminations) {
-      for (const k of Object.keys(players)) players[k].alive = true;
-      eliminatedCount = 0; winner = null; gameOver = false;
-      warmup = true; warmupLeft = 15.0; countdownActive = false; countdownLeft = 0; startedInSerious = false;
-      setStatus('warmup','Calentamiento…'); elTimer.textContent = String(Math.ceil(warmupLeft));
-    }
-    updateAliveBadge(); goalJustHappened = false;
+  // === Resize (AHORA usa variables ya declaradas) ===========================
+  function fitInternalResolution() {
+    const rect = canvas.getBoundingClientRect();
+    const size = Math.round(Math.min(rect.width, rect.height));
+    const scale = window.devicePixelRatio || 1;
+    const px = Math.max(480, Math.min(900, Math.floor(size * scale)));
+    canvas.width = px; canvas.height = px;
+    // Recentrar en estados previos al juego serio
+    if ((!startedInSerious || countdownActive || warmup) && !gameOver) centerBall();
   }
-  resetRound(true);
+  window.addEventListener('resize', fitInternalResolution);
+  fitInternalResolution();
+
+  // === Overlay: “pulsa una tecla para audio” ===============================
+  let audioBanner = null;
+  function showAudioBanner() {
+    if (audioBanner) return;
+    audioBanner = document.createElement('div');
+    audioBanner.id = 'audio-hint';
+    Object.assign(audioBanner.style, {
+      position:'fixed', left:'12px', bottom:'12px', padding:'8px 12px',
+      background:'rgba(0,0,0,0.55)', color:'#fff', font:'12px system-ui, sans-serif',
+      border:'1px solid rgba(255,255,255,0.25)', borderRadius:'8px', zIndex:9999
+    });
+    audioBanner.textContent = '🔈 Audio bloqueado: pulsa cualquier tecla o clic para activarlo.';
+    document.body.appendChild(audioBanner);
+  }
+  function hideAudioBanner() {
+    if (audioBanner && audioBanner.parentNode) audioBanner.parentNode.removeChild(audioBanner);
+    audioBanner = null;
+  }
 
   // === Audio robusto ========================================================
   let audioCtx = null, master = null, audioReady = false, pending = [];
+  const ensureAudioOnce = () => ensureAudio();
   function ensureAudio() {
     try {
       if (!audioCtx) {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         master = audioCtx.createGain(); master.gain.value = 0.6; master.connect(audioCtx.destination);
       }
-      const onResume = () => {
-        audioCtx.resume().then(() => {
-          audioReady = true;
-          const toPlay = pending.slice(); pending.length = 0;
-          toPlay.forEach(fn => fn());
-          window.removeEventListener('keydown', ensureAudioOnce);
-          window.removeEventListener('mousedown', ensureAudioOnce);
-          window.removeEventListener('touchstart', ensureAudioOnce);
-        });
-      };
-      onResume();
+      audioCtx.resume().then(() => {
+        audioReady = true; hideAudioBanner();
+        const toPlay = pending.slice(); pending.length = 0; toPlay.forEach(fn => fn());
+        window.removeEventListener('keydown', ensureAudioOnce);
+        window.removeEventListener('mousedown', ensureAudioOnce);
+        window.removeEventListener('touchstart', ensureAudioOnce);
+      });
     } catch {}
   }
-  const ensureAudioOnce = () => ensureAudio();
-  ['keydown','mousedown','touchstart'].forEach(ev => window.addEventListener(ev, ensureAudioOnce, {once:true}));
   function playOrQueue(fn){ if (audioReady) fn(); else pending.push(fn); }
+  // Mostrar banner hasta que se desbloquee
+  showAudioBanner();
+  ['keydown','mousedown','touchstart'].forEach(ev => window.addEventListener(ev, ensureAudioOnce, {once:true}));
 
   // Silbato
   function whistle() {
@@ -135,7 +139,7 @@
     });
   }
 
-  // Sonidos (rebote / gol)
+  // Sonidos rebote
   function playBounce(intensity = 0.5){
     playOrQueue(() => {
       try{
@@ -186,6 +190,8 @@
       } catch {}
     });
   }
+
+  // Sonidos gol
   function playGoal(){
     playOrQueue(() => {
       try{
@@ -218,20 +224,20 @@
     q: () => { players.P1.up = true; }, a: () => { players.P1.down = true; },
     p: () => { players.P2.up = true; }, 'ñ': () => { players.P2.down = true; }, ';': () => { players.P2.down = true; },
     v: () => { players.P3.left = true; }, b: () => { players.P3.right = true; },
-    arrowleft:  () => { players.P4.left = true;  }, // NUEVO
-    arrowright: () => { players.P4.right = true; }  // NUEVO
+    arrowleft:  () => { players.P4.left = true;  },
+    arrowright: () => { players.P4.right = true; }
   };
   const keyupmap = {
     q: () => { players.P1.up = false; }, a: () => { players.P1.down = false; },
     p: () => { players.P2.up = false; }, 'ñ': () => { players.P2.down = false; }, ';': () => { players.P2.down = false; },
     v: () => { players.P3.left = false; }, b: () => { players.P3.right = false; },
-    arrowleft:  () => { players.P4.left = false;  }, // NUEVO
-    arrowright: () => { players.P4.right = false; }, // NUEVO
+    arrowleft:  () => { players.P4.left = false;  },
+    arrowright: () => { players.P4.right = false; },
     r: () => { if (gameOver) resetRound(false); }
   };
   window.addEventListener('keydown', e => {
     const k=e.key.toLowerCase();
-    if (k === 'arrowleft' || k === 'arrowright') e.preventDefault(); // evitar scroll
+    if (k === 'arrowleft' || k === 'arrowright') e.preventDefault();
     if(down.has(k))return; down.add(k); (keymap[k]||(()=>{}))();
   }, {passive:false});
   window.addEventListener('keyup',   e => {
@@ -248,7 +254,6 @@
       const x  = (p.side==='left') ? 0 : w - paddleThickness;
       return { x, y: clamp(cy - L/2, 0, h - L), w: paddleThickness, h: L };
     }
-    // horizontales (top/bottom)
     const Lx = Math.floor(p.len*w);
     const cx = Math.floor((p.x ?? 0.5) * w);
     const y  = (p.side==='top') ? 0 : h - paddleThickness;
@@ -273,7 +278,7 @@
   function handleWallsAndGoals(){
     const w=W(),h=H(),r=ball.r;
 
-    // TOP (ahora puede ser gol vs P4)
+    // TOP (puede ser gol vs P4)
     if (ball.y - r <= 0){
       if (players.P4.alive && !warmup && !countdownActive){
         playGoal(); eliminate('P4'); return true;
@@ -282,73 +287,46 @@
         if (!countdownActive) playBounce(ball.speed/ball.maxSpeed);
       }
     }
-
     // LEFT
     if (ball.x - r <= 0){
-      if (players.P1.alive && !warmup && !countdownActive){
-        playGoal(); eliminate('P1'); return true;
-      } else {
-        ball.x = r; ball.dirx = Math.abs(ball.dirx);
-        if (!countdownActive) playBounce(ball.speed/ball.maxSpeed);
-      }
+      if (players.P1.alive && !warmup && !countdownActive){ playGoal(); eliminate('P1'); return true; }
+      else { ball.x = r; ball.dirx = Math.abs(ball.dirx); if (!countdownActive) playBounce(ball.speed/ball.maxSpeed); }
     }
-
     // RIGHT
     if (ball.x + r >= w){
-      if (players.P2.alive && !warmup && !countdownActive){
-        playGoal(); eliminate('P2'); return true;
-      } else {
-        ball.x = w - r; ball.dirx = -Math.abs(ball.dirx);
-        if (!countdownActive) playBounce(ball.speed/ball.maxSpeed);
-      }
+      if (players.P2.alive && !warmup && !countdownActive){ playGoal(); eliminate('P2'); return true; }
+      else { ball.x = w - r; ball.dirx = -Math.abs(ball.dirx); if (!countdownActive) playBounce(ball.speed/ball.maxSpeed); }
     }
-
     // BOTTOM
     if (ball.y + r >= h){
-      if (players.P3.alive && !warmup && !countdownActive){
-        playGoal(); eliminate('P3'); return true;
-      } else {
-        ball.y = h - r; ball.diry = -Math.abs(ball.diry);
-        if (!countdownActive) playBounce(ball.speed/ball.maxSpeed);
-      }
+      if (players.P3.alive && !warmup && !countdownActive){ playGoal(); eliminate('P3'); return true; }
+      else { ball.y = h - r; ball.diry = -Math.abs(ball.diry); if (!countdownActive) playBounce(ball.speed/ball.maxSpeed); }
     }
-
     return false;
   }
 
   function handlePaddleCollisions(){
     const w=W(),h=H(),r=ball.r;
 
-    // P1 (left)
-    if(players.P1.alive){
-      const pr=paddleRect(players.P1,w,h);
+    if(players.P1.alive){ const pr=paddleRect(players.P1,w,h);
       if(ball.x - r <= pr.x + pr.w && ball.y>=pr.y && ball.y<=pr.y+pr.h && ball.dirx<0){
         ball.x=pr.x+pr.w+r; const off=((ball.y-pr.y)/pr.h)*2-1; reflectOnPaddle(1,0,off);
         if (!warmup && !countdownActive) playBounce(0.6 + 0.4*(ball.speed/ball.maxSpeed));
       }
     }
-
-    // P2 (right)
-    if(players.P2.alive){
-      const pr=paddleRect(players.P2,w,h);
+    if(players.P2.alive){ const pr=paddleRect(players.P2,w,h);
       if(ball.x + r >= pr.x && ball.y>=pr.y && ball.y<=pr.y+pr.h && ball.dirx>0){
         ball.x=pr.x-r; const off=((ball.y-pr.y)/pr.h)*2-1; reflectOnPaddle(-1,0,off);
         if (!warmup && !countdownActive) playBounce(0.6 + 0.4*(ball.speed/ball.maxSpeed));
       }
     }
-
-    // P3 (bottom)
-    if(players.P3.alive){
-      const pr=paddleRect(players.P3,w,h);
+    if(players.P3.alive){ const pr=paddleRect(players.P3,w,h);
       if(ball.y + r >= pr.y && ball.x>=pr.x && ball.x<=pr.x+pr.w && ball.diry>0){
         ball.y=pr.y-r; const off=((ball.x-pr.x)/pr.w)*2-1; reflectOnPaddle(0,-1,off);
         if (!warmup && !countdownActive) playBounce(0.6 + 0.4*(ball.speed/ball.maxSpeed));
       }
     }
-
-    // P4 (top)  NUEVO
-    if(players.P4.alive){
-      const pr=paddleRect(players.P4,w,h);
+    if(players.P4.alive){ const pr=paddleRect(players.P4,w,h);
       if(ball.y - r <= pr.y + pr.h && ball.x>=pr.x && ball.x<=pr.x+pr.w && ball.diry<0){
         ball.y=pr.y+pr.h+r; const off=((ball.x-pr.x)/pr.w)*2-1; reflectOnPaddle(0,1,off);
         if (!warmup && !countdownActive) playBounce(0.6 + 0.4*(ball.speed/ball.maxSpeed));
@@ -356,7 +334,7 @@
     }
   }
 
-  // === Rebotes de calentamiento (sin goles/sonidos) =========================
+  // === Warmup (rebotes sin goles/sonidos) ==================================
   function warmupWallsBounce(){
     const w=W(),h=H(),r=ball.r;
     if (ball.y - r <= 0){ ball.y = r; ball.diry = Math.abs(ball.diry); }
@@ -375,7 +353,7 @@
     if(players.P3.alive){ const pr=paddleRect(players.P3,w,h);
       if(ball.y + r >= pr.y && ball.x>=pr.x && ball.x<=pr.x+pr.w && ball.diry>0){ ball.y=pr.y-r; const off=((ball.x-pr.x)/pr.w)*2-1; reflectOnPaddle(0,-1,off); }
     }
-    if(players.P4.alive){ const pr=paddleRect(players.P4,w,h); // NUEVO
+    if(players.P4.alive){ const pr=paddleRect(players.P4,w,h);
       if(ball.y - r <= pr.y + pr.h && ball.x>=pr.x && ball.x<=pr.x+pr.w && ball.diry<0){ ball.y=pr.y+pr.h+r; const off=((ball.x-pr.x)/pr.w)*2-1; reflectOnPaddle(0,1,off); }
     }
   }
@@ -384,21 +362,38 @@
   function eliminate(pid){
     if(!players[pid].alive) return;
     players[pid].alive=false; eliminatedCount++; updateAliveBadge();
-    if (eliminatedCount >= 3){ // 4 jugadores -> gana el último en pie
+    if (eliminatedCount >= 3){
       winner = Object.keys(players).find(k=>players[k].alive) || '—';
       gameOver = true; setStatus('over', `¡Ganador: ${winner}! (R para reiniciar)`); elTimer.textContent='—';
       emojiChangePending = true;
       return;
     }
-    // continuar partido con vivos
     resetRound(true);
     startedInSerious = true;
     setStatus('live', '¡Partido en serio!');
   }
 
-  // === Bucle ================================================================
+  // === Reset de ronda / partido ============================================
+  function resetRound(keepEliminations = true) {
+    if (!keepEliminations && emojiChangePending) { rollEmoji(); emojiChangePending = false; }
+    centerBall();
+    ball.speed = 80;
+    const v = randomUnitVector(); ball.dirx = v.x; ball.diry = v.y;
+
+    if (!keepEliminations) {
+      for (const k of Object.keys(players)) players[k].alive = true;
+      eliminatedCount = 0; winner = null; gameOver = false;
+      warmup = true; warmupLeft = 15.0; countdownActive = false; countdownLeft = 0; startedInSerious = false;
+      setStatus('warmup','Calentamiento…'); elTimer.textContent = String(Math.ceil(warmupLeft));
+    }
+    updateAliveBadge(); goalJustHappened = false;
+  }
+  resetRound(true);
+
+  // === Bucle principal ======================================================
   let last = performance.now();
   function frame(now){ const dt = Math.min(0.033, (now-last)/1000); last=now; step(dt); draw(); requestAnimationFrame(frame); }
+  requestAnimationFrame(frame);
 
   function step(dt){
     if (gameOver) return;
@@ -434,7 +429,6 @@
       return;
     }
 
-    // Partido en serio
     movePaddles(dt);
     if (!goalJustHappened){
       ball.speed = Math.min(ball.maxSpeed, ball.speed * (1 + ball.speedGrowth * dt));
@@ -455,9 +449,9 @@
     if (players.P1.alive){ const r1=paddleRect(players.P1,w,h); roundRect(ctx,r1.x,r1.y,r1.w,r1.h,6,true); } else drawSideGlow('left');
     if (players.P2.alive){ const r2=paddleRect(players.P2,w,h); roundRect(ctx,r2.x,r2.y,r2.w,r2.h,6,true); } else drawSideGlow('right');
     if (players.P3.alive){ const r3=paddleRect(players.P3,w,h); roundRect(ctx,r3.x,r3.y,r3.w,r3.h,6,true); } else drawSideGlow('bottom');
-    if (players.P4.alive){ const r4=paddleRect(players.P4,w,h); roundRect(ctx,r4.x,r4.y,r4.w,r4.h,6,true); } else drawSideGlow('top'); // NUEVO
+    if (players.P4.alive){ const r4=paddleRect(players.P4,w,h); roundRect(ctx,r4.x,r4.y,r4.w,r4.h,6,true); } else drawSideGlow('top');
 
-    // Pelota-emoji
+    // Pelota emoji
     const fontSize = Math.floor(ball.r * 3.2);
     ctx.font = `${fontSize}px system-ui, "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif`;
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
@@ -493,14 +487,9 @@
     if (side==='left'){ x=0; y=0; ww=40; hh=h; }
     if (side==='right'){ x=w-40; y=0; ww=40; hh=h; }
     if (side==='bottom'){ x=0; y=h-40; ww=w; hh=40; }
-    if (side==='top'){ x=0; y=0; ww=w; hh=40; } // NUEVO
+    if (side==='top'){ x=0; y=0; ww=w; hh=40; }
     const g=ctx.createLinearGradient(x, y, side==='left'?40:side==='right'?w-40:x, side==='top'?40:side==='bottom'?h-40:y);
     g.addColorStop(0,'rgba(248,113,113,0.28)'); g.addColorStop(1,'rgba(248,113,113,0.03)');
     ctx.fillStyle=g; ctx.fillRect(x,y,ww,hh);
   }
-
-  requestAnimationFrame(frame);
-
-  // Tip teclado sin Ñ
-  setTimeout(()=>{ const isEs=Intl.DateTimeFormat().resolvedOptions().locale.toLowerCase().includes('es'); if(!isEs) console.info('Tip: si tu teclado no tiene "Ñ", usa ";" para P2 abajo.'); },0);
 })();
