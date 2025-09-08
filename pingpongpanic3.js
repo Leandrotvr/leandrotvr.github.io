@@ -1,9 +1,7 @@
-/* PING PONG PANIC 3 - 3 jugadores (fix audio + continuidad + coords px)
-   - Audio robusto: cola de silbato/goles hasta que el usuario desbloquee sonido.
-   - Tras primer gol el partido continúa; solo se elimina a quien recibe gol.
-   - Pelota en píxeles siempre (centrado correcto).
-   - Mantiene: emoji aleatorio, sonidos aleatorios (rebote/gol), 15s warmup,
-               cuenta regresiva 3–2–1, silbato, “último en pie”.
+/* PING PONG PANIC 3 - 4 jugadores
+   Novedad: P4 en la PARTE SUPERIOR (flechas ← y →).
+   Reglas: gol elimina SOLO a ese lado; gana el último en pie (3 eliminados).
+   Mantiene: emoji, sonidos aleatorios, warmup con bola en movimiento, 3–2–1, silbato.
 */
 (() => {
   // === Utiles ===============================================================
@@ -27,7 +25,6 @@
     const scale = window.devicePixelRatio || 1;
     const px = Math.max(480, Math.min(900, Math.floor(size * scale)));
     canvas.width = px; canvas.height = px;
-    // Recentrar si estamos en cuenta atrás/inicio
     if (!startedInSerious && !gameOver) centerBall();
   }
   window.addEventListener('resize', fitInternalResolution);
@@ -45,6 +42,7 @@
     if (players.P1.alive) vivos.push('P1');
     if (players.P2.alive) vivos.push('P2');
     if (players.P3.alive) vivos.push('P3');
+    if (players.P4.alive) vivos.push('P4');
     elAlive.textContent = `Vivos: ${vivos.join(',') || '—'}`;
   }
 
@@ -53,7 +51,8 @@
   const players = {
     P1: { side:'left',   alive:true, y:0.5, len:paddleLen, up:false,  down:false },
     P2: { side:'right',  alive:true, y:0.5, len:paddleLen, up:false,  down:false },
-    P3: { side:'bottom', alive:true, x:0.5, len:paddleLen, left:false, right:false }
+    P3: { side:'bottom', alive:true, x:0.5, len:paddleLen, left:false, right:false },
+    P4: { side:'top',    alive:true, x:0.5, len:paddleLen, left:false, right:false } // NUEVO
   };
 
   const EMOJIS = ['⚽','🏀','🏐','🎾','⚾','🏉','🥎','🏈'];
@@ -78,7 +77,7 @@
     const v = randomUnitVector(); ball.dirx = v.x; ball.diry = v.y;
 
     if (!keepEliminations) {
-      players.P1.alive = players.P2.alive = players.P3.alive = true;
+      for (const k of Object.keys(players)) players[k].alive = true;
       eliminatedCount = 0; winner = null; gameOver = false;
       warmup = true; warmupLeft = 15.0; countdownActive = false; countdownLeft = 0; startedInSerious = false;
       setStatus('warmup','Calentamiento…'); elTimer.textContent = String(Math.ceil(warmupLeft));
@@ -95,11 +94,9 @@
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         master = audioCtx.createGain(); master.gain.value = 0.6; master.connect(audioCtx.destination);
       }
-      // Algunos navegadores requieren interacción antes de resume()
       const onResume = () => {
         audioCtx.resume().then(() => {
           audioReady = true;
-          // drenar cola de sonidos pendientes
           const toPlay = pending.slice(); pending.length = 0;
           toPlay.forEach(fn => fn());
           window.removeEventListener('keydown', ensureAudioOnce);
@@ -108,11 +105,10 @@
         });
       };
       onResume();
-    } catch { /* sin audio */ }
+    } catch {}
   }
   const ensureAudioOnce = () => ensureAudio();
   ['keydown','mousedown','touchstart'].forEach(ev => window.addEventListener(ev, ensureAudioOnce, {once:true}));
-
   function playOrQueue(fn){ if (audioReady) fn(); else pending.push(fn); }
 
   // Silbato
@@ -139,7 +135,7 @@
     });
   }
 
-  // Rebotes
+  // Sonidos (rebote / gol)
   function playBounce(intensity = 0.5){
     playOrQueue(() => {
       try{
@@ -190,8 +186,6 @@
       } catch {}
     });
   }
-
-  // Goles
   function playGoal(){
     playOrQueue(() => {
       try{
@@ -223,30 +217,49 @@
   const keymap = {
     q: () => { players.P1.up = true; }, a: () => { players.P1.down = true; },
     p: () => { players.P2.up = true; }, 'ñ': () => { players.P2.down = true; }, ';': () => { players.P2.down = true; },
-    v: () => { players.P3.left = true; }, b: () => { players.P3.right = true; }
+    v: () => { players.P3.left = true; }, b: () => { players.P3.right = true; },
+    arrowleft:  () => { players.P4.left = true;  }, // NUEVO
+    arrowright: () => { players.P4.right = true; }  // NUEVO
   };
   const keyupmap = {
     q: () => { players.P1.up = false; }, a: () => { players.P1.down = false; },
     p: () => { players.P2.up = false; }, 'ñ': () => { players.P2.down = false; }, ';': () => { players.P2.down = false; },
     v: () => { players.P3.left = false; }, b: () => { players.P3.right = false; },
+    arrowleft:  () => { players.P4.left = false;  }, // NUEVO
+    arrowright: () => { players.P4.right = false; }, // NUEVO
     r: () => { if (gameOver) resetRound(false); }
   };
-  window.addEventListener('keydown', e => { const k=e.key.toLowerCase(); if(down.has(k))return; down.add(k); (keymap[k]||(()=>{}))(); });
-  window.addEventListener('keyup',   e => { const k=e.key.toLowerCase(); down.delete(k); (keyupmap[k]||(()=>{}))(); });
+  window.addEventListener('keydown', e => {
+    const k=e.key.toLowerCase();
+    if (k === 'arrowleft' || k === 'arrowright') e.preventDefault(); // evitar scroll
+    if(down.has(k))return; down.add(k); (keymap[k]||(()=>{}))();
+  }, {passive:false});
+  window.addEventListener('keyup',   e => {
+    const k=e.key.toLowerCase();
+    if (k === 'arrowleft' || k === 'arrowright') e.preventDefault();
+    down.delete(k); (keyupmap[k]||(()=>{}))();
+  }, {passive:false});
 
   // === Geometría palas ======================================================
   function paddleRect(p, w, h) {
-    const L = Math.floor(p.len*h);
-    if (p.side==='left'){ const cy=Math.floor(p.y*h); return {x:0,y:clamp(cy-L/2,0,h-L),w:paddleThickness,h:L}; }
-    if (p.side==='right'){const cy=Math.floor(p.y*h); return {x:w-paddleThickness,y:clamp(cy-L/2,0,h-L),w:paddleThickness,h:L};}
-    const Lx=Math.floor(p.len*w), cx=Math.floor(p.x*w);
-    return {x:clamp(cx-Lx/2,0,w-Lx), y:h-paddleThickness, w:Lx, h:paddleThickness};
+    if (p.side==='left' || p.side==='right'){
+      const L = Math.floor(p.len*h);
+      const cy = Math.floor((p.y ?? 0.5) * h);
+      const x  = (p.side==='left') ? 0 : w - paddleThickness;
+      return { x, y: clamp(cy - L/2, 0, h - L), w: paddleThickness, h: L };
+    }
+    // horizontales (top/bottom)
+    const Lx = Math.floor(p.len*w);
+    const cx = Math.floor((p.x ?? 0.5) * w);
+    const y  = (p.side==='top') ? 0 : h - paddleThickness;
+    return { x: clamp(cx - Lx/2, 0, w - Lx), y, w: Lx, h: paddleThickness };
   }
   function movePaddles(dt){
     const w=W(),h=H(),dy=paddleSpeed*dt,dx=paddleSpeed*dt;
     if(players.P1.alive){ if(players.P1.up)players.P1.y-=dy/h; if(players.P1.down)players.P1.y+=dy/h; players.P1.y=clamp(players.P1.y,players.P1.len/2,1-players.P1.len/2); }
     if(players.P2.alive){ if(players.P2.up)players.P2.y-=dy/h; if(players.P2.down)players.P2.y+=dy/h; players.P2.y=clamp(players.P2.y,players.P2.len/2,1-players.P2.len/2); }
     if(players.P3.alive){ if(players.P3.left)players.P3.x-=dx/w; if(players.P3.right)players.P3.x+=dx/w; players.P3.x=clamp(players.P3.x,players.P3.len/2,1-players.P3.len/2); }
+    if(players.P4.alive){ if(players.P4.left)players.P4.x-=dx/w; if(players.P4.right)players.P4.x+=dx/w; players.P4.x=clamp(players.P4.x,players.P4.len/2,1-players.P4.len/2); }
   }
   function reflectOnPaddle(nx,ny,hitOffset=0){
     const dot=ball.dirx*nx+ball.diry*ny;
@@ -259,41 +272,85 @@
   // === Goles / paredes (partido en serio) ==================================
   function handleWallsAndGoals(){
     const w=W(),h=H(),r=ball.r;
-    if (ball.y - r <= 0){ ball.y = r; ball.diry = Math.abs(ball.diry); if (!countdownActive) playBounce(ball.speed/ball.maxSpeed); }
+
+    // TOP (ahora puede ser gol vs P4)
+    if (ball.y - r <= 0){
+      if (players.P4.alive && !warmup && !countdownActive){
+        playGoal(); eliminate('P4'); return true;
+      } else {
+        ball.y = r; ball.diry = Math.abs(ball.diry);
+        if (!countdownActive) playBounce(ball.speed/ball.maxSpeed);
+      }
+    }
+
+    // LEFT
     if (ball.x - r <= 0){
       if (players.P1.alive && !warmup && !countdownActive){
         playGoal(); eliminate('P1'); return true;
-      } else { ball.x = r; ball.dirx = Math.abs(ball.dirx); if (!countdownActive) playBounce(ball.speed/ball.maxSpeed); }
+      } else {
+        ball.x = r; ball.dirx = Math.abs(ball.dirx);
+        if (!countdownActive) playBounce(ball.speed/ball.maxSpeed);
+      }
     }
+
+    // RIGHT
     if (ball.x + r >= w){
       if (players.P2.alive && !warmup && !countdownActive){
         playGoal(); eliminate('P2'); return true;
-      } else { ball.x = w - r; ball.dirx = -Math.abs(ball.dirx); if (!countdownActive) playBounce(ball.speed/ball.maxSpeed); }
+      } else {
+        ball.x = w - r; ball.dirx = -Math.abs(ball.dirx);
+        if (!countdownActive) playBounce(ball.speed/ball.maxSpeed);
+      }
     }
+
+    // BOTTOM
     if (ball.y + r >= h){
       if (players.P3.alive && !warmup && !countdownActive){
         playGoal(); eliminate('P3'); return true;
-      } else { ball.y = h - r; ball.diry = -Math.abs(ball.diry); if (!countdownActive) playBounce(ball.speed/ball.maxSpeed); }
+      } else {
+        ball.y = h - r; ball.diry = -Math.abs(ball.diry);
+        if (!countdownActive) playBounce(ball.speed/ball.maxSpeed);
+      }
     }
+
     return false;
   }
+
   function handlePaddleCollisions(){
     const w=W(),h=H(),r=ball.r;
-    if(players.P1.alive){ const pr=paddleRect(players.P1,w,h);
+
+    // P1 (left)
+    if(players.P1.alive){
+      const pr=paddleRect(players.P1,w,h);
       if(ball.x - r <= pr.x + pr.w && ball.y>=pr.y && ball.y<=pr.y+pr.h && ball.dirx<0){
         ball.x=pr.x+pr.w+r; const off=((ball.y-pr.y)/pr.h)*2-1; reflectOnPaddle(1,0,off);
         if (!warmup && !countdownActive) playBounce(0.6 + 0.4*(ball.speed/ball.maxSpeed));
       }
     }
-    if(players.P2.alive){ const pr=paddleRect(players.P2,w,h);
+
+    // P2 (right)
+    if(players.P2.alive){
+      const pr=paddleRect(players.P2,w,h);
       if(ball.x + r >= pr.x && ball.y>=pr.y && ball.y<=pr.y+pr.h && ball.dirx>0){
         ball.x=pr.x-r; const off=((ball.y-pr.y)/pr.h)*2-1; reflectOnPaddle(-1,0,off);
         if (!warmup && !countdownActive) playBounce(0.6 + 0.4*(ball.speed/ball.maxSpeed));
       }
     }
-    if(players.P3.alive){ const pr=paddleRect(players.P3,w,h);
+
+    // P3 (bottom)
+    if(players.P3.alive){
+      const pr=paddleRect(players.P3,w,h);
       if(ball.y + r >= pr.y && ball.x>=pr.x && ball.x<=pr.x+pr.w && ball.diry>0){
         ball.y=pr.y-r; const off=((ball.x-pr.x)/pr.w)*2-1; reflectOnPaddle(0,-1,off);
+        if (!warmup && !countdownActive) playBounce(0.6 + 0.4*(ball.speed/ball.maxSpeed));
+      }
+    }
+
+    // P4 (top)  NUEVO
+    if(players.P4.alive){
+      const pr=paddleRect(players.P4,w,h);
+      if(ball.y - r <= pr.y + pr.h && ball.x>=pr.x && ball.x<=pr.x+pr.w && ball.diry<0){
+        ball.y=pr.y+pr.h+r; const off=((ball.x-pr.x)/pr.w)*2-1; reflectOnPaddle(0,1,off);
         if (!warmup && !countdownActive) playBounce(0.6 + 0.4*(ball.speed/ball.maxSpeed));
       }
     }
@@ -318,13 +375,16 @@
     if(players.P3.alive){ const pr=paddleRect(players.P3,w,h);
       if(ball.y + r >= pr.y && ball.x>=pr.x && ball.x<=pr.x+pr.w && ball.diry>0){ ball.y=pr.y-r; const off=((ball.x-pr.x)/pr.w)*2-1; reflectOnPaddle(0,-1,off); }
     }
+    if(players.P4.alive){ const pr=paddleRect(players.P4,w,h); // NUEVO
+      if(ball.y - r <= pr.y + pr.h && ball.x>=pr.x && ball.x<=pr.x+pr.w && ball.diry<0){ ball.y=pr.y+pr.h+r; const off=((ball.x-pr.x)/pr.w)*2-1; reflectOnPaddle(0,1,off); }
+    }
   }
 
   // === Eliminación / ganador ===============================================
   function eliminate(pid){
     if(!players[pid].alive) return;
     players[pid].alive=false; eliminatedCount++; updateAliveBadge();
-    if (eliminatedCount >= 2){
+    if (eliminatedCount >= 3){ // 4 jugadores -> gana el último en pie
       winner = Object.keys(players).find(k=>players[k].alive) || '—';
       gameOver = true; setStatus('over', `¡Ganador: ${winner}! (R para reiniciar)`); elTimer.textContent='—';
       emojiChangePending = true;
@@ -395,7 +455,9 @@
     if (players.P1.alive){ const r1=paddleRect(players.P1,w,h); roundRect(ctx,r1.x,r1.y,r1.w,r1.h,6,true); } else drawSideGlow('left');
     if (players.P2.alive){ const r2=paddleRect(players.P2,w,h); roundRect(ctx,r2.x,r2.y,r2.w,r2.h,6,true); } else drawSideGlow('right');
     if (players.P3.alive){ const r3=paddleRect(players.P3,w,h); roundRect(ctx,r3.x,r3.y,r3.w,r3.h,6,true); } else drawSideGlow('bottom');
+    if (players.P4.alive){ const r4=paddleRect(players.P4,w,h); roundRect(ctx,r4.x,r4.y,r4.w,r4.h,6,true); } else drawSideGlow('top'); // NUEVO
 
+    // Pelota-emoji
     const fontSize = Math.floor(ball.r * 3.2);
     ctx.font = `${fontSize}px system-ui, "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif`;
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
@@ -427,12 +489,14 @@
   }
   function drawSideGlow(side){
     const w=W(),h=H();
-    const g=ctx.createLinearGradient(side==='left'?0:side==='right'?w:0, side==='bottom'?h:0, side==='left'?40:side==='right'?w-40:0, side==='bottom'?h-40:0);
+    let x=0,y=0,ww=w,hh=h;
+    if (side==='left'){ x=0; y=0; ww=40; hh=h; }
+    if (side==='right'){ x=w-40; y=0; ww=40; hh=h; }
+    if (side==='bottom'){ x=0; y=h-40; ww=w; hh=40; }
+    if (side==='top'){ x=0; y=0; ww=w; hh=40; } // NUEVO
+    const g=ctx.createLinearGradient(x, y, side==='left'?40:side==='right'?w-40:x, side==='top'?40:side==='bottom'?h-40:y);
     g.addColorStop(0,'rgba(248,113,113,0.28)'); g.addColorStop(1,'rgba(248,113,113,0.03)');
-    ctx.fillStyle=g;
-    if(side==='left')ctx.fillRect(0,0,40,h);
-    if(side==='right')ctx.fillRect(w-40,0,40,h);
-    if(side==='bottom')ctx.fillRect(0,h-40,w,40);
+    ctx.fillStyle=g; ctx.fillRect(x,y,ww,hh);
   }
 
   requestAnimationFrame(frame);
