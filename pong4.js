@@ -1,7 +1,7 @@
 /* Pong4 — minimalista, 100% pantalla, 4 palas
    - Palas = 1/3 del lado. Controles: P1 QA, P2 XC, P3 NM, P4 PÑ(;).
    - Gol elimina ese lado; gana el último en pie (3 eliminados).
-   - Bola acelera de forma muy suave.
+   - Bola acelera poco a poco y SE REINICIA al mínimo TRAS CADA ELIMINACIÓN.
 */
 (() => {
   // Utilidades
@@ -25,7 +25,10 @@
   const PADDLE_LEN_FRAC = 1/3; // 1/3 del lado
   const PADDLE_THICK_FR = 0.018; // relativo al minDim
   const PADDLE_SPEED_FR = 0.85;  // fracción de lado/seg
-  const BALL_R_FR = 0.012, BALL_V0_FR = 0.07, BALL_GROWTH = 0.010, BALL_VMAX_FR = 1.2;
+  const BALL_R_FR   = 0.012;
+  const BALL_V0_FR  = 0.07;   // velocidad base muy lenta
+  const BALL_GROWTH = 0.010;  // aceleración exponencial suave
+  const BALL_VMAX_FR= 1.2;    // límite superior
 
   // Estado jugadores
   const players = {
@@ -39,6 +42,12 @@
   // Pelota
   const ball={x:0,y:0,r:0,dx:0,dy:0,speed:0};
   const center=()=>{ ball.x=W()/2; ball.y=H()/2; };
+  const serveSlow=()=>{ // === clave: reinicia velocidad tras cada eliminación
+    const md=Math.min(W(),H());
+    const v=unitVec(); ball.dx=v.x; ball.dy=v.y;
+    ball.speed = BALL_V0_FR * md;
+    center();
+  };
 
   // Partida
   let warmup=true, warmLeft=3, over=false, winner=null, eliminated=0, justScored=false;
@@ -46,8 +55,7 @@
   function resetRound(keep=true){
     const md=Math.min(W(),H());
     ball.r=Math.max(6,Math.round(md*BALL_R_FR));
-    center();
-    const v=unitVec(); ball.dx=v.x; ball.dy=v.y; ball.speed=BALL_V0_FR*md;
+    serveSlow(); // siempre empezar lento
     if(!keep){
       Object.values(players).forEach(p=>p.alive=true);
       eliminated=0; over=false; winner=null; warmup=true; warmLeft=3;
@@ -140,9 +148,11 @@
       over=true; setStatus('over',`¡Ganador: ${winner}! (R reinicia)`); timerEl.textContent='—';
       return true;
     }
-    // Siguiente saque
-    justScored=true; setStatus('live',`Gol a ${pid}. ¡Sigue!`);
-    center(); const v=unitVec(); ball.dx=v.x; ball.dy=v.y; ball.speed=BALL_V0_FR*Math.min(W(),H());
+    // === clave: tras eliminar, saque lento (reinicia aceleración)
+    setStatus('live',`Gol a ${pid}. ¡Sigue!`);
+    serveSlow();
+    // evitar re-gol inmediato un frame
+    justScored=true;
     return true;
   }
 
@@ -161,11 +171,14 @@
 
     movePaddles(dt);
     if(!justScored){
+      // Acelera poco a poco hasta la siguiente eliminación
       const md=Math.min(W(),H());
-      ball.speed=Math.min(BALL_VMAX_FR*md, ball.speed*(1+BALL_GROWTH*dt)); // acelera suave
+      ball.speed=Math.min(BALL_VMAX_FR*md, ball.speed*(1+BALL_GROWTH*dt));
       ball.x+=ball.dx*ball.speed*dt; ball.y+=ball.dy*ball.speed*dt;
       collidePaddles(); wallsAndGoals();
-    } else { justScored=false; }
+    } else {
+      justScored=false; // un frame de gracia
+    }
 
     draw(); requestAnimationFrame(loop);
   }
@@ -193,7 +206,7 @@
     ctx.beginPath(); ctx.arc(ball.x,ball.y,ball.r,0,Math.PI*2); ctx.fillStyle='#fff'; ctx.fill();
 
     if(over) banner(`GANADOR: ${winner}`);
-    else if(warmup) banner(`Preparados… ${Math.max(1,Math.ceil(warmLeft))}`);
+    else if(warmup) banner(`Preparados… ${Math.max(1,Math.ceil(warmupLeft))}`);
   }
   function roundRect(x,y,w,h,r=6,fill=true){
     const rr=Math.min(r,w/2,h/2);
