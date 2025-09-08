@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Pong 4</title>
+  <link rel="stylesheet" href="pong4.css" />
+</head>
+<body>
+  <canvas id="game"></canvas>
+
+  <!-- HUD superpuesta dentro del campo -->
+  <div id="hud" class="hud">
+    <div class="row">
+      <span class="badge live" id="status">Preparados…</span>
+      <span class="badge" id="timer">3</span>
+      <span class="badge" id="alive">Vivos: P1,P2,P3,P4</span>
+    </div>
+    <div class="help">
+      <strong>Controles</strong> — P1 (izq): <kbd>Q</kbd>/<kbd>A</kbd> ·
+      P2 (arriba): <kbd>X</kbd>/<kbd>C</kbd> ·
+      P3 (abajo): <kbd>N</kbd>/<kbd>M</kbd> ·
+      P4 (der): <kbd>P</kbd>/<kbd>Ñ</kbd> (<kbd>;</kbd> si no hay Ñ) ·
+      <kbd>R</kbd> reinicia
+    </div>
+  </div>
+
+  <script src="pong4.js"></script>
+</body>
+</html>
