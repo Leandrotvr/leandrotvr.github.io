@@ -1,0 +1,38 @@
+body {
+    background: #111;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    min-height: 100vh;
+}
+
+.container {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+}
+
+.player {
+    text-align: center;
+}
+
+h2 {
+    font-size: 18px;
+    margin: 10px 0;
+}
+
+canvas {
+    border: 2px solid #444;
+    background: #222;
+}
+
+footer {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #888;
+    text-align: center;
+    opacity: 0.7;
+}
