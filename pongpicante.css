@@ -1,31 +1,31 @@
 body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    background-color: #1a1a1a;
-    flex-direction: column;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  background-color: #1a1a1a;
+  flex-direction: column;
 }
 
 canvas {
-    border: 2px solid #ff4444;
-    background-color: #000;
+  border: 2px solid #ff4444;
+  background-color: #000;
 }
 
 .message {
-    color: #ff4444;
-    font-family: Arial, sans-serif;
-    font-size: 24px;
-    font-weight: bold;
-    text-align: center;
-    margin-top: 20px;
-    text-transform: uppercase;
-    animation: pulse 1s infinite;
+  color: #ff4444;
+  font-family: Arial, sans-serif;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 20px;
+  text-transform: uppercase;
+  animation: pulse 1s infinite;
 }
 
 @keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.1); }
+  100% { transform: scale(1); }
 }
