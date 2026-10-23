@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Demo: cobranzas y recordatorios de pago · Leandro Maciel</title>
+<meta name="description" content="Demo de panel de cobranzas: quién debe, desde cuándo, recordatorio por WhatsApp y link de pago. Datos de ejemplo.">
+<meta name="theme-color" content="#12201A">
+<style>
+:root{--ink:#17221D;--body:#3B4842;--muted:#55625B;--bg:#F5F6F2;--white:#fff;--line:#E3E7E1;--dark:#12201A;--accent:#0B7A63;--mint:#5FD3B3;--red:#B3261E;--amber:#8A5A00}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+.hero{background:linear-gradient(135deg,#12201A,#0B7A63);color:#fff;padding:34px 0 40px}
+.badge{display:inline-block;background:rgba(255,255,255,.15);padding:4px 12px;border-radius:999px;font-size:13px}
+h1{margin:12px 0 6px;font-size:clamp(26px,4.5vw,40px);line-height:1.15}.hero p{margin:0;max-width:640px;color:#D5E6DD}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin:-22px 0 20px}
+.k{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 18px;box-shadow:0 6px 18px rgba(18,32,26,.07)}
+.k small{color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-size:12px}.k b{display:block;font-size:26px;margin-top:2px}
+.k.red b{color:var(--red)}.k.ok b{color:var(--accent)}
+.note{background:#FFF8E1;border:1px solid #F0DFA0;border-radius:12px;padding:12px 14px;font-size:14px;color:#5C4A00;margin:0 0 16px}
+.table{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.tr{display:grid;grid-template-columns:1.4fr .9fr .9fr 1fr 1.5fr;gap:10px;padding:14px 18px;align-items:center;border-top:1px solid var(--line)}
+.tr.h{background:#F0F4EF;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border-top:0}
+.st{display:inline-block;padding:3px 10px;border-radius:999px;font-size:13px;font-weight:700}
+.st.late{background:#FBE7E5;color:var(--red)}.st.soon{background:#FFF1D0;color:var(--amber)}.st.paid{background:#DDF3EA;color:var(--accent)}
+.acts{display:flex;gap:8px;flex-wrap:wrap}
+.b{border-radius:10px;border:1.5px solid var(--ink);background:#fff;color:var(--ink);padding:8px 12px;font:600 14px inherit;cursor:pointer;text-decoration:none;display:inline-flex}
+.b.wa{background:#1FA855;border-color:#1FA855;color:#fff}.b.g{border-color:var(--accent);color:var(--accent)}
+.paidrow{opacity:.6}
+@media(max-width:760px){.tr.h{display:none}.tr{grid-template-columns:1fr 1fr}.tr>*:first-child{grid-column:1/-1;font-weight:700}.acts{grid-column:1/-1}}
+.how{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:26px 0 34px}
+.how div{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px}.how b{color:var(--accent);font-size:26px;display:block}
+.cta{background:var(--dark);color:#EAF0EC;padding:34px 0;text-align:center}.cta a{color:var(--mint);font-weight:700}
+.cta .b2{display:inline-flex;margin-top:12px;padding:12px 22px;border-radius:12px;background:var(--mint);color:var(--dark);text-decoration:none;font-weight:700}
+</style>
+</head>
+<body>
+<header class="hero"><div class="wrap">
+  <span class="badge">DEMO · datos de ejemplo</span>
+  <h1>Cobrar sin correr atrás de nadie</h1>
+  <p>Un panel con quién debe, desde cuándo y un botón para recordárselo por WhatsApp con el link de pago. Probalo: marcá pagos y mirá cómo cambian los números.</p>
+</div></header>
+<main class="wrap">
+  <div class="kpis">
+    <div class="k red"><small>Pendiente de cobro</small><b id="k1">$0</b></div>
+    <div class="k"><small>Clientes atrasados</small><b id="k2">0</b></div>
+    <div class="k ok"><small>Cobrado este mes</small><b id="k3">$0</b></div>
+  </div>
+  <p class="note"><b>Es una demo.</b> Los nombres, importes y fechas son inventados. El link de pago real (Mercado Pago, QR o transferencia) se configura con tus datos.</p>
+  <div class="table" id="t"></div>
+  <div class="how">
+    <div><b>1</b>Cargás tus clientes y vencimientos una sola vez.</div>
+    <div><b>2</b>El panel te marca en rojo a quien está atrasado.</div>
+    <div><b>3</b>Un toque y le llega el recordatorio con el link de pago.</div>
+  </div>
+</main>
+<div class="cta"><div class="wrap">
+  <h2 style="margin:0 0 6px">¿Cobrás cuotas, abonos o clases?</h2>
+  <p style="margin:0;color:#C6D6CE">Te lo armo con tus clientes y lo ves funcionando antes de decidir.</p>
+  <a class="b2" href="https://wa.me/5493777416857?text=Hola%20Leandro%2C%20vi%20la%20demo%20de%20cobranzas%20y%20quiero%20algo%20as%C3%AD%20para%20mi%20negocio" target="_blank" rel="noopener">Consultar por WhatsApp</a>
+  <p style="margin-top:14px"><a href="https://leandrotvr.github.io/">← Volver a todos los proyectos</a></p>
+</div></div>
+<script>
+var D=[{n:"Gimnasio · Lucía R.",c:"Cuota octubre",m:18000,d:-12},{n:"Gimnasio · Martín P.",c:"Cuota octubre",m:18000,d:-5},{n:"Academia · Sofía G.",c:"Clases de inglés",m:24000,d:-2},{n:"Academia · Tomás F.",c:"Clases de inglés",m:24000,d:3},{n:"Gimnasio · Carla M.",c:"Cuota noviembre",m:18000,d:9},{n:"Club · Familia Díaz",c:"Abono mensual",m:32000,d:0}];
+var paid=14000+8000,$=function(i){return document.getElementById(i)};
+var money=function(n){return"$"+n.toLocaleString("es-AR")};
+function st(x){return x.p?'<span class="st paid">Pagado</span>':x.d<0?'<span class="st late">Atrasado '+(-x.d)+" d</span>":x.d===0?'<span class="st soon">Vence hoy</span>':'<span class="st soon">Vence en '+x.d+" d</span>"}
+function draw(){D.sort(function(a,b){return(a.p?1:0)-(b.p?1:0)||a.d-b.d});
+$("t").innerHTML='<div class="tr h"><span>Cliente</span><span>Concepto</span><span>Importe</span><span>Estado</span><span>Acciones</span></div>'+D.map(function(x,i){
+var msg="Hola "+x.n.split("· ")[1].split(" ")[0]+"! Te recuerdo que "+x.c.toLowerCase()+" ("+money(x.m)+") "+(x.d<0?"está vencida":"vence pronto")+". Podés pagar acá: [tu link de pago]. ¡Gracias!";
+return'<div class="tr'+(x.p?" paidrow":"")+'"><span>'+x.n+"</span><span>"+x.c+"</span><span>"+money(x.m)+"</span><span>"+st(x)+'</span><span class="acts">'+(x.p?"":'<a class="b wa" target="_blank" rel="noopener" href="https://wa.me/?text='+encodeURIComponent(msg)+'">Recordar</a><button class="b g" data-p="'+D.indexOf(x)+'">Marcar pagado</button>')+"</span></div>"}).join("");
+var pend=0,late=0,cobr=paid;D.forEach(function(x){if(x.p)cobr+=x.m;else{pend+=x.m;if(x.d<0)late++}});$("k1").textContent=money(pend);$("k2").textContent=late;$("k3").textContent=money(cobr)}
+document.addEventListener("click",function(e){var i=e.target.dataset.p;if(i!==undefined){D[i].p=true;draw()}});draw();
+</script>
+<script src="https://leandrotvr.github.io/nav.js" defer></script>
+</body>
+</html>
