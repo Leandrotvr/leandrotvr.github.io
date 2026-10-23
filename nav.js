@@ -2,6 +2,13 @@
    Se carga con: <script src="https://leandrotvr.github.io/nav.js" defer></script> */
 (function () {
   if (window.__lmNav) return; window.__lmNav = true;
+  // Contador de visitas (GoatCounter). Poné acá SOLO el nombre de tu cuenta, ej.: "leandromaciel". Vacío = no cuenta nada.
+  var GOATCOUNTER = "";
+  if (GOATCOUNTER && !(window.CONFIG && window.CONFIG.goatcounter)) {
+    var gc = document.createElement("script"); gc.async = true;
+    gc.setAttribute("data-goatcounter", "https://" + GOATCOUNTER + ".goatcounter.com/count");
+    gc.src = "https://gc.zgo.at/count.js"; document.head.appendChild(gc);
+  }
   var B = "https://leandrotvr.github.io";
   var items = [
     { k: "inicio",   t: "Inicio",     h: B + "/",                                   m: /^\/$|^\/index\.html$/ },
