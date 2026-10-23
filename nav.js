@@ -3,7 +3,7 @@
 (function () {
   if (window.__lmNav) return; window.__lmNav = true;
   // Contador de visitas (GoatCounter). Poné acá SOLO el nombre de tu cuenta, ej.: "leandromaciel". Vacío = no cuenta nada.
-  var GOATCOUNTER = "";
+  var GOATCOUNTER = "leandrotvr";
   if (GOATCOUNTER && !(window.CONFIG && window.CONFIG.goatcounter)) {
     var gc = document.createElement("script"); gc.async = true;
     gc.setAttribute("data-goatcounter", "https://" + GOATCOUNTER + ".goatcounter.com/count");
