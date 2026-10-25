@@ -60,7 +60,7 @@ pre{white-space:pre-wrap;background:#F0F4EF;border-radius:10px;padding:10px;font
     <label for="ent">Retiro o envío</label><input id="ent" placeholder="Ej.: Retiro a las 20 hs">
     <pre id="msg">El mensaje del pedido aparece acá.</pre>
     <a class="btn" id="send" href="#" target="_blank" rel="noopener" aria-disabled="true">Enviar pedido por WhatsApp</a>
-    <small style="display:block;margin-top:8px;color:#55625B">En la demo, WhatsApp te deja elegir a quién enviarlo. En tu comercio va directo a tu número.</small>
+    <small id="sendnote" style="display:block;margin-top:8px;color:#55625B">En la demo, WhatsApp te deja elegir a quién enviarlo. En tu comercio va directo a tu número.</small>
   </aside>
 </main>
 <div class="cta"><div class="wrap">
@@ -69,8 +69,12 @@ pre{white-space:pre-wrap;background:#F0F4EF;border-radius:10px;padding:10px;font
   <a class="b2" href="https://wa.me/5493777416857?text=Hola%20Leandro%2C%20vi%20la%20demo%20del%20cat%C3%A1logo%20y%20quiero%20uno%20para%20mi%20comercio" target="_blank" rel="noopener">Consultar por WhatsApp</a>
   <p style="margin-top:14px"><a href="https://leandrotvr.github.io/">← Volver a todos los proyectos</a></p>
 </div></div>
+<script src="https://leandrotvr.github.io/prueba.js"></script>
 <script>
 var P=[["🥖","Pan de campo","Panadería",1800],["🥐","Medialunas x6","Panadería",2400],["🍰","Torta de chocolate","Panadería",9500],["🥤","Gaseosa 1,5 L","Bebidas",2300],["💧","Agua mineral 2 L","Bebidas",1500],["🍺","Cerveza 1 L","Bebidas",2900],["🍕","Pizza muzzarella","Rotisería",7800],["🍗","Pollo al spiedo","Rotisería",11500],["🥗","Ensalada mixta","Rotisería",3900]];
+var C=window.LMPrueba?LMPrueba.load("catalogo"):null,WA="";
+if(C){var _w=(C.whatsapp||"").replace(/\D/g,"").replace(/^0+/,"");WA=_w?(_w.indexOf("54")===0?_w:"549"+_w):"";
+if(C.productos&&C.productos.length){P=C.productos.map(function(l){var a=l.split(";");return["🛍️",(a[0]||"").trim(),(a[2]||"").trim()||"General",parseInt((a[1]||"0").replace(/\D/g,""),10)||0]})}}
 var cat="Todos",q={};var $=function(i){return document.getElementById(i)};
 var money=function(n){return"$"+n.toLocaleString("es-AR")};
 function cats(){var c=["Todos"].concat(P.map(function(p){return p[2]}).filter(function(v,i,a){return a.indexOf(v)===i}));
@@ -81,12 +85,25 @@ function cart(){var ls=[],t=0,txt=[];P.forEach(function(p,i){var n=q[i]||0;if(n)
 $("lines").innerHTML=ls.join("")||"<small>Todavía no agregaste nada.</small>";$("total").textContent=money(t);
 var m="Hola! Quiero hacer un pedido:\n"+txt.join("\n")+"\n\nTotal: "+money(t)+($("nombre").value?"\nNombre: "+$("nombre").value:"")+($("ent").value?"\nEntrega: "+$("ent").value:"");
 $("msg").textContent=txt.length?m:"El mensaje del pedido aparece acá.";var s=$("send");
-if(txt.length){s.href="https://wa.me/?text="+encodeURIComponent(m);s.removeAttribute("aria-disabled");s.style.opacity=1;s.style.pointerEvents="auto"}else{s.href="#";s.setAttribute("aria-disabled","true");s.style.opacity=.45;s.style.pointerEvents="none"}}
+if(txt.length){s.href="https://wa.me/"+WA+"?text="+encodeURIComponent(m);s.removeAttribute("aria-disabled");s.style.opacity=1;s.style.pointerEvents="auto"}else{s.href="#";s.setAttribute("aria-disabled","true");s.style.opacity=.45;s.style.pointerEvents="none"}}
 document.addEventListener("click",function(e){var t=e.target;if(t.dataset.c){cat=t.dataset.c;cats();grid()}
 if(t.dataset.a!==undefined){q[t.dataset.a]=(q[t.dataset.a]||0)+1;grid();cart()}
 if(t.dataset.m!==undefined){q[t.dataset.m]=Math.max(0,(q[t.dataset.m]||0)-1);grid();cart()}});
 ["nombre","ent"].forEach(function(i){$(i).addEventListener("input",cart)});
 cats();grid();cart();
+if(C){var col=C.color||"#0B7A63";document.documentElement.style.setProperty("--accent",col);
+document.querySelector("h1").textContent=C.nombre||"Mi comercio";
+document.querySelector(".hero p").textContent="Elegí tus productos y mandá el pedido por WhatsApp.";
+document.querySelector(".badge").textContent="VERSIÓN DE PRUEBA";
+document.querySelector(".hero").style.background="linear-gradient(135deg,#12201A,"+col+")";
+document.querySelector(".note").innerHTML="<b>Esta es tu versión de prueba.</b> Son tus productos"+(WA?" y los pedidos llegan a tu WhatsApp.":". Cargá tu WhatsApp en «Editar» para recibir los pedidos.");
+document.getElementById("sendnote").textContent=WA?"El pedido se envía a tu WhatsApp.":"Sin WhatsApp cargado: podrás elegir a quién enviarlo."}
+if(window.LMPrueba)LMPrueba.mount({key:"catalogo",cosa:"comercio",title:"Mi catálogo de prueba",intro:"Cargá tu comercio y mirá cómo lo ve tu cliente.",limit:"hasta 8 productos",
+fields:[{id:"nombre",label:"Nombre de tu comercio",req:1,placeholder:"Ej.: Rotisería Don Pepe"},
+{id:"whatsapp",label:"Tu WhatsApp (donde llegan los pedidos)",type:"tel",placeholder:"Ej.: 3777 123456",hint:"Con código de área, sin 0 ni 15. Podés dejarlo vacío por ahora."},
+{id:"color",label:"Color de tu marca",type:"color",def:"#0B7A63"},
+{id:"productos",label:"Tus productos",type:"list",req:1,max:8,placeholder:"Pan de campo; 1800; Panadería\nPizza muzzarella; 7800; Comidas",hint:"Una línea por producto: Nombre; precio; categoría (la categoría es opcional)."}],
+check:function(v){for(var i=0;i<v.productos.length;i++){var a=v.productos[i].split(";");if(!(a[0]||"").trim()||!parseInt((a[1]||"").replace(/\D/g,""),10))return"Revisá la línea "+(i+1)+": falta el nombre o el precio (Nombre; precio; categoría)."}return""}});
 </script>
 <script src="https://leandrotvr.github.io/nav.js" defer></script>
 </body>
