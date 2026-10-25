@@ -1,67 +1,177 @@
-/* Modo "Probar con mi negocio": personalización guardada en el navegador, límites visibles y paso a la versión completa.
+/* Modo "Probar con mi negocio" + versión completa activada por pago.
    Se carga con: <script src="https://leandrotvr.github.io/prueba.js"></script> */
 (function () {
   if (window.LMPrueba) return;
   // ===== Editá solo esta sección: precios, links de pago y textos de los planes =====
   var P = {
     wa: "5493777416857",
-    // Link de suscripción de Mercado Pago por producto. Vacío = el botón abre WhatsApp en su lugar.
     mp: { turnos: "https://mpago.la/1A4Y8eH", catalogo: "https://mpago.la/1Yj1BTN", cobros: "https://mpago.la/2JgAaqh", stock: "https://mpago.la/2uWuK1q", pack: "https://mpago.la/1N9wukc" },
     precios: { turnos: 9900, catalogo: 7900, cobros: 7900, stock: 9900, pack: 24900 },
     nombres: { turnos: "Turnos online con seña", catalogo: "Catálogo y pedidos por WhatsApp", cobros: "Cobros y recordatorios", stock: "Control de stock" },
     incluye: {
-      turnos: "Cobro real de la seña con Mercado Pago, agenda sin límites y aviso inmediato cuando alguien reserva.",
+      turnos: "Reservas reales de tus clientes, agenda sin límites y todos tus horarios.",
       catalogo: "Todos los productos que quieras, tu propio link y cambios cuando actualices tus precios.",
       cobros: "Todos tus clientes y vencimientos, con recordatorios que llevan tu link de pago.",
       stock: "Productos ilimitados, ventas, compras y avisos de reposición."
     },
-    vigencia: "Precios por mes, en pesos argentinos, vigentes a octubre 2026."
+    vigencia: "Precios por mes, en pesos argentinos, vigentes a octubre 2026.",
+    sb: { url: "https://hodjmhsqcbmyyjdkxmxp.supabase.co", key: "sb_publishable_XN9f3BDQe3sUNnh3PYglZA_my11T3_M" }
   };
   // ================================================================================
   function money(n) { return "$" + Number(n).toLocaleString("es-AR"); }
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
   function sk(key) { return "lm_prueba_" + key; }
-  function load(key) { try { var s = localStorage.getItem(sk(key)); return s ? JSON.parse(s) : null; } catch (e) { return null; } }
-  function save(key, o) { try { localStorage.setItem(sk(key), JSON.stringify(o)); return true; } catch (e) { return false; } }
-  function reset(key) { try { localStorage.removeItem(sk(key)); } catch (e) {} }
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); return true; } catch (e) { return false; } }
+  function lsDel(k) { try { localStorage.removeItem(k); } catch (e) {} }
   function waLink(txt) { return "https://wa.me/" + P.wa + "?text=" + encodeURIComponent(txt); }
 
+  /* ---------- Backend ---------- */
+  function rpcSync(name, args) {
+    try {
+      var x = new XMLHttpRequest(); x.open("POST", P.sb.url + "/rest/v1/rpc/" + name, false);
+      x.setRequestHeader("apikey", P.sb.key); x.setRequestHeader("Content-Type", "application/json");
+      x.send(JSON.stringify(args));
+      if (x.status >= 200 && x.status < 300) return x.responseText ? JSON.parse(x.responseText) : null;
+    } catch (e) {}
+    return undefined;
+  }
+  function rpc(name, args) {
+    return fetch(P.sb.url + "/rest/v1/rpc/" + name, { method: "POST", headers: { apikey: P.sb.key, "Content-Type": "application/json" }, body: JSON.stringify(args) })
+      .then(function (r) { return r.text().then(function (t) { var j = null; try { j = t ? JSON.parse(t) : null; } catch (e) {} if (!r.ok) throw new Error((j && j.message) || String(r.status)); return j; }); });
+  }
+  function syncCuenta(codigo) {
+    return fetch(P.sb.url + "/functions/v1/lm-sync", { method: "POST", headers: { apikey: P.sb.key, "Content-Type": "application/json" }, body: JSON.stringify({ codigo: codigo }) })
+      .then(function (r) { return r.json(); }).catch(function () { return {}; });
+  }
+
+  /* ---------- Cuenta (versión completa) ---------- */
+  var qs = new URLSearchParams(location.search), C_COD = qs.get("c"), C_KEY = qs.get("k"), ACC = null;
+  if (C_COD && /^[a-z0-9]{6,12}$/i.test(C_COD)) {
+    var v = C_KEY ? rpcSync("lm_admin", { p_codigo: C_COD, p_clave: C_KEY }) : undefined;
+    if (v) { ACC = v; ACC.admin = true; ACC.clave = C_KEY; }
+    else { v = rpcSync("lm_ver", { p_codigo: C_COD }); ACC = v ? v : { error: true }; ACC.admin = false; }
+    ACC.codigo = C_COD;
+  }
+  var ACTIVO = !!(ACC && ACC.estado === "activo");
+  function cuentaLocal(key) { try { return JSON.parse(lsGet("lm_cuenta_" + key)) || null; } catch (e) { return null; } }
+  function load(key) {
+    if (ACC && ACC.producto === key && ACC.config) return ACC.config;
+    try { var s = lsGet(sk(key)); return s ? JSON.parse(s) : null; } catch (e) { return null; }
+  }
+  function save(key, o) { return lsSet(sk(key), JSON.stringify(o)); }
+  function reset(key) { lsDel(sk(key)); }
+
+  /* ---------- Estilos y helpers de UI ---------- */
   var CSS = ".lmp-bar{position:fixed;left:0;right:0;bottom:0;z-index:2147482500;background:#12201A;color:#EAF0EC;font:600 14px/1.3 system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;padding:10px 14px;display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;box-shadow:0 -4px 16px rgba(0,0,0,.25)}" +
-    ".lmp-bar span{opacity:.95}.lmp-b{border:0;border-radius:10px;padding:9px 14px;font:700 14px system-ui,sans-serif;cursor:pointer;background:#5FD3B3;color:#12201A}" +
-    ".lmp-b.o{background:transparent;color:#EAF0EC;border:1.5px solid rgba(255,255,255,.4)}.lmp-b.g{background:#1FA855;color:#fff;text-decoration:none;display:inline-block;text-align:center}" +
+    ".lmp-bar span{opacity:.95}.lmp-b{border:0;border-radius:10px;padding:9px 14px;font:700 14px system-ui,sans-serif;cursor:pointer;background:#5FD3B3;color:#12201A;text-decoration:none;display:inline-block;text-align:center}" +
+    ".lmp-b.o{background:transparent;color:#EAF0EC;border:1.5px solid rgba(255,255,255,.4)}.lmp-b.g{background:#1FA855;color:#fff}.lmp-b[disabled]{opacity:.5;cursor:not-allowed}" +
     ".lmp-ov{position:fixed;inset:0;z-index:2147483200;background:rgba(10,20,15,.6);display:flex;align-items:flex-end;justify-content:center;font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif}" +
+    ".lmp-ov.full{background:#F5F6F2;align-items:center}" +
     ".lmp-m{background:#fff;color:#17221D;width:100%;max-width:520px;max-height:92vh;overflow:auto;border-radius:20px 20px 0 0;padding:20px 20px 24px}" +
     "@media(min-width:600px){.lmp-ov{align-items:center}.lmp-m{border-radius:20px}}" +
     ".lmp-m h2{margin:0 0 4px;font-size:21px}.lmp-m p{margin:0 0 12px;color:#3B4842;font-size:14px}" +
     ".lmp-m label{display:block;font:700 13px system-ui,sans-serif;margin:12px 0 4px}.lmp-m small{display:block;color:#55625B;font-size:12.5px;margin-top:3px}" +
     ".lmp-m input,.lmp-m textarea{width:100%;box-sizing:border-box;padding:10px 12px;border:1.5px solid #D3DAD5;border-radius:10px;font:15px system-ui,sans-serif;color:#17221D;background:#fff}" +
     ".lmp-m input[type=color]{height:44px;padding:3px}.lmp-m textarea{min-height:130px;resize:vertical}" +
-    ".lmp-err{background:#FBE7E5;color:#B3261E;border-radius:10px;padding:10px 12px;font-size:13.5px;margin-top:12px}" +
+    ".lmp-err{background:#FBE7E5;color:#B3261E;border-radius:10px;padding:10px 12px;font-size:13.5px;margin-top:12px}.lmp-okb{background:#DDF3EA;color:#0B5A47;border-radius:10px;padding:10px 12px;font-size:13.5px;margin-top:12px}" +
     ".lmp-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.lmp-row .lmp-b{flex:1;min-width:120px;padding:12px}" +
+    ".lmp-m .lmp-b{background:#0B7A63;color:#fff}.lmp-m .lmp-b.o{background:#fff;color:#17221D;border:1.5px solid #D3DAD5}.lmp-m .lmp-b.g{background:#1FA855}" +
     ".lmp-price{background:#F0F4EF;border-radius:14px;padding:14px 16px;margin:10px 0}.lmp-price b{font-size:26px}.lmp-price small{display:inline;font-size:13px}" +
-    ".lmp-x{float:right;background:none;border:0;font-size:24px;cursor:pointer;color:#55625B;line-height:1}body{padding-bottom:64px}";
+    ".lmp-x{float:right;background:none;border:0;font-size:24px;cursor:pointer;color:#55625B;line-height:1}body{padding-bottom:64px}" +
+    ".lmp-link{word-break:break-all;background:#F0F4EF;border-radius:10px;padding:10px 12px;font-size:13px;margin:6px 0}" +
+    ".lmp-spin{display:inline-block;width:14px;height:14px;border:2px solid #0B7A63;border-top-color:transparent;border-radius:50%;animation:lmps 1s linear infinite;vertical-align:-2px;margin-right:6px}@keyframes lmps{to{transform:rotate(360deg)}}";
   function css() { if (document.getElementById("lmp-css")) return; var s = document.createElement("style"); s.id = "lmp-css"; s.textContent = CSS; document.head.appendChild(s); }
   function el(html) { var d = document.createElement("div"); d.innerHTML = html; return d.firstChild; }
   function close(ov) { if (ov && ov.parentNode) ov.parentNode.removeChild(ov); }
-
-  function plans(key, why) {
+  function modal(html) {
     css();
-    var n = P.nombres[key] || "", pr = P.precios[key], pk = P.precios.pack;
-    var mp = P.mp[key] || "";
-    var cta = mp ? '<a class="lmp-b" style="text-decoration:none;display:block;text-align:center" href="' + esc(mp) + '" target="_blank" rel="noopener">Pagar con Mercado Pago</a>' : "";
-    var ov = el('<div class="lmp-ov" role="dialog" aria-modal="true"><div class="lmp-m"><button class="lmp-x" aria-label="Cerrar">×</button>' +
-      "<h2>Versión completa</h2><p>" + (why ? esc(why) + " " : "") + "<b>" + esc(n) + "</b>: " + esc(P.incluye[key] || "") + "</p>" +
-      '<div class="lmp-price"><b>' + money(pr) + "</b> <small>por mes</small><br><small>Pack con los 4 productos: <b>" + money(pk) + "</b> por mes" + (P.mp.pack ? ' · <a href="' + esc(P.mp.pack) + '" target="_blank" rel="noopener">Elegir el pack</a>' : "") + "</small></div>" +
-      "<p>Si pasás a la versión completa la dejo armada con tus datos reales. Tu configuración de prueba se guarda solo en este navegador.</p>" +
-      '<div class="lmp-row">' + cta + '<a class="lmp-b g" href="' + waLink("Hola Leandro, probé la versión gratis de " + n + " y quiero la completa.") + '" target="_blank" rel="noopener">Consultar por WhatsApp</a></div>' +
-      '<p style="margin-top:12px"><small>' + esc(P.vigencia) + "</small></p></div></div>");
+    var ov = el('<div class="lmp-ov" role="dialog" aria-modal="true"><div class="lmp-m"><button class="lmp-x" aria-label="Cerrar">×</button>' + html + "</div></div>");
     ov.querySelector(".lmp-x").onclick = function () { close(ov); };
     ov.addEventListener("click", function (e) { if (e.target === ov) close(ov); });
-    document.body.appendChild(ov);
+    document.body.appendChild(ov); return ov;
+  }
+  function copiar(txt, btn) {
+    function ok() { if (btn) { var t = btn.textContent; btn.textContent = "¡Copiado!"; setTimeout(function () { btn.textContent = t; }, 1500); } }
+    try { navigator.clipboard.writeText(txt).then(ok, function () { window.prompt("Copiá este enlace:", txt); }); } catch (e) { window.prompt("Copiá este enlace:", txt); }
+  }
+  var BASE = location.origin + location.pathname;
+  function urlPublica(cod) { return BASE + "?c=" + cod; }
+  function urlPanel(cod, k) { return BASE + "?c=" + cod + "&k=" + k; }
+  var LAST = null;
+
+  /* ---------- Precio / activación ---------- */
+  function plans(key, why) {
+    var n = P.nombres[key] || "", pr = P.precios[key], pk = P.precios.pack, cfg = load(key);
+    var ov = modal("<h2>Versión completa</h2><p>" + (why ? esc(why) + " " : "") + "<b>" + esc(n) + "</b>: " + esc(P.incluye[key] || "") + "</p>" +
+      '<div class="lmp-price"><b>' + money(pr) + "</b> <small>por mes</small><br><small>Pack con los 4 productos: <b>" + money(pk) + "</b> por mes</small></div>" +
+      "<p>Se activa sola apenas pagás, sin esperar a nadie. Tus datos de la prueba pasan tal cual. Podés cancelar cuando quieras desde Mercado Pago.</p>" +
+      '<div class="lmp-row">' + (cfg && LAST ? '<button class="lmp-b" id="lmp-act">Activar versión completa</button>' : '<button class="lmp-b" id="lmp-first">Primero probala con tus datos</button>') +
+      '<a class="lmp-b g" href="' + waLink("Hola Leandro, probé la versión gratis de " + n + " y tengo una consulta.") + '" target="_blank" rel="noopener">Consultar por WhatsApp</a></div>' +
+      '<p style="margin-top:12px"><small>' + esc(P.vigencia) + "</small></p>");
+    var a = ov.querySelector("#lmp-act"); if (a) a.onclick = function () { close(ov); activar(LAST); };
+    var f = ov.querySelector("#lmp-first"); if (f) f.onclick = function () { close(ov); if (LAST) form(LAST); };
   }
 
+  function activar(o) {
+    var key = o.key, cfg = load(key), cta = cuentaLocal(key);
+    if (cta && cta.codigo) return pasoPago(o, cta);
+    var ov = modal("<h2>Activar " + esc(P.nombres[key]) + "</h2><p>Dejá tu email y pagá la suscripción: se activa sola.</p>" +
+      '<label for="lmp-em">Tu email</label><input id="lmp-em" type="email" inputmode="email" autocomplete="email" placeholder="tu@email.com">' +
+      "<small>Usá el mismo email con el que pagás en Mercado Pago. Si usás otro, podés indicarlo en el paso siguiente.</small><div id=\"lmp-e\"></div>" +
+      '<div class="lmp-row"><button class="lmp-b" id="lmp-go">Continuar</button></div>');
+    var go = ov.querySelector("#lmp-go");
+    go.onclick = function () {
+      var em = ov.querySelector("#lmp-em").value.trim(), e = ov.querySelector("#lmp-e");
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)) { e.innerHTML = '<div class="lmp-err">Revisá el email.</div>'; return; }
+      go.disabled = true; go.textContent = "Un momento...";
+      rpc("lm_crear", { p_producto: key, p_email: em, p_config: cfg || {} }).then(function (r) {
+        var c = { codigo: r.codigo, clave: r.clave, email: em }; lsSet("lm_cuenta_" + key, JSON.stringify(c)); close(ov); pasoPago(o, c);
+      }).catch(function (err) {
+        go.disabled = false; go.textContent = "Continuar";
+        e.innerHTML = '<div class="lmp-err">' + (/demasiadas/.test(err.message) ? "Hiciste demasiados intentos hoy. Probá mañana o escribime por WhatsApp." : "No se pudo continuar. Revisá tu conexión e intentá de nuevo.") + "</div>";
+      });
+    };
+  }
+
+  function pasoPago(o, c) {
+    var key = o.key, vivo = true, ov;
+    function ok(estado) {
+      vivo = false;
+      var pan = urlPanel(c.codigo, c.clave), pub = urlPublica(c.codigo);
+      ov.querySelector(".lmp-m").innerHTML = '<button class="lmp-x" aria-label="Cerrar">×</button><h2>¡Listo, ya está activo! 🎉</h2><p>Tu versión completa funciona sin límites. Te mandamos estos enlaces también por email.</p>' +
+        "<label>Tu panel (solo tuyo, guardalo)</label><div class=\"lmp-link\">" + esc(pan) + "</div>" +
+        "<label>Enlace para compartir con tus clientes</label><div class=\"lmp-link\">" + esc(pub) + "</div>" +
+        '<div class="lmp-row"><a class="lmp-b" href="' + esc(pan) + '">Abrir mi panel</a><button class="lmp-b o" id="lmp-cp">Copiar enlace para mis clientes</button></div>';
+      ov.querySelector(".lmp-x").onclick = function () { close(ov); };
+      ov.querySelector("#lmp-cp").onclick = function () { copiar(pub, ov.querySelector("#lmp-cp")); };
+    }
+    function chequear() {
+      if (!vivo) return;
+      syncCuenta(c.codigo).then(function () { return rpc("lm_ver", { p_codigo: c.codigo }); }).then(function (r) {
+        if (!vivo) return;
+        if (r && r.estado === "activo") ok(); else setTimeout(chequear, 6000);
+      }).catch(function () { if (vivo) setTimeout(chequear, 8000); });
+    }
+    ov = modal("<h2>Último paso: pagá la suscripción</h2><p>Se abre Mercado Pago en otra pestaña. Cuando termines, volvé a esta pantalla: se activa sola.</p>" +
+      '<div class="lmp-row"><a class="lmp-b" href="' + esc(P.mp[key]) + '" target="_blank" rel="noopener">Pagar ' + money(P.precios[key]) + "/mes</a>" +
+      '<a class="lmp-b o" href="' + esc(P.mp.pack) + '" target="_blank" rel="noopener">Mejor el pack de los 4 · ' + money(P.precios.pack) + "/mes</a></div>" +
+      '<div class="lmp-okb"><span class="lmp-spin"></span>Esperando tu pago… Email registrado: <b>' + esc(c.email || "") + "</b></div>" +
+      '<label for="lmp-mp">¿Pagás con otro email en Mercado Pago?</label><input id="lmp-mp" type="email" placeholder="email de tu cuenta de Mercado Pago"><div id="lmp-e"></div>' +
+      '<div class="lmp-row"><button class="lmp-b o" id="lmp-vin">Usar este email</button></div>');
+    var xb = ov.querySelector(".lmp-x"); xb.onclick = function () { vivo = false; close(ov); };
+    ov.querySelector("#lmp-vin").onclick = function () {
+      var em = ov.querySelector("#lmp-mp").value.trim(), e = ov.querySelector("#lmp-e");
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)) { e.innerHTML = '<div class="lmp-err">Revisá el email.</div>'; return; }
+      rpc("lm_vincular", { p_codigo: c.codigo, p_clave: c.clave, p_email_mp: em }).then(function () { e.innerHTML = '<div class="lmp-okb">Listo, lo tomamos en cuenta.</div>'; chequear(); })
+        .catch(function () { e.innerHTML = '<div class="lmp-err">No se pudo guardar. Probá de nuevo.</div>'; });
+    };
+    chequear();
+  }
+
+  /* ---------- Formulario de personalización ---------- */
   function form(o) {
-    css();
+    var panel = !!(ACC && ACC.admin && ACTIVO && ACC.producto === o.key);
     var cur = load(o.key) || {};
     var body = o.fields.map(function (f) {
       var v = cur[f.id] != null ? cur[f.id] : (f.def != null ? f.def : "");
@@ -70,11 +180,9 @@
         '<input id="lmpf-' + f.id + '" type="' + (f.type || "text") + '" value="' + esc(v) + '" placeholder="' + esc(f.placeholder || "") + '">';
       return '<label for="lmpf-' + f.id + '">' + esc(f.label) + "</label>" + c + (f.hint ? "<small>" + esc(f.hint) + "</small>" : "");
     }).join("");
-    var ov = el('<div class="lmp-ov" role="dialog" aria-modal="true"><div class="lmp-m"><button class="lmp-x" aria-label="Cerrar">×</button><h2>' + esc(o.title) + "</h2><p>" + esc(o.intro || "") + " <b>Límite de la prueba gratis:</b> " + esc(o.limit) + ".</p>" + body +
-      '<div id="lmp-err"></div><div class="lmp-row"><button class="lmp-b" id="lmp-save">Guardar y ver mi prueba</button>' + (cur && Object.keys(cur).length ? '<button class="lmp-b o" style="color:#17221D;border-color:#D3DAD5" id="lmp-reset">Borrar mi prueba</button>' : "") + "</div></div></div>");
+    var ov = modal("<h2>" + esc(panel ? "Editar mi " + (o.cosa || "negocio") : o.title) + "</h2><p>" + esc(o.intro || "") + (panel ? "" : " <b>Límite de la prueba gratis:</b> " + esc(o.limit) + ".") + "</p>" + body +
+      '<div id="lmp-err"></div><div class="lmp-row"><button class="lmp-b" id="lmp-save">Guardar</button>' + (!panel && Object.keys(load(o.key) || {}).length ? '<button class="lmp-b o" id="lmp-reset">Borrar mi prueba</button>' : "") + "</div>");
     function err(t, up) { var e = ov.querySelector("#lmp-err"); e.innerHTML = t ? '<div class="lmp-err">' + esc(t) + (up ? ' <a href="#" id="lmp-up">Ver la versión completa</a>' : "") + "</div>" : ""; var u = ov.querySelector("#lmp-up"); if (u) u.onclick = function (ev) { ev.preventDefault(); close(ov); plans(o.key, "La prueba tiene un tope."); }; }
-    ov.querySelector(".lmp-x").onclick = function () { close(ov); };
-    ov.addEventListener("click", function (e) { if (e.target === ov) close(ov); });
     ov.querySelector("#lmp-save").onclick = function () {
       var vals = {};
       for (var i = 0; i < o.fields.length; i++) {
@@ -82,7 +190,7 @@
         if (f.type === "list") {
           var lines = raw.split("\n").map(function (s) { return s.trim(); }).filter(Boolean);
           if (f.req && !lines.length) return err("Completá: " + f.label + ".");
-          if (f.max && lines.length > f.max) return err("La prueba gratis permite hasta " + f.max + " líneas en «" + f.label + "». Tenés " + lines.length + ".", true);
+          if (!panel && f.max && lines.length > f.max) return err("La prueba gratis permite hasta " + f.max + " líneas en «" + f.label + "». Tenés " + lines.length + ".", true);
           vals[f.id] = lines;
         } else {
           raw = raw.trim();
@@ -92,27 +200,67 @@
       }
       var msg = o.check ? o.check(vals) : "";
       if (msg) return err(msg);
+      if (panel) {
+        var merged = {}; for (var k in cur) merged[k] = cur[k]; for (var k2 in vals) merged[k2] = vals[k2];
+        var b = ov.querySelector("#lmp-save"); b.disabled = true; b.textContent = "Guardando...";
+        return rpc("lm_guardar", { p_codigo: ACC.codigo, p_clave: ACC.clave, p_config: merged }).then(function () { location.reload(); })
+          .catch(function () { b.disabled = false; b.textContent = "Guardar"; err("No se pudo guardar. Revisá tu conexión."); });
+      }
       if (!save(o.key, vals)) return err("Tu navegador no permite guardar datos (¿modo privado?). Probá en una ventana normal.");
       location.reload();
     };
     var r = ov.querySelector("#lmp-reset");
-    if (r) r.onclick = function () { reset(o.key); location.reload(); };
+    if (r) r.onclick = function () { reset(o.key); lsDel("lm_cuenta_" + o.key); location.reload(); };
+  }
+
+  /* ---------- Barra inferior ---------- */
+  function aviso(txt) {
+    css(); var ov = el('<div class="lmp-ov full"><div class="lmp-m" style="border-radius:20px;text-align:center"><h2>' + esc(txt) + "</h2><p>Si sos el dueño, escribime y lo resolvemos al instante.</p>" +
+      '<div class="lmp-row"><a class="lmp-b g" href="' + waLink("Hola Leandro, tengo un problema con mi enlace.") + '" target="_blank" rel="noopener">Escribir por WhatsApp</a></div></div></div>');
     document.body.appendChild(ov);
   }
-
+  function refrescar() {
+    if (!ACC || ACC.error) return;
+    var tk = "lm_sync_" + ACC.codigo, last = Number(lsGet(tk) || 0);
+    if (ACTIVO && Date.now() - last < 3 * 3600e3) return;
+    lsSet(tk, String(Date.now()));
+    syncCuenta(ACC.codigo).then(function (r) { if (r && r.estado && (r.estado === "activo") !== ACTIVO) location.reload(); });
+  }
   function mount(o) {
-    css();
-    var cfg = load(o.key);
-    var bar = el('<div class="lmp-bar" role="region" aria-label="Versión de prueba"></div>');
-    if (cfg) {
-      bar.innerHTML = "<span>Versión de prueba gratis · " + esc(o.limit) + '</span><button class="lmp-b o" id="lmp-ed">Editar</button><button class="lmp-b" id="lmp-up">Pasar a la completa · ' + money(P.precios[o.key]) + "/mes</button>";
-    } else {
-      bar.innerHTML = "<span>¿Es para tu " + esc(o.cosa || "negocio") + "? Probalo gratis con tus datos.</span>" + '<button class="lmp-b" id="lmp-ed">Probar con mi ' + esc(o.cosa || "negocio") + '</button><button class="lmp-b o" id="lmp-up">Ver precio</button>';
+    css(); LAST = o;
+    if (C_COD && (!ACC || ACC.error)) return aviso("Este enlace no es válido");
+    if (ACC && ACC.producto === o.key) {
+      refrescar();
+      if (!ACC.admin) { if (!ACTIVO) aviso("Este negocio no está disponible por ahora"); return; }
+      var bar = el('<div class="lmp-bar" role="region" aria-label="Mi panel"></div>');
+      if (ACTIVO) {
+        bar.innerHTML = '<span>Mi panel · versión completa</span><button class="lmp-b o" id="lmp-ed">Editar</button><button class="lmp-b" id="lmp-cp">Copiar enlace para mis clientes</button>' +
+          (ACC.reservas ? '<button class="lmp-b o" id="lmp-rs">Reservas (' + ACC.reservas.length + ")</button>" : "");
+        bar.querySelector("#lmp-ed").onclick = function () { form(o); };
+        bar.querySelector("#lmp-cp").onclick = function (e) { copiar(urlPublica(ACC.codigo), e.target); };
+        var rs = bar.querySelector("#lmp-rs");
+        if (rs) rs.onclick = function () {
+          var f = function (d) { var p = String(d).split("-"); return p[2] + "/" + p[1]; };
+          modal("<h2>Reservas de tus clientes</h2>" + (ACC.reservas.length ? ACC.reservas.map(function (r) { return "<p><b>" + f(r.fecha) + " " + esc(r.hora) + "</b> · " + esc(r.nombre) + ' · <a href="https://wa.me/' + esc(String(r.tel).replace(/\D/g, "")) + '" target="_blank" rel="noopener">' + esc(r.tel) + "</a></p>"; }).join("") : "<p>Todavía no hay reservas.</p>"));
+        };
+      } else {
+        bar.innerHTML = '<span>Esperando la confirmación de tu pago</span><button class="lmp-b" id="lmp-st">Ver estado</button>';
+        bar.querySelector("#lmp-st").onclick = function () { pasoPago(o, { codigo: ACC.codigo, clave: ACC.clave, email: ACC.email }); };
+      }
+      document.body.appendChild(bar); return;
     }
-    bar.querySelector("#lmp-ed").onclick = function () { form(o); };
-    bar.querySelector("#lmp-up").onclick = function () { plans(o.key); };
-    document.body.appendChild(bar);
+    var cfg = load(o.key), cta = cuentaLocal(o.key);
+    var bar2 = el('<div class="lmp-bar" role="region" aria-label="Versión de prueba"></div>');
+    if (cfg) {
+      bar2.innerHTML = "<span>Versión de prueba gratis · " + esc(o.limit) + '</span><button class="lmp-b o" id="lmp-ed">Editar</button><button class="lmp-b" id="lmp-up">' + (cta ? "Terminar mi activación" : "Pasar a la completa · " + money(P.precios[o.key]) + "/mes") + "</button>";
+    } else {
+      bar2.innerHTML = "<span>¿Es para tu " + esc(o.cosa || "negocio") + "? Probalo gratis con tus datos.</span>" + '<button class="lmp-b" id="lmp-ed">Probar con mi ' + esc(o.cosa || "negocio") + '</button><button class="lmp-b o" id="lmp-up">Ver precio</button>';
+    }
+    bar2.querySelector("#lmp-ed").onclick = function () { form(o); };
+    bar2.querySelector("#lmp-up").onclick = function () { cfg ? activar(o) : plans(o.key); };
+    document.body.appendChild(bar2);
   }
 
-  window.LMPrueba = { planes: P, money: money, load: load, save: save, reset: reset, mount: mount, plans: plans, esc: esc, waLink: waLink };
+  window.LMPrueba = { planes: P, money: money, load: load, save: save, reset: reset, mount: mount, plans: plans, esc: esc, waLink: waLink,
+    rpc: rpc, cuenta: ACC, activo: ACTIVO, admin: !!(ACC && ACC.admin && ACTIVO) };
 })();
