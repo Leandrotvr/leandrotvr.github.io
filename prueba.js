@@ -6,7 +6,7 @@
   var P = {
     wa: "5493777416857",
     // Link de suscripción de Mercado Pago por producto. Vacío = el botón abre WhatsApp en su lugar.
-    mp: { turnos: "", catalogo: "", cobros: "", stock: "", pack: "" },
+    mp: { turnos: "https://mpago.la/1A4Y8eH", catalogo: "https://mpago.la/1Yj1BTN", cobros: "https://mpago.la/2JgAaqh", stock: "https://mpago.la/2uWuK1q", pack: "https://mpago.la/1N9wukc" },
     precios: { turnos: 9900, catalogo: 7900, cobros: 7900, stock: 9900, pack: 24900 },
     nombres: { turnos: "Turnos online con seña", catalogo: "Catálogo y pedidos por WhatsApp", cobros: "Cobros y recordatorios", stock: "Control de stock" },
     incluye: {
@@ -51,7 +51,7 @@
     var cta = mp ? '<a class="lmp-b" style="text-decoration:none;display:block;text-align:center" href="' + esc(mp) + '" target="_blank" rel="noopener">Pagar con Mercado Pago</a>' : "";
     var ov = el('<div class="lmp-ov" role="dialog" aria-modal="true"><div class="lmp-m"><button class="lmp-x" aria-label="Cerrar">×</button>' +
       "<h2>Versión completa</h2><p>" + (why ? esc(why) + " " : "") + "<b>" + esc(n) + "</b>: " + esc(P.incluye[key] || "") + "</p>" +
-      '<div class="lmp-price"><b>' + money(pr) + "</b> <small>por mes</small><br><small>Pack con los 4 productos: <b>" + money(pk) + "</b> por mes</small></div>" +
+      '<div class="lmp-price"><b>' + money(pr) + "</b> <small>por mes</small><br><small>Pack con los 4 productos: <b>" + money(pk) + "</b> por mes" + (P.mp.pack ? ' · <a href="' + esc(P.mp.pack) + '" target="_blank" rel="noopener">Elegir el pack</a>' : "") + "</small></div>" +
       "<p>Si pasás a la versión completa la dejo armada con tus datos reales. Tu configuración de prueba se guarda solo en este navegador.</p>" +
       '<div class="lmp-row">' + cta + '<a class="lmp-b g" href="' + waLink("Hola Leandro, probé la versión gratis de " + n + " y quiero la completa.") + '" target="_blank" rel="noopener">Consultar por WhatsApp</a></div>' +
       '<p style="margin-top:12px"><small>' + esc(P.vigencia) + "</small></p></div></div>");
