@@ -75,6 +75,7 @@ var P=[["🥖","Pan de campo","Panadería",1800],["🥐","Medialunas x6","Panade
 var C=window.LMPrueba?LMPrueba.load("catalogo"):null,WA="";
 if(C){var _w=(C.whatsapp||"").replace(/\D/g,"").replace(/^0+/,"");WA=_w?(_w.indexOf("54")===0?_w:"549"+_w):"";
 if(C.productos&&C.productos.length){P=C.productos.map(function(l){var a=l.split(";");return["🛍️",(a[0]||"").trim(),(a[2]||"").trim()||"General",parseInt((a[1]||"0").replace(/\D/g,""),10)||0]})}}
+var AC=!!(window.LMPrueba&&LMPrueba.cuenta&&LMPrueba.cuenta.estado==="activo"&&LMPrueba.cuenta.producto==="catalogo");
 var cat="Todos",q={};var $=function(i){return document.getElementById(i)};
 var money=function(n){return"$"+n.toLocaleString("es-AR")};
 function cats(){var c=["Todos"].concat(P.map(function(p){return p[2]}).filter(function(v,i,a){return a.indexOf(v)===i}));
@@ -94,10 +95,11 @@ cats();grid();cart();
 if(C){var col=C.color||"#0B7A63";document.documentElement.style.setProperty("--accent",col);
 document.querySelector("h1").textContent=C.nombre||"Mi comercio";
 document.querySelector(".hero p").textContent="Elegí tus productos y mandá el pedido por WhatsApp.";
-document.querySelector(".badge").textContent="VERSIÓN DE PRUEBA";
+if(AC)document.querySelector(".badge").style.display="none";else document.querySelector(".badge").textContent="VERSIÓN DE PRUEBA";
 document.querySelector(".hero").style.background="linear-gradient(135deg,#12201A,"+col+")";
-document.querySelector(".note").innerHTML="<b>Esta es tu versión de prueba.</b> Son tus productos"+(WA?" y los pedidos llegan a tu WhatsApp.":". Cargá tu WhatsApp en «Editar» para recibir los pedidos.");
-document.getElementById("sendnote").textContent=WA?"El pedido se envía a tu WhatsApp.":"Sin WhatsApp cargado: podrás elegir a quién enviarlo."}
+if(AC)document.querySelector(".note").style.display="none";else document.querySelector(".note").innerHTML="<b>Esta es tu versión de prueba.</b> Son tus productos"+(WA?" y los pedidos llegan a tu WhatsApp.":". Cargá tu WhatsApp en «Editar» para recibir los pedidos.");
+document.getElementById("sendnote").style.display=AC?"none":"block";document.getElementById("sendnote").textContent=WA?"El pedido se envía a tu WhatsApp.":"Sin WhatsApp cargado: podrás elegir a quién enviarlo."}
+if(AC){var ctaEl=document.querySelector(".cta");if(ctaEl)ctaEl.style.display="none";if(C&&C.nombre)document.title=C.nombre}
 if(window.LMPrueba)LMPrueba.mount({key:"catalogo",cosa:"comercio",title:"Mi catálogo de prueba",intro:"Cargá tu comercio y mirá cómo lo ve tu cliente.",limit:"hasta 8 productos",
 fields:[{id:"nombre",label:"Nombre de tu comercio",req:1,placeholder:"Ej.: Rotisería Don Pepe"},
 {id:"whatsapp",label:"Tu WhatsApp (donde llegan los pedidos)",type:"tel",placeholder:"Ej.: 3777 123456",hint:"Con código de área, sin 0 ni 15. Podés dejarlo vacío por ahora."},
