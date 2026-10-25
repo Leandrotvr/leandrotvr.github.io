@@ -81,7 +81,15 @@
     ".lmp-x{float:right;background:none;border:0;font-size:24px;cursor:pointer;color:#55625B;line-height:1}body{padding-bottom:64px}" +
     ".lmp-link{word-break:break-all;background:#F0F4EF;border-radius:10px;padding:10px 12px;font-size:13px;margin:6px 0}" +
     ".lmp-spin{display:inline-block;width:14px;height:14px;border:2px solid #0B7A63;border-top-color:transparent;border-radius:50%;animation:lmps 1s linear infinite;vertical-align:-2px;margin-right:6px}@keyframes lmps{to{transform:rotate(360deg)}}";
-  function css() { if (document.getElementById("lmp-css")) return; var s = document.createElement("style"); s.id = "lmp-css"; s.textContent = CSS; document.head.appendChild(s); }
+  var CSS2 = ".lmp-b{transition:transform .12s,box-shadow .12s}.lmp-b:hover{transform:translateY(-1px)}.lmp-b:active{transform:scale(.96)}" +
+    ".lmp-m{animation:lmpUp .28s ease-out}@keyframes lmpUp{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}" +
+    ".lmp-toast{position:fixed;left:50%;top:18px;transform:translateX(-50%);z-index:2147483600;background:#12201A;color:#fff;padding:12px 18px;border-radius:999px;font:700 15px system-ui,sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.3);animation:lmpT 3.2s ease forwards;max-width:92vw;text-align:center}" +
+    "@keyframes lmpT{0%{opacity:0;transform:translate(-50%,-14px)}10%,85%{opacity:1;transform:translate(-50%,0)}100%{opacity:0;transform:translate(-50%,-10px)}}" +
+    ".lmp-cf{position:fixed;top:-14px;width:9px;height:14px;z-index:2147483500;pointer-events:none;animation:lmpF linear forwards}@keyframes lmpF{to{transform:translateY(108vh) rotate(720deg)}}" +
+    ".lm-rv{opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s ease}.lm-rv.in{opacity:1;transform:none}" +
+    ".lmp-chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}.lmp-chip{border:1.5px solid #0B7A63;background:#fff;color:#0B7A63;border-radius:999px;padding:7px 12px;font:600 13px system-ui,sans-serif;cursor:pointer}.lmp-chip:active{transform:scale(.95)}" +
+    "@media(prefers-reduced-motion:reduce){.lmp-m,.lmp-toast{animation:none}.lm-rv{opacity:1;transform:none;transition:none}.lmp-b{transition:none}}";
+  function css() { if (document.getElementById("lmp-css")) return; var s = document.createElement("style"); s.id = "lmp-css"; s.textContent = CSS + CSS2; document.head.appendChild(s); }
   function el(html) { var d = document.createElement("div"); d.innerHTML = html; return d.firstChild; }
   function close(ov) { if (ov && ov.parentNode) ov.parentNode.removeChild(ov); }
   function modal(html) {
@@ -113,9 +121,10 @@
       '<div class="lmp-price"><b>' + money(pr) + "</b> <small>por mes</small><br><small>Pack con los 4 productos: <b>" + money(pk) + "</b> por mes</small></div>" +
       "<p>Se activa sola apenas pagás, sin esperar a nadie. Tus datos de la prueba pasan tal cual. Podés cancelar cuando quieras desde Mercado Pago.</p>" +
       '<div class="lmp-row">' + (cfg && LAST ? '<button class="lmp-b" id="lmp-act">Activar versión completa</button>' : '<button class="lmp-b" id="lmp-first">Primero probala con tus datos</button>') +
-      '<a class="lmp-b g" href="' + waLink("Hola Leandro, probé la versión gratis de " + n + " y tengo una consulta.") + '" target="_blank" rel="noopener">Consultar por WhatsApp</a></div>' +
+      '<button class="lmp-b o" id="lmp-ped" style="color:#12201A;border-color:#12201A">¿Algo a medida? Contame</button></div>' +
       '<p style="margin-top:12px"><small>' + esc(P.vigencia) + "</small></p>");
     var a = ov.querySelector("#lmp-act"); if (a) a.onclick = function () { close(ov); activar(LAST); };
+    var pd = ov.querySelector("#lmp-ped"); if (pd) pd.onclick = function () { close(ov); pedir(n); };
     var f = ov.querySelector("#lmp-first"); if (f) f.onclick = function () { close(ov); if (LAST) form(LAST); };
   }
 
@@ -143,7 +152,7 @@
   function pasoPago(o, c) {
     var key = o.key, vivo = true, ov;
     function ok(estado) {
-      vivo = false;
+      vivo = false; confeti(90); vibra();
       var pan = urlPanel(c.codigo, c.clave), pub = urlPublica(c.codigo);
       ov.querySelector(".lmp-m").innerHTML = '<button class="lmp-x" aria-label="Cerrar">×</button><h2>¡Listo, ya está activo! 🎉</h2><p>Tu versión completa funciona sin límites. Te mandamos estos enlaces también por email.</p>' +
         "<label>Tu panel (solo tuyo, guardalo)</label><div class=\"lmp-link\">" + esc(pan) + "</div>" +
@@ -209,11 +218,11 @@
       if (panel) {
         var merged = {}; for (var k in cur) merged[k] = cur[k]; for (var k2 in vals) merged[k2] = vals[k2];
         var b = ov.querySelector("#lmp-save"); b.disabled = true; b.textContent = "Guardando...";
-        return rpc("lm_guardar", { p_codigo: ACC.codigo, p_clave: ACC.clave, p_config: merged }).then(function () { location.reload(); })
+        return rpc("lm_guardar", { p_codigo: ACC.codigo, p_clave: ACC.clave, p_config: merged }).then(function () { celebrar("¡Guardado! Ya está en vivo ✨"); location.reload(); })
           .catch(function () { b.disabled = false; b.textContent = "Guardar"; err("No se pudo guardar. Revisá tu conexión."); });
       }
       if (!save(o.key, vals)) return err("Tu navegador no permite guardar datos (¿modo privado?). Probá en una ventana normal.");
-      location.reload();
+      celebrar("¡Listo! Así se ve tu " + (o.cosa || "negocio") + " 🎉"); location.reload();
     };
     var r = ov.querySelector("#lmp-reset");
     if (r) r.onclick = function () { reset(o.key); lsDel("lm_cuenta_" + o.key); location.reload(); };
@@ -270,10 +279,53 @@
       m.querySelector("#lmp-no").onclick = function () { lsSet("lm_inst_no", "1"); m.querySelector(".lmp-x").click(); };
     }, 1500);
   }
-  function ayuda() {
-    var n = P.nombres[ACC.producto] || ACC.producto;
-    modal("<h2>¿Necesitás ayuda o algo a tu medida?</h2><p>Si algo no funciona como esperás, querés una mejora, o una personalización que no podés hacer desde «Editar» (otro diseño, más campos, conectarlo con otra herramienta), escribime y lo resolvemos.</p><p><a class=\"lmp-b\" style=\"display:inline-block;text-decoration:none\" href=\"" + esc(waLink("Hola Leandro, soy cliente de " + n + " (código " + ACC.codigo + "). Quiero consultarte por: ")) + "\" target=\"_blank\" rel=\"noopener\">Escribirme por WhatsApp</a></p>");
+  /* ---------- Detalles que dan gusto ---------- */
+  function reducido() { try { return matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) { return false; } }
+  function vibra() { try { if (navigator.vibrate) navigator.vibrate(12); } catch (e) {} }
+  function toast(msg) { css(); var t = el('<div class="lmp-toast" role="status">' + esc(msg) + "</div>"); document.body.appendChild(t); setTimeout(function () { close(t); }, 3300); }
+  function confeti(n) {
+    if (reducido()) return; css(); var cols = ["#5FD3B3", "#0B7A63", "#F5B942", "#E4572E", "#4C8DF6"];
+    for (var i = 0; i < (n || 60); i++) {
+      var d = document.createElement("i"); d.className = "lmp-cf"; d.style.left = Math.random() * 100 + "vw"; d.style.background = cols[i % cols.length];
+      d.style.animationDuration = (1.4 + Math.random() * 1.4) + "s"; d.style.animationDelay = (Math.random() * 0.4) + "s"; document.body.appendChild(d);
+      (function (x) { setTimeout(function () { close(x); }, 3600); })(d);
+    }
   }
+  function celebrar(msg) { try { sessionStorage.setItem("lm_celebra", msg); } catch (e) {} }
+  function pendiente() { try { var m = sessionStorage.getItem("lm_celebra"); if (m) { sessionStorage.removeItem("lm_celebra"); setTimeout(function () { toast(m); confeti(70); vibra(); }, 300); } } catch (e) {} }
+  function contar() {
+    if (reducido()) return;
+    [].forEach.call(document.querySelectorAll(".k b"), function (b) {
+      var raw = b.textContent, dig = raw.replace(/\D/g, ""); if (!dig || dig.length > 9) return;
+      var fin = parseInt(dig, 10), pre = raw.charAt(0) === "$" ? "$" : "", t0 = null; if (fin <= 0) return;
+      function paso(ts) { if (!t0) t0 = ts; var p = Math.min(1, (ts - t0) / 700), v = Math.round(fin * (1 - Math.pow(1 - p, 3))); if (p < 1) { b.textContent = pre + v.toLocaleString("es-AR"); requestAnimationFrame(paso); } else b.textContent = raw; }
+      requestAnimationFrame(paso);
+    });
+  }
+  function revelar() {
+    if (reducido() || !window.IntersectionObserver) return; css();
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }); }, { threshold: 0.08 });
+    [].forEach.call(document.querySelectorAll(".card,.how>div,.k"), function (x) { x.classList.add("lm-rv"); io.observe(x); });
+  }
+  window.addEventListener("load", function () { setTimeout(function () { contar(); revelar(); pendiente(); }, 200); });
+  document.addEventListener("click", function (e) {
+    var t = e.target; if (!t || !t.closest) return;
+    if (t.closest("[data-p]")) { toast("¡Cobrado! 🎉"); confeti(35); vibra(); return; }
+    if (t.closest("[data-d],.lmp-b,.btn,.b")) vibra();
+  });
+  function pedir(origen) {
+    var n = ACC && ACC.producto ? (P.nombres[ACC.producto] || "") : (origen || "");
+    var ov = modal('<h2>💬 Contame qué necesitás</h2><p>Si algo no funciona, querés una mejora o ninguna opción te cierra del todo, escribilo acá y lo armamos para vos. Sin compromiso.</p>' +
+      '<div class="lmp-chips">' + ["Algo no funciona", "Una mejora", "Un dato o campo más", "Algo a medida"].map(function (c) { return '<button type="button" class="lmp-chip">' + esc(c) + "</button>"; }).join("") + "</div>" +
+      '<label for="lmp-need">Tu mensaje</label><textarea id="lmp-need" placeholder="Ej.: quiero que mis clientes puedan subir una foto del producto"></textarea>' +
+      '<div class="lmp-row"><a class="lmp-b g" id="lmp-snd" href="#" target="_blank" rel="noopener" style="text-decoration:none">Enviármelo por WhatsApp</a></div>');
+    var ta = ov.querySelector("#lmp-need");
+    [].forEach.call(ov.querySelectorAll(".lmp-chip"), function (c) { c.onclick = function () { if (!ta.value) ta.value = c.textContent + ": "; ta.focus(); vibra(); }; });
+    ov.querySelector("#lmp-snd").onclick = function () {
+      this.href = waLink("Hola Leandro! " + (ACC && ACC.codigo ? "Soy cliente de " + n + " (código " + ACC.codigo + "). " : (n ? "Estuve viendo " + n + ". " : "")) + (ta.value.trim() || "Quiero consultarte por una función a medida."));
+    };
+  }
+  function ayuda() { pedir(); }
   function mount(o) {
     css(); LAST = o;
     if (C_COD && (!ACC || ACC.error)) return aviso("Este enlace no es válido");
@@ -315,5 +367,5 @@
   }
 
   window.LMPrueba = { planes: P, money: money, load: load, save: save, reset: reset, mount: mount, plans: plans, esc: esc, waLink: waLink,
-    rpc: rpc, guardar: guardar, cuenta: ACC, activo: ACTIVO, admin: !!(ACC && ACC.admin && ACTIVO) };
+    rpc: rpc, pedir: pedir, guardar: guardar, cuenta: ACC, activo: ACTIVO, admin: !!(ACC && ACC.admin && ACTIVO) };
 })();
