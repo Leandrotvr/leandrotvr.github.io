@@ -242,7 +242,7 @@
       var bar = el('<div class="lmp-bar" role="region" aria-label="Mi panel"></div>');
       if (ACTIVO) {
         bar.innerHTML = '<span>Mi panel · versión completa</span><button class="lmp-b o" id="lmp-ed">Editar</button>' + (o.privado ? "" : '<button class="lmp-b" id="lmp-cp">Copiar enlace para mis clientes</button>') +
-          (ACC.reservas ? '<button class="lmp-b o" id="lmp-rs">Reservas (' + ACC.reservas.length + ")</button>" : "");
+          (ACC.producto === "turnos" && ACC.reservas ? '<button class="lmp-b o" id="lmp-rs">Reservas (' + ACC.reservas.length + ")</button>" : "");
         bar.querySelector("#lmp-ed").onclick = function () { form(o); };
         var cpb = bar.querySelector("#lmp-cp"); if (cpb) cpb.onclick = function (e) { copiar(urlPublica(ACC.codigo), e.target); };
         var rs = bar.querySelector("#lmp-rs");
