@@ -60,17 +60,29 @@ h1{margin:12px 0 6px;font-size:clamp(26px,4.5vw,40px);line-height:1.15}.hero p{m
   <a class="b2" href="https://wa.me/5493777416857?text=Hola%20Leandro%2C%20vi%20la%20demo%20de%20cobranzas%20y%20quiero%20algo%20as%C3%AD%20para%20mi%20negocio" target="_blank" rel="noopener">Consultar por WhatsApp</a>
   <p style="margin-top:14px"><a href="https://leandrotvr.github.io/">← Volver a todos los proyectos</a></p>
 </div></div>
+<script src="https://leandrotvr.github.io/prueba.js"></script>
 <script>
+var C=window.LMPrueba?LMPrueba.load("cobros"):null,LINK=C&&C.link?C.link:"";
 var D=[{n:"Gimnasio · Lucía R.",c:"Cuota octubre",m:18000,d:-12},{n:"Gimnasio · Martín P.",c:"Cuota octubre",m:18000,d:-5},{n:"Academia · Sofía G.",c:"Clases de inglés",m:24000,d:-2},{n:"Academia · Tomás F.",c:"Clases de inglés",m:24000,d:3},{n:"Gimnasio · Carla M.",c:"Cuota noviembre",m:18000,d:9},{n:"Club · Familia Díaz",c:"Abono mensual",m:32000,d:0}];
-var paid=14000+8000,$=function(i){return document.getElementById(i)};
+var paid=C?0:22000,$=function(i){return document.getElementById(i)};
 var money=function(n){return"$"+n.toLocaleString("es-AR")};
+function fn(n){var p=n.indexOf("· ")>=0?n.split("· ")[1]:n;return p.split(" ")[0]}
 function st(x){return x.p?'<span class="st paid">Pagado</span>':x.d<0?'<span class="st late">Atrasado '+(-x.d)+" d</span>":x.d===0?'<span class="st soon">Vence hoy</span>':'<span class="st soon">Vence en '+x.d+" d</span>"}
 function draw(){D.sort(function(a,b){return(a.p?1:0)-(b.p?1:0)||a.d-b.d});
 $("t").innerHTML='<div class="tr h"><span>Cliente</span><span>Concepto</span><span>Importe</span><span>Estado</span><span>Acciones</span></div>'+D.map(function(x,i){
-var msg="Hola "+x.n.split("· ")[1].split(" ")[0]+"! Te recuerdo que "+x.c.toLowerCase()+" ("+money(x.m)+") "+(x.d<0?"está vencida":"vence pronto")+". Podés pagar acá: [tu link de pago]. ¡Gracias!";
+var msg="Hola "+fn(x.n)+"! Te recuerdo que "+x.c.toLowerCase()+" ("+money(x.m)+") "+(x.d<0?"está vencida":"vence pronto")+". Podés pagar acá: "+(LINK||"[tu link de pago]")+". ¡Gracias!";
 return'<div class="tr'+(x.p?" paidrow":"")+'"><span>'+x.n+"</span><span>"+x.c+"</span><span>"+money(x.m)+"</span><span>"+st(x)+'</span><span class="acts">'+(x.p?"":'<a class="b wa" target="_blank" rel="noopener" href="https://wa.me/?text='+encodeURIComponent(msg)+'">Recordar</a><button class="b g" data-p="'+D.indexOf(x)+'">Marcar pagado</button>')+"</span></div>"}).join("");
 var pend=0,late=0,cobr=paid;D.forEach(function(x){if(x.p)cobr+=x.m;else{pend+=x.m;if(x.d<0)late++}});$("k1").textContent=money(pend);$("k2").textContent=late;$("k3").textContent=money(cobr)}
-document.addEventListener("click",function(e){var i=e.target.dataset.p;if(i!==undefined){D[i].p=true;draw()}});draw();
+document.addEventListener("click",function(e){var i=e.target.dataset.p;if(i!==undefined){D[i].p=true;draw()}});if(C&&C.clientes&&C.clientes.length){D=C.clientes.map(function(l){var a=l.split(";");return{n:(a[0]||"").trim(),c:(a[1]||"").trim()||"Cuota",m:parseInt((a[2]||"0").replace(/\D/g,""),10)||0,d:parseInt((a[3]||"0").replace(/[^\d-]/g,""),10)||0}})}
+draw();
+if(C){document.querySelector("h1").textContent="Cobranzas de "+(C.nombre||"mi negocio");
+document.querySelector(".badge").textContent="VERSIÓN DE PRUEBA";
+document.querySelector(".note").innerHTML="<b>Esta es tu versión de prueba.</b> Son tus clientes"+(LINK?" y tu link de pago.":". Cargá tu link de pago en «Editar» para incluirlo en los recordatorios.")}
+if(window.LMPrueba)LMPrueba.mount({key:"cobros",cosa:"negocio",title:"Mis cobranzas de prueba",intro:"Cargá tus clientes y mirá cómo se arma tu panel.",limit:"hasta 5 clientes",
+fields:[{id:"nombre",label:"Nombre de tu negocio",req:1,placeholder:"Ej.: Gimnasio Fuerza"},
+{id:"link",label:"Tu link de pago (opcional)",type:"url",placeholder:"https://mpago.la/...",hint:"El link de Mercado Pago que querés incluir en los recordatorios."},
+{id:"clientes",label:"Tus clientes",type:"list",req:1,max:5,placeholder:"Lucía R.; Cuota octubre; 18000; -5\nMartín P.; Cuota octubre; 18000; 3",hint:"Una línea por cliente: Nombre; concepto; importe; días (negativo = ya vencido, ej. -5; positivo = faltan 3 días)."}],
+check:function(v){for(var i=0;i<v.clientes.length;i++){var a=v.clientes[i].split(";");if(!(a[0]||"").trim()||!parseInt((a[2]||"").replace(/\D/g,""),10))return"Revisá la línea "+(i+1)+": falta el nombre o el importe (Nombre; concepto; importe; días)."}return""}});
 </script>
 <script src="https://leandrotvr.github.io/nav.js" defer></script>
 </body>
