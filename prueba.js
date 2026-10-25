@@ -99,6 +99,12 @@
   function urlPublica(cod) { return BASE + "?c=" + cod; }
   function urlPanel(cod, k) { return BASE + "?c=" + cod + "&k=" + k; }
   var LAST = null;
+  function hideNav() { var st = document.createElement("style"); st.textContent = ".lm-nav{display:none!important}"; document.head.appendChild(st); }
+  function guardar(patch) {
+    if (!(ACC && ACC.admin && ACTIVO)) return Promise.resolve();
+    var m = {}, k; for (k in ACC.config) m[k] = ACC.config[k]; for (k in patch) m[k] = patch[k]; ACC.config = m;
+    return rpc("lm_guardar", { p_codigo: ACC.codigo, p_clave: ACC.clave, p_config: m });
+  }
 
   /* ---------- Precio / activación ---------- */
   function plans(key, why) {
@@ -141,10 +147,10 @@
       var pan = urlPanel(c.codigo, c.clave), pub = urlPublica(c.codigo);
       ov.querySelector(".lmp-m").innerHTML = '<button class="lmp-x" aria-label="Cerrar">×</button><h2>¡Listo, ya está activo! 🎉</h2><p>Tu versión completa funciona sin límites. Te mandamos estos enlaces también por email.</p>' +
         "<label>Tu panel (solo tuyo, guardalo)</label><div class=\"lmp-link\">" + esc(pan) + "</div>" +
-        "<label>Enlace para compartir con tus clientes</label><div class=\"lmp-link\">" + esc(pub) + "</div>" +
-        '<div class="lmp-row"><a class="lmp-b" href="' + esc(pan) + '">Abrir mi panel</a><button class="lmp-b o" id="lmp-cp">Copiar enlace para mis clientes</button></div>';
+        (o.privado ? "" : "<label>Enlace para compartir con tus clientes</label><div class=\"lmp-link\">" + esc(pub) + "</div>") +
+        '<div class="lmp-row"><a class="lmp-b" href="' + esc(pan) + '">Abrir mi panel</a>' + (o.privado ? "" : '<button class="lmp-b o" id="lmp-cp">Copiar enlace para mis clientes</button>') + "</div>";
       ov.querySelector(".lmp-x").onclick = function () { close(ov); };
-      ov.querySelector("#lmp-cp").onclick = function () { copiar(pub, ov.querySelector("#lmp-cp")); };
+      var cp2 = ov.querySelector("#lmp-cp"); if (cp2) cp2.onclick = function () { copiar(pub, cp2); };
     }
     function chequear() {
       if (!vivo) return;
@@ -231,13 +237,14 @@
     if (C_COD && (!ACC || ACC.error)) return aviso("Este enlace no es válido");
     if (ACC && ACC.producto === o.key) {
       refrescar();
-      if (!ACC.admin) { if (!ACTIVO) aviso("Este negocio no está disponible por ahora"); return; }
+      if (ACTIVO) hideNav();
+      if (!ACC.admin) { if (o.privado) { aviso("Este panel es privado"); return; } if (!ACTIVO) aviso("Este negocio no está disponible por ahora"); return; }
       var bar = el('<div class="lmp-bar" role="region" aria-label="Mi panel"></div>');
       if (ACTIVO) {
-        bar.innerHTML = '<span>Mi panel · versión completa</span><button class="lmp-b o" id="lmp-ed">Editar</button><button class="lmp-b" id="lmp-cp">Copiar enlace para mis clientes</button>' +
+        bar.innerHTML = '<span>Mi panel · versión completa</span><button class="lmp-b o" id="lmp-ed">Editar</button>' + (o.privado ? "" : '<button class="lmp-b" id="lmp-cp">Copiar enlace para mis clientes</button>') +
           (ACC.reservas ? '<button class="lmp-b o" id="lmp-rs">Reservas (' + ACC.reservas.length + ")</button>" : "");
         bar.querySelector("#lmp-ed").onclick = function () { form(o); };
-        bar.querySelector("#lmp-cp").onclick = function (e) { copiar(urlPublica(ACC.codigo), e.target); };
+        var cpb = bar.querySelector("#lmp-cp"); if (cpb) cpb.onclick = function (e) { copiar(urlPublica(ACC.codigo), e.target); };
         var rs = bar.querySelector("#lmp-rs");
         if (rs) rs.onclick = function () {
           var f = function (d) { var p = String(d).split("-"); return p[2] + "/" + p[1]; };
@@ -262,5 +269,5 @@
   }
 
   window.LMPrueba = { planes: P, money: money, load: load, save: save, reset: reset, mount: mount, plans: plans, esc: esc, waLink: waLink,
-    rpc: rpc, cuenta: ACC, activo: ACTIVO, admin: !!(ACC && ACC.admin && ACTIVO) };
+    rpc: rpc, guardar: guardar, cuenta: ACC, activo: ACTIVO, admin: !!(ACC && ACC.admin && ACTIVO) };
 })();
