@@ -232,6 +232,10 @@
     lsSet(tk, String(Date.now()));
     syncCuenta(ACC.codigo).then(function (r) { if (r && r.estado && (r.estado === "activo") !== ACTIVO) location.reload(); });
   }
+  function ayuda() {
+    var n = P.nombres[ACC.producto] || ACC.producto;
+    modal("<h2>¿Necesitás ayuda o algo a tu medida?</h2><p>Si algo no funciona como esperás, querés una mejora, o una personalización que no podés hacer desde «Editar» (otro diseño, más campos, conectarlo con otra herramienta), escribime y lo resolvemos.</p><p><a class=\"lmp-b\" style=\"display:inline-block;text-decoration:none\" href=\"" + esc(waLink("Hola Leandro, soy cliente de " + n + " (código " + ACC.codigo + "). Quiero consultarte por: ")) + "\" target=\"_blank\" rel=\"noopener\">Escribirme por WhatsApp</a></p>");
+  }
   function mount(o) {
     css(); LAST = o;
     if (C_COD && (!ACC || ACC.error)) return aviso("Este enlace no es válido");
@@ -242,13 +246,15 @@
       var bar = el('<div class="lmp-bar" role="region" aria-label="Mi panel"></div>');
       if (ACTIVO) {
         bar.innerHTML = '<span>Mi panel · versión completa</span><button class="lmp-b o" id="lmp-ed">Editar</button>' + (o.privado ? "" : '<button class="lmp-b" id="lmp-cp">Copiar enlace para mis clientes</button>') +
-          (ACC.producto === "turnos" && ACC.reservas ? '<button class="lmp-b o" id="lmp-rs">Reservas (' + ACC.reservas.length + ")</button>" : "");
+          '<button class="lmp-b o" id="lmp-ay">¿Ayuda o mejoras?</button>' + (ACC.producto === "turnos" && ACC.reservas ? '<button class="lmp-b o" id="lmp-rs">Reservas (' + ACC.reservas.length + ")</button>" : "");
         bar.querySelector("#lmp-ed").onclick = function () { form(o); };
         var cpb = bar.querySelector("#lmp-cp"); if (cpb) cpb.onclick = function (e) { copiar(urlPublica(ACC.codigo), e.target); };
+        var ay = bar.querySelector("#lmp-ay"); if (ay) ay.onclick = function () { ayuda(); };
         var rs = bar.querySelector("#lmp-rs");
         if (rs) rs.onclick = function () {
           var f = function (d) { var p = String(d).split("-"); return p[2] + "/" + p[1]; };
-          modal("<h2>Reservas de tus clientes</h2>" + (ACC.reservas.length ? ACC.reservas.map(function (r) { return "<p><b>" + f(r.fecha) + " " + esc(r.hora) + "</b> · " + esc(r.nombre) + ' · <a href="https://wa.me/' + esc(String(r.tel).replace(/\D/g, "")) + '" target="_blank" rel="noopener">' + esc(r.tel) + "</a></p>"; }).join("") : "<p>Todavía no hay reservas.</p>"));
+          var ov = modal("<h2>Reservas de tus clientes</h2>" + (ACC.reservas.length ? ACC.reservas.map(function (r) { return "<p><b>" + f(r.fecha) + " " + esc(r.hora) + "</b> · " + esc(r.nombre) + ' · <a href="https://wa.me/' + esc(String(r.tel).replace(/\D/g, "")) + '" target="_blank" rel="noopener">' + esc(r.tel) + '</a> · <label style="white-space:nowrap"><input type="checkbox" data-sena="' + r.id + '"' + (r.sena ? " checked" : "") + "> Seña recibida</label></p>"; }).join("") : "<p>Todavía no hay reservas.</p>"));
+          ov.addEventListener("change", function (e) { var c = e.target; if (!c.dataset || !c.dataset.sena) return; var id = Number(c.dataset.sena), val = c.checked; rpc("lm_sena", { p_codigo: ACC.codigo, p_clave: ACC.clave, p_id: id, p_valor: val }).then(function () { ACC.reservas.forEach(function (r) { if (r.id === id) r.sena = val; }); }, function () { c.checked = !val; }); });
         };
       } else {
         bar.innerHTML = '<span>Esperando la confirmación de tu pago</span><button class="lmp-b" id="lmp-st">Ver estado</button>';
