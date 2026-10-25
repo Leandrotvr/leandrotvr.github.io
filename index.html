@@ -216,7 +216,7 @@ footer a{margin-right:14px}
 <script>
 (function(){var L=window.LMPrueba;if(!L)return;var P=L.planes,g=document.getElementById("planesGrid");if(!g)return;
 var h=["turnos","catalogo","cobros","stock"].map(function(k){return '<article class="card"><span class="tag">'+L.esc(P.nombres[k])+'</span><h3>'+L.money(P.precios[k])+' <small style="font-size:15px;font-weight:600;color:var(--muted)">por mes</small></h3><p>'+L.esc(P.incluye[k])+'</p></article>'}).join("");
-h+='<article class="card" style="border:2px solid var(--accent)"><span class="tag">Pack con los 4</span><h3>'+L.money(P.precios.pack)+' <small style="font-size:15px;font-weight:600;color:var(--muted)">por mes</small></h3><p>Turnos, catálogo, cobros y stock juntos, con tus datos cargados.</p><a class="btn btn-primary" href="'+L.waLink("Hola Leandro, me interesa el pack de los 4 sistemas.")+'" target="_blank" rel="noopener">Consultar el pack</a></article>';
+h+='<article class="card" style="border:2px solid var(--accent)"><span class="tag">Pack con los 4</span><h3>'+L.money(P.precios.pack)+' <small style="font-size:15px;font-weight:600;color:var(--muted)">por mes</small></h3><p>Turnos, catálogo, cobros y stock juntos, con tus datos cargados.</p><a class="btn btn-primary" href="'+L.esc(P.mp.pack||L.waLink("Hola Leandro, me interesa el pack de los 4 sistemas."))+'" target="_blank" rel="noopener">Quiero el pack</a></article>';
 g.innerHTML=h;document.getElementById("planesNote").textContent=P.vigencia+" La prueba gratis se guarda solo en tu navegador.";})();
 </script>
 <script src="https://leandrotvr.github.io/nav.js" defer></script>
