@@ -126,7 +126,7 @@ footer a{margin-right:14px}
       <h3>Turnos online con seña</h3>
       <p>Tu cliente elige día y horario, paga la seña y recibe su turno al instante. Menos ausentes, menos mensajes.</p>
       <ul><li>Reserva el horario mientras paga</li><li>Cobro por Mercado Pago</li><li>Aviso inmediato para vos</li></ul>
-      <a class="btn btn-primary" href="https://leandrotvr.github.io/demo-turnos/">Probar la demo <span aria-hidden="true">→</span></a>
+      <a class="btn btn-primary" href="https://leandrotvr.github.io/demo-turnos/">Probar gratis con mi negocio <span aria-hidden="true">→</span></a>
     </article>
     <article class="card">
       <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="19" height="13" rx="3"/><path d="M2.5 10h19M6.5 15h4"/></svg></div><span class="num">02</span>
@@ -134,7 +134,7 @@ footer a{margin-right:14px}
       <h3>Cobros y recordatorios</h3>
       <p>Panel de quién debe y desde cuándo, con recordatorio por WhatsApp y link de pago a un toque.</p>
       <ul><li>Atrasados marcados en rojo</li><li>Recordatorio con link de pago</li><li>Totales que se actualizan solos</li></ul>
-      <a class="btn btn-primary" href="https://leandrotvr.github.io/cobros/">Probar la demo <span aria-hidden="true">→</span></a>
+      <a class="btn btn-primary" href="https://leandrotvr.github.io/cobros/">Probar gratis con mi negocio <span aria-hidden="true">→</span></a>
     </article>
     <article class="card">
       <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2l2.4 11h10.2L20 8H6.2"/><circle cx="9" cy="19.5" r="1.4"/><circle cx="17" cy="19.5" r="1.4"/></svg></div><span class="num">03</span>
@@ -142,7 +142,7 @@ footer a{margin-right:14px}
       <h3>Catálogo y pedidos por WhatsApp</h3>
       <p>Una mini tienda con carrito: el cliente arma el pedido y te llega ya ordenado por WhatsApp.</p>
       <ul><li>Productos, precios y fotos</li><li>Carrito que arma el mensaje</li><li>Se actualiza fácil, sin programar</li></ul>
-      <a class="btn btn-primary" href="https://leandrotvr.github.io/catalogo/">Probar la demo <span aria-hidden="true">→</span></a>
+      <a class="btn btn-primary" href="https://leandrotvr.github.io/catalogo/">Probar gratis con mi negocio <span aria-hidden="true">→</span></a>
     </article>
     <article class="card">
       <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5 9 5 9-5zM3 8v8l9 5 9-5V8M12 13v8"/></svg></div><span class="num">04</span>
@@ -170,6 +170,15 @@ footer a{margin-right:14px}
     <p>“Ahora sé exactamente cuánto tengo de cada cosa.”</p>
     <cite>Dueño de un comercio que usa el gestor de stock · <a href="https://leandrotvr.github.io/portfolio-automatizaciones/#caso-stock">ver el caso</a></cite>
   </figure>
+  </div>
+</section>
+
+<section id="planes">
+  <div class="wrap">
+  <h2 class="t">Precios simples, por mes</h2>
+  <p class="sub">Probá gratis con los datos de tu negocio. Si te sirve, pasás a la versión completa sin permanencia mínima.</p>
+  <div class="cards" id="planesGrid"></div>
+  <p class="sub" id="planesNote" style="margin-top:16px;font-size:14px"></p>
   </div>
 </section>
 
@@ -203,6 +212,13 @@ footer a{margin-right:14px}
 </div>
 <div class="wrap"><footer>© 2026 Leandro Maciel · <a href="https://leandrotvr.github.io/tarjeta/">Tarjeta con QR para imprimir</a><a href="https://github.com/Leandrotvr">GitHub</a></footer></div>
 <a class="fab" href="https://wa.me/5493777416857?text=Hola%20Leandro%2C%20vi%20tu%20p%C3%A1gina%20y%20quiero%20consultarte" target="_blank" rel="noopener" aria-label="Escribir por WhatsApp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20.5l1.7-5A8.5 8.5 0 1 1 21 11.5z"/></svg><span>WhatsApp</span></a>
+<script src="https://leandrotvr.github.io/prueba.js"></script>
+<script>
+(function(){var L=window.LMPrueba;if(!L)return;var P=L.planes,g=document.getElementById("planesGrid");if(!g)return;
+var h=["turnos","catalogo","cobros","stock"].map(function(k){return '<article class="card"><span class="tag">'+L.esc(P.nombres[k])+'</span><h3>'+L.money(P.precios[k])+' <small style="font-size:15px;font-weight:600;color:var(--muted)">por mes</small></h3><p>'+L.esc(P.incluye[k])+'</p></article>'}).join("");
+h+='<article class="card" style="border:2px solid var(--accent)"><span class="tag">Pack con los 4</span><h3>'+L.money(P.precios.pack)+' <small style="font-size:15px;font-weight:600;color:var(--muted)">por mes</small></h3><p>Turnos, catálogo, cobros y stock juntos, con tus datos cargados.</p><a class="btn btn-primary" href="'+L.waLink("Hola Leandro, me interesa el pack de los 4 sistemas.")+'" target="_blank" rel="noopener">Consultar el pack</a></article>';
+g.innerHTML=h;document.getElementById("planesNote").textContent=P.vigencia+" La prueba gratis se guarda solo en tu navegador.";})();
+</script>
 <script src="https://leandrotvr.github.io/nav.js" defer></script>
 </body>
 </html>
