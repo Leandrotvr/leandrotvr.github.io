@@ -232,6 +232,44 @@
     lsSet(tk, String(Date.now()));
     syncCuenta(ACC.codigo).then(function (r) { if (r && r.estado && (r.estado === "activo") !== ACTIVO) location.reload(); });
   }
+  /* ---------- App instalable (PWA) ---------- */
+  var DIP = null;
+  window.addEventListener("beforeinstallprompt", function (e) { e.preventDefault(); DIP = e; });
+  window.addEventListener("appinstalled", function () { DIP = null; lsSet("lm_inst_ok", "1"); });
+  function enApp() { try { return matchMedia("(display-mode: standalone)").matches || navigator.standalone === true; } catch (e) { return false; } }
+  function icono(txt, size) {
+    var c = document.createElement("canvas"); c.width = c.height = size; var g = c.getContext("2d");
+    g.fillStyle = "#0B7A63"; g.fillRect(0, 0, size, size); g.fillStyle = "#fff";
+    g.font = "bold " + Math.round(size * 0.55) + "px system-ui,Arial,sans-serif"; g.textAlign = "center"; g.textBaseline = "middle";
+    g.fillText(txt, size / 2, size / 2 + size * 0.03); return c.toDataURL("image/png");
+  }
+  function pwa(nombre) {
+    try {
+      nombre = String(nombre || "Mi panel").trim() || "Mi panel";
+      var ini = nombre.charAt(0).toUpperCase();
+      var man = { name: nombre, short_name: nombre.slice(0, 12), start_url: location.href, scope: location.origin + location.pathname.replace(/[^\/]*$/, ""), display: "standalone", background_color: "#F5F6F2", theme_color: "#0B7A63",
+        icons: [{ src: icono(ini, 192), sizes: "192x192", type: "image/png" }, { src: icono(ini, 512), sizes: "512x512", type: "image/png" }] };
+      var l = document.createElement("link"); l.rel = "manifest"; l.href = URL.createObjectURL(new Blob([JSON.stringify(man)], { type: "application/manifest+json" })); document.head.appendChild(l);
+      var a = document.createElement("link"); a.rel = "apple-touch-icon"; a.href = icono(ini, 180); document.head.appendChild(a);
+      [["apple-mobile-web-app-capable", "yes"], ["apple-mobile-web-app-title", nombre.slice(0, 12)], ["mobile-web-app-capable", "yes"]].forEach(function (p) { var m = document.createElement("meta"); m.name = p[0]; m.content = p[1]; document.head.appendChild(m); });
+    } catch (e) {}
+  }
+  function instalar() {
+    if (DIP) { DIP.prompt(); DIP.userChoice.then(function () { DIP = null; }); return; }
+    var ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
+    modal("<h2>📲 Instalar en tu celular</h2>" + (ios
+      ? "<ol><li>Abrí esta página en <b>Safari</b>.</li><li>Tocá el botón <b>Compartir</b> (el cuadrado con una flecha hacia arriba).</li><li>Elegí <b>«Agregar a inicio»</b> y confirmá.</li></ol>"
+      : "<ol><li>Tocá los <b>tres puntos ⋮</b> arriba a la derecha del navegador.</li><li>Elegí <b>«Instalar aplicación»</b> o <b>«Agregar a la pantalla principal»</b>.</li><li>Confirmá. Te queda un ícono para abrirlo con un toque.</li></ol>") +
+      "<p>Quedará con el ícono de tu negocio, como cualquier app.</p>");
+  }
+  function ofrecerInstalar() {
+    if (enApp() || lsGet("lm_inst_ok") || lsGet("lm_inst_no") || !/android|iphone|ipad|ipod/i.test(navigator.userAgent)) return;
+    setTimeout(function () {
+      var m = modal('<h2>📲 Llevá tu panel en el celular</h2><p>Instalalo y lo abrís con un toque desde la pantalla de inicio, como cualquier app. Es gratis y no ocupa espacio.</p><p><button class="lmp-b" id="lmp-ins">Instalar ahora</button> <button class="lmp-b o" id="lmp-no">Ahora no</button></p>');
+      m.querySelector("#lmp-ins").onclick = function () { lsSet("lm_inst_no", "1"); m.querySelector(".lmp-x").click(); instalar(); };
+      m.querySelector("#lmp-no").onclick = function () { lsSet("lm_inst_no", "1"); m.querySelector(".lmp-x").click(); };
+    }, 1500);
+  }
   function ayuda() {
     var n = P.nombres[ACC.producto] || ACC.producto;
     modal("<h2>¿Necesitás ayuda o algo a tu medida?</h2><p>Si algo no funciona como esperás, querés una mejora, o una personalización que no podés hacer desde «Editar» (otro diseño, más campos, conectarlo con otra herramienta), escribime y lo resolvemos.</p><p><a class=\"lmp-b\" style=\"display:inline-block;text-decoration:none\" href=\"" + esc(waLink("Hola Leandro, soy cliente de " + n + " (código " + ACC.codigo + "). Quiero consultarte por: ")) + "\" target=\"_blank\" rel=\"noopener\">Escribirme por WhatsApp</a></p>");
@@ -246,9 +284,11 @@
       var bar = el('<div class="lmp-bar" role="region" aria-label="Mi panel"></div>');
       if (ACTIVO) {
         bar.innerHTML = '<span>Mi panel · versión completa</span><button class="lmp-b o" id="lmp-ed">Editar</button>' + (o.privado ? "" : '<button class="lmp-b" id="lmp-cp">Copiar enlace para mis clientes</button>') +
-          '<button class="lmp-b o" id="lmp-ay">¿Ayuda o mejoras?</button>' + (ACC.producto === "turnos" && ACC.reservas ? '<button class="lmp-b o" id="lmp-rs">Reservas (' + ACC.reservas.length + ")</button>" : "");
+          (enApp() ? "" : '<button class="lmp-b o" id="lmp-in">📲 Instalar app</button>') + '<button class="lmp-b o" id="lmp-ay">¿Ayuda o mejoras?</button>' + (ACC.producto === "turnos" && ACC.reservas ? '<button class="lmp-b o" id="lmp-rs">Reservas (' + ACC.reservas.length + ")</button>" : "");
         bar.querySelector("#lmp-ed").onclick = function () { form(o); };
         var cpb = bar.querySelector("#lmp-cp"); if (cpb) cpb.onclick = function (e) { copiar(urlPublica(ACC.codigo), e.target); };
+        var inb = bar.querySelector("#lmp-in"); if (inb) inb.onclick = instalar;
+        pwa(ACC.config && ACC.config.nombre || P.nombres[ACC.producto]); ofrecerInstalar();
         var ay = bar.querySelector("#lmp-ay"); if (ay) ay.onclick = function () { ayuda(); };
         var rs = bar.querySelector("#lmp-rs");
         if (rs) rs.onclick = function () {
