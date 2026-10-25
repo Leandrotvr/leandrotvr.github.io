@@ -12,7 +12,7 @@
       turnos: "Reservas reales de tus clientes, agenda sin límites y todos tus horarios.",
       catalogo: "Todos los productos que quieras, tu propio link y cambios cuando actualices tus precios.",
       cobros: "Todos tus clientes y vencimientos, con recordatorios que llevan tu link de pago.",
-      stock: "Productos ilimitados, ventas, compras y avisos de reposición."
+      stock: "Productos ilimitados, cantidades que se guardan solas, avisos de reposición y pedido al proveedor por WhatsApp."
     },
     vigencia: "Precios por mes, en pesos argentinos, vigentes a octubre 2026.",
     sb: { url: "https://hodjmhsqcbmyyjdkxmxp.supabase.co", key: "sb_publishable_XN9f3BDQe3sUNnh3PYglZA_my11T3_M" }
