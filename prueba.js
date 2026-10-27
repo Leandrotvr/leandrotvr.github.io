@@ -368,4 +368,6 @@
 
   window.LMPrueba = { planes: P, money: money, load: load, save: save, reset: reset, mount: mount, plans: plans, esc: esc, waLink: waLink,
     rpc: rpc, pedir: pedir, guardar: guardar, cuenta: ACC, activo: ACTIVO, admin: !!(ACC && ACC.admin && ACTIVO) };
+  /* Botón "Compartir QR" (nunca incluye claves) */
+  (function () { var q = document.createElement("script"); q.src = "https://leandrotvr.github.io/qr.js"; q.async = true; document.head.appendChild(q); })();
 })();
