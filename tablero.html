@@ -4,6 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tablero de ventas y mercadería</title>
+<meta name="description" content="Demostración con datos inventados de una ferretería: qué se vende, qué deja ganancia y qué conviene reponer, en una sola pantalla.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Tablero de ventas y mercadería (demostración)">
+<meta property="og:description" content="Con datos inventados de una ferretería: qué se vende, qué deja ganancia y qué conviene reponer, en una sola pantalla.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Semi+Condensed:wght@600;700&display=swap" rel="stylesheet">
 <style>
@@ -94,6 +98,10 @@ tr:last-child td{border-bottom:0}
 @media (max-width:900px){
   .kpis{grid-template-columns:repeat(2,1fr)}
   .grid2,.grid3,.cta{grid-template-columns:1fr}
+}
+@media (max-width:480px){
+  .kpi{padding:12px}
+  .kpi .v{font-size:clamp(1.1rem,5.4vw,1.5rem)}
 }
 </style>
 </head>
@@ -230,18 +238,20 @@ function niceStep(x){const p=Math.pow(10,Math.floor(Math.log10(x))),f=x/p;return
 const $=s=>document.querySelector(s);
 const nf=new Intl.NumberFormat('es-AR',{maximumFractionDigits:0});
 const nf1=new Intl.NumberFormat('es-AR',{maximumFractionDigits:1});
-const peso=n=>'$ '+nf.format(Math.round(n));
-const pesoM=n=>'$ '+nf1.format(n/1e6)+' M';
+const peso=n=>'$ '+nf.format(Math.round(n));
+const pesoM=n=>'$ '+nf1.format(n/1e6)+' M';
 const pct=n=>nf1.format(n*100)+' %';
 const ICON={crit:'<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M6 1l5.5 10h-11z"/></svg>',warn:'<svg viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="5"/></svg>'};
 
+let anchoMes=0;
 function chartMes(d){
-  const W=560,H=230,L=54,R=10,T=20,B=30,iw=W-L-R,ih=H-T-B;
+  anchoMes=$('#c-mes').clientWidth;
+  const W=Math.max(280,Math.round(anchoMes||560)),H=W<420?200:230,L=54,R=10,T=20,B=30,iw=W-L-R,ih=H-T-B;
   const max=Math.max(...d.porMes,1), step=niceStep(max/3);
   let s='<svg class="chart" viewBox="0 0 '+W+' '+H+'" role="group" aria-label="Ventas por mes">';
   for(let v=0;v<=max;v+=step){
     const y=T+ih-(v/max)*ih;
-    s+='<line class="grid" x1="'+L+'" x2="'+(W-R)+'" y1="'+y+'" y2="'+y+'"/><text class="ax" x="'+(L-8)+'" y="'+(y+4)+'" text-anchor="end">'+(v===0?'$ 0':pesoM(v))+'</text>';
+    s+='<line class="grid" x1="'+L+'" x2="'+(W-R)+'" y1="'+y+'" y2="'+y+'"/><text class="ax" x="'+(L-8)+'" y="'+(y+4)+'" text-anchor="end">'+(v===0?'$ 0':pesoM(v))+'</text>';
   }
   const band=iw/6, bw=Math.min(46,band*0.56);
   d.porMes.forEach((v,m)=>{
@@ -258,7 +268,8 @@ function tabla(head,filas){
   if(!filas.length) return '<p class="empty">No hay productos para mostrar con este filtro.</p>';
   return '<table><thead><tr>'+head.map((h,i)=>'<th'+(i?' class="num"':'')+'>'+h+'</th>').join('')+'</tr></thead><tbody>'+filas.join('')+'</tbody></table>';
 }
-const celdaProd=(r,extra)=>'<td><span class="pname">'+r.p.nombre+'</span><span class="small">'+(extra||RUBROS[r.p.rubro])+'</span></td>';
+const nb=s=>s.replace(/(\d) (kg|mm|cm|m|L|W|A)(?![a-zñ])/g,'$1 $2');
+const celdaProd=(r,extra)=>'<td><span class="pname">'+nb(r.p.nombre)+'</span><span class="small">'+(extra||RUBROS[r.p.rubro])+'</span></td>';
 
 function render(){
   const d=calc();
@@ -313,6 +324,8 @@ document.addEventListener('pointerover',e=>{const g=e.target.closest('[data-tip]
 document.addEventListener('focusin',e=>{const g=e.target.closest('[data-tip]');g?mostrar(g):ocultar()});
 document.addEventListener('focusout',ocultar);
 window.addEventListener('scroll',ocultar,{passive:true});
+let tAncho;
+window.addEventListener('resize',()=>{clearTimeout(tAncho);tAncho=setTimeout(()=>{if($('#c-mes').clientWidth!==anchoMes)render()},120)});
 render();
 </script>
 </body>
