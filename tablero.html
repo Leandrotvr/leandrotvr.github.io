@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tablero de ventas y mercadería</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Semi+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Idea: franja de título, una fila de filtros, cuatro cifras, dos gráficos y tres listas. En el celular, una sola columna. */
+  --plane:#f4f5f3; --surface:#fcfcfb; --ink:#0b0b0b; --ink-2:#52514e; --line:#dcdcd7;
+  --accent:#2a78d6; --accent-soft:#b7d3f6;
+  --band:#0d366b; --band-ink:#f0efec; --band-ink-2:#cde2fb;
+  --warn:#fab219; --crit:#d03b3b;
+  --font-display:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;
+  --font-body:"Barlow","Segoe UI",Arial,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --plane:#0d0d0d; --surface:#1a1a19; --ink:#f0efec; --ink-2:#c3c2b7; --line:#383835;
+    --accent:#3987e5; --accent-soft:#184f95;
+    --band:#0d366b; --band-ink:#f0efec; --band-ink-2:#cde2fb;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --plane:#0d0d0d; --surface:#1a1a19; --ink:#f0efec; --ink-2:#c3c2b7; --line:#383835;
+  --accent:#3987e5; --accent-soft:#184f95;
+  --band:#0d366b; --band-ink:#f0efec; --band-ink-2:#cde2fb;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--plane);color:var(--ink);font:400 16px/1.45 var(--font-body)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+.band{background:var(--band);color:var(--band-ink);padding:22px 0 20px}
+.tag{display:inline-block;border:1px solid var(--band-ink-2);color:var(--band-ink-2);border-radius:999px;padding:2px 10px;font:600 .76rem/1.5 var(--font-body);letter-spacing:.07em;text-transform:uppercase;margin-bottom:10px}
+h1{font:700 clamp(1.8rem,4.6vw,2.6rem)/1.05 var(--font-display);margin:0;text-wrap:balance}
+.sub{margin:8px 0 0;max-width:64ch;color:var(--band-ink-2)}
+.filters{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center;padding:16px 0}
+.fgroup{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.flabel{font:600 .78rem var(--font-body);color:var(--ink-2);text-transform:uppercase;letter-spacing:.06em;margin-right:4px}
+.fgroup button{font:500 .95rem var(--font-body);padding:7px 12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;cursor:pointer}
+.fgroup button[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.kpi,.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;min-width:0}
+.kpi{padding:14px 16px}
+.kpi .k{font:600 .78rem var(--font-body);color:var(--ink-2);text-transform:uppercase;letter-spacing:.05em}
+.kpi .v{font:700 clamp(1.5rem,3.1vw,2.1rem)/1.1 var(--font-display);font-variant-numeric:tabular-nums;margin-top:6px}
+.kpi .n{color:var(--ink-2);font-size:.9rem;margin-top:4px}
+.grid2{display:grid;grid-template-columns:1.15fr 1fr;gap:12px;margin-top:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
+.card{padding:16px}
+.card h2{font:700 1.25rem/1.2 var(--font-display);margin:0 0 2px;text-wrap:balance}
+.hint{color:var(--ink-2);font-size:.9rem;margin:0 0 12px}
+svg.chart{width:100%;height:auto;display:block}
+.grid{stroke:var(--line);stroke-width:1}
+.ax{fill:var(--ink-2);font:500 12px var(--font-body)}
+.lab{fill:var(--ink);font:600 12px var(--font-body)}
+.bar{outline:none;cursor:default}
+.bar path{fill:var(--accent)}
+.bar.off path{fill:var(--accent-soft)}
+.bar .hit{fill:transparent}
+.bar:focus-visible path{stroke:var(--ink);stroke-width:2}
+.bars{display:grid;gap:11px}
+.brow{display:grid;grid-template-columns:104px 1fr auto;gap:10px;align-items:center;font-variant-numeric:tabular-nums}
+.brow .bl{font-weight:500}
+.brow .bv{color:var(--ink-2);font-size:.92rem;white-space:nowrap}
+.bfill{height:14px;background:var(--accent);border-radius:0 4px 4px 0;min-width:2px}
+.brow.dim .bfill{background:var(--accent-soft)}
+.tscroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+th{font:600 .74rem var(--font-body);color:var(--ink-2);text-transform:uppercase;letter-spacing:.05em;text-align:left;padding:0 0 6px;border-bottom:1px solid var(--line)}
+td{padding:8px 0;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+.num{text-align:right;white-space:nowrap;padding-left:10px}
+.pname{font-weight:500}
+.small{display:block;color:var(--ink-2);font-size:.82rem}
+.pill{display:inline-flex;align-items:center;gap:5px;font:600 .78rem var(--font-body);border:1px solid var(--line);border-radius:999px;padding:2px 9px 2px 7px;white-space:nowrap}
+.pill svg{width:11px;height:11px;flex:none}
+.pill.crit svg{fill:var(--crit)}
+.pill.warn svg{fill:var(--warn)}
+.empty{color:var(--ink-2);margin:0}
+.cta{margin:12px 0 40px;background:var(--band);color:var(--band-ink);border-radius:10px;padding:20px;display:grid;grid-template-columns:1.3fr 1fr;gap:16px 28px;align-items:center}
+.cta h2{font:700 1.45rem/1.15 var(--font-display);margin:0 0 6px;text-wrap:balance}
+.cta p{margin:0;color:var(--band-ink-2);max-width:60ch}
+.cta .who{font-weight:600;color:var(--band-ink)}
+.cta a{color:var(--band-ink);font-weight:600}
+.cta ul{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:4px}
+#tip{position:fixed;z-index:5;background:var(--ink);color:var(--surface);padding:5px 9px;border-radius:6px;font:500 .85rem var(--font-body);pointer-events:none;white-space:nowrap}
+@media (max-width:900px){
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .grid2,.grid3,.cta{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<header class="band">
+  <div class="wrap">
+    <span class="tag">Datos de ejemplo</span>
+    <h1>Tablero de ventas y mercadería</h1>
+    <p class="sub">Una ferretería ficticia, de mayo a octubre de 2026. En una sola pantalla se ve qué se vende, qué deja ganancia y qué conviene reponer.</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="filters">
+    <div class="fgroup" id="f-periodo"><span class="flabel">Período</span></div>
+    <div class="fgroup" id="f-rubro"><span class="flabel">Rubro</span></div>
+  </div>
+
+  <section class="kpis" aria-label="Resumen">
+    <div class="kpi"><div class="k">Ventas</div><div class="v" id="k-venta"></div><div class="n" id="n-venta"></div></div>
+    <div class="kpi"><div class="k">Ganancia bruta</div><div class="v" id="k-gan"></div><div class="n" id="n-gan"></div></div>
+    <div class="kpi"><div class="k">Para reponer</div><div class="v" id="k-rep"></div><div class="n" id="n-rep"></div></div>
+    <div class="kpi"><div class="k">Mercadería quieta</div><div class="v" id="k-quieta"></div><div class="n" id="n-quieta"></div></div>
+  </section>
+
+  <section class="grid2">
+    <div class="card">
+      <h2>Ventas por mes</h2>
+      <p class="hint">Los meses fuera del período elegido se ven atenuados.</p>
+      <div id="c-mes"></div>
+    </div>
+    <div class="card">
+      <h2>Ventas por rubro</h2>
+      <p class="hint">Qué rubros sostienen la venta en el período.</p>
+      <div class="bars" id="c-rubro"></div>
+    </div>
+  </section>
+
+  <section class="grid3">
+    <div class="card">
+      <h2>Lo que más se vende</h2>
+      <p class="hint">Por facturación en el período.</p>
+      <div class="tscroll" id="t-venta"></div>
+    </div>
+    <div class="card">
+      <h2>Lo que más ganancia deja</h2>
+      <p class="hint">No siempre coincide con lo que más se vende.</p>
+      <div class="tscroll" id="t-gan"></div>
+    </div>
+    <div class="card">
+      <h2>Conviene reponer pronto</h2>
+      <p class="hint">Según el ritmo de venta de los últimos tres meses.</p>
+      <div class="tscroll" id="t-rep"></div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div>
+      <h2>¿Quiere ver estos números con los datos de su negocio?</h2>
+      <p>Este tablero usa datos inventados. La versión para su comercio se entrega en Excel y se arma con sus productos, sus rubros y los datos del sistema que ya usa.</p>
+    </div>
+    <div>
+      <p class="who">Leandro Maciel</p>
+      <p>Planillas y tableros en Excel para comercios. Provincia de Corrientes, Argentina.</p>
+      <ul>
+        <li>WhatsApp: <a href="https://wa.me/5493777416857">3777 41-6857</a></li>
+        <li>Correo: <a href="mailto:leandrotvr@gmail.com">leandrotvr@gmail.com</a></li>
+      </ul>
+    </div>
+  </section>
+</main>
+<div id="tip" hidden></div>
+
+<script>
+/*CALC-START*/
+const MESES=['May','Jun','Jul','Ago','Sep','Oct'];
+const MESES_L=['Mayo','Junio','Julio','Agosto','Septiembre','Octubre'];
+const RUBROS=['Construcción','Herramientas','Electricidad','Pinturería','Sanitarios','Bulonería'];
+// nombre, rubro, costo, precio, stock, venta mensual base (unidades), sin ventas en los dos últimos meses
+const BASE=[
+ ['Cemento Portland 50 kg',0,9800,12400,180,520,0],
+ ['Hierro ADN 420 Ø 8 mm x 12 m',0,8900,11200,95,260,0],
+ ['Arena fina x m³',0,21000,29500,40,48,0],
+ ['Ladrillo hueco 12x18x33',0,620,840,5200,6100,0],
+ ['Amoladora angular 115 mm',1,58000,84900,14,22,0],
+ ['Taladro percutor 13 mm',1,72000,109000,6,11,0],
+ ['Disco de corte 115 mm',1,950,1650,110,640,0],
+ ['Juego de llaves combinadas x 12',1,31000,52000,9,3,1],
+ ['Cable unipolar 2,5 mm x 100 m',2,61000,82000,12,34,0],
+ ['Térmica bipolar 20 A',2,7400,11900,48,60,0],
+ ['Lámpara LED 12 W',2,1100,1990,260,410,0],
+ ['Caja de embutir rectangular',2,380,690,900,300,0],
+ ['Látex interior 20 L',3,46000,68500,26,37,0],
+ ['Esmalte sintético 4 L',3,24500,37900,22,19,0],
+ ['Rodillo de lana 22 cm',3,4200,7600,35,52,0],
+ ['Enduido plástico 10 kg',3,9800,15400,60,8,1],
+ ['Caño PVC 110 mm x 4 m',4,13800,19900,36,58,0],
+ ['Tanque de agua 600 L',4,96000,139000,3,7,0],
+ ['Canilla monocomando cocina',4,38000,61000,7,9,0],
+ ['Termofusión 20 mm x 4 m',4,5200,8300,140,120,0],
+ ['Tornillo autoperforante 8x1 (x100)',5,2900,5200,140,210,0],
+ ['Bulón hexagonal 1/2 x 2 (x50)',5,6100,10400,40,44,0],
+ ['Electrodo 6013 2,5 mm x kg',5,5400,8900,18,96,0],
+ ['Varilla roscada 3/8 x 1 m',5,1900,3400,210,30,1]
+];
+let seed=7;
+const rnd=()=>{seed=(seed*1664525+1013904223)%4294967296;return seed/4294967296};
+const P=BASE.map(([nombre,rubro,costo,precio,stock,base,quieta])=>{
+  const u=MESES.map((_,m)=>Math.max(0,Math.round(base*(0.94+0.02*m)*(0.9+rnd()*0.2))));
+  if(quieta){u[4]=0;u[5]=0;}
+  return {nombre,rubro,costo,precio,stock,u};
+});
+const st={rubro:-1,meses:6};
+function calc(){
+  const from=6-st.meses;
+  const sel=P.filter(p=>st.rubro<0||p.rubro===st.rubro);
+  const rows=sel.map(p=>{
+    let un=0; for(let m=from;m<6;m++) un+=p.u[m];
+    const prom=(p.u[3]+p.u[4]+p.u[5])/3;
+    return {p,un,venta:un*p.precio,gan:un*(p.precio-p.costo),prom,
+      cob:prom>0?p.stock/(prom/30):Infinity,
+      quieta:p.u[4]+p.u[5]===0&&p.stock>0};
+  });
+  const venta=rows.reduce((a,r)=>a+r.venta,0), gan=rows.reduce((a,r)=>a+r.gan,0);
+  const porMes=MESES.map((_,m)=>sel.reduce((a,p)=>a+p.u[m]*p.precio,0));
+  const porRubro=RUBROS.map((n,i)=>({n,i,v:P.filter(p=>p.rubro===i).reduce((a,p)=>{let s=0;for(let m=from;m<6;m++)s+=p.u[m]*p.precio;return a+s},0)})).sort((a,b)=>b.v-a.v);
+  const rep=rows.filter(r=>r.cob<15).sort((a,b)=>a.cob-b.cob);
+  const quietas=rows.filter(r=>r.quieta);
+  return {rows,venta,gan,porMes,porRubro,rep,quietas,from};
+}
+function niceStep(x){const p=Math.pow(10,Math.floor(Math.log10(x))),f=x/p;return (f<1.5?1:f<3.5?2:f<7.5?5:10)*p}
+/*CALC-END*/
+
+const $=s=>document.querySelector(s);
+const nf=new Intl.NumberFormat('es-AR',{maximumFractionDigits:0});
+const nf1=new Intl.NumberFormat('es-AR',{maximumFractionDigits:1});
+const peso=n=>'$ '+nf.format(Math.round(n));
+const pesoM=n=>'$ '+nf1.format(n/1e6)+' M';
+const pct=n=>nf1.format(n*100)+' %';
+const ICON={crit:'<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M6 1l5.5 10h-11z"/></svg>',warn:'<svg viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="5"/></svg>'};
+
+function chartMes(d){
+  const W=560,H=230,L=54,R=10,T=20,B=30,iw=W-L-R,ih=H-T-B;
+  const max=Math.max(...d.porMes,1), step=niceStep(max/3);
+  let s='<svg class="chart" viewBox="0 0 '+W+' '+H+'" role="group" aria-label="Ventas por mes">';
+  for(let v=0;v<=max;v+=step){
+    const y=T+ih-(v/max)*ih;
+    s+='<line class="grid" x1="'+L+'" x2="'+(W-R)+'" y1="'+y+'" y2="'+y+'"/><text class="ax" x="'+(L-8)+'" y="'+(y+4)+'" text-anchor="end">'+(v===0?'$ 0':pesoM(v))+'</text>';
+  }
+  const band=iw/6, bw=Math.min(46,band*0.56);
+  d.porMes.forEach((v,m)=>{
+    const h=Math.max(2,(v/max)*ih), x=L+band*m+(band-bw)/2, y=T+ih-h, r=Math.min(4,h/2), y0=T+ih;
+    s+='<g class="bar'+(m>=d.from?'':' off')+'" tabindex="0" role="img" aria-label="'+MESES_L[m]+': '+peso(v)+'" data-tip="'+MESES_L[m]+' · '+peso(v)+'">'+
+      '<rect class="hit" x="'+(L+band*m)+'" y="'+T+'" width="'+band+'" height="'+ih+'"/>'+
+      '<path d="M'+x+','+y0+'V'+(y+r)+'Q'+x+','+y+' '+(x+r)+','+y+'H'+(x+bw-r)+'Q'+(x+bw)+','+y+' '+(x+bw)+','+(y+r)+'V'+y0+'Z"/></g>'+
+      '<text class="ax" x="'+(x+bw/2)+'" y="'+(H-10)+'" text-anchor="middle">'+MESES[m]+'</text>';
+    if(m===5) s+='<text class="lab" x="'+(x+bw/2)+'" y="'+(y-6)+'" text-anchor="middle">'+pesoM(v)+'</text>';
+  });
+  return s+'</svg>';
+}
+function tabla(head,filas){
+  if(!filas.length) return '<p class="empty">No hay productos para mostrar con este filtro.</p>';
+  return '<table><thead><tr>'+head.map((h,i)=>'<th'+(i?' class="num"':'')+'>'+h+'</th>').join('')+'</tr></thead><tbody>'+filas.join('')+'</tbody></table>';
+}
+const celdaProd=(r,extra)=>'<td><span class="pname">'+r.p.nombre+'</span><span class="small">'+(extra||RUBROS[r.p.rubro])+'</span></td>';
+
+function render(){
+  const d=calc();
+  const periodo=st.meses===1?'en octubre':'en los últimos '+st.meses+' meses';
+  $('#k-venta').textContent=peso(d.venta);
+  $('#n-venta').textContent=(st.rubro<0?'Todos los rubros':RUBROS[st.rubro])+', '+periodo;
+  $('#k-gan').textContent=peso(d.gan);
+  $('#n-gan').textContent='Margen del '+pct(d.venta?d.gan/d.venta:0);
+  const urg=d.rep.filter(r=>r.cob<7).length;
+  $('#k-rep').textContent=d.rep.length+(d.rep.length===1?' producto':' productos');
+  $('#n-rep').textContent=urg?urg+' con stock para menos de una semana':'Ninguno urgente';
+  $('#k-quieta').textContent=peso(d.quietas.reduce((a,r)=>a+r.p.stock*r.p.costo,0));
+  $('#n-quieta').textContent=d.quietas.length+(d.quietas.length===1?' producto':' productos')+' sin ventas en 60 días';
+
+  $('#c-mes').innerHTML=chartMes(d);
+  const maxR=Math.max(...d.porRubro.map(r=>r.v),1), totR=d.porRubro.reduce((a,r)=>a+r.v,0)||1;
+  $('#c-rubro').innerHTML=d.porRubro.map(r=>'<div class="brow'+(st.rubro>=0&&st.rubro!==r.i?' dim':'')+'" data-tip="'+r.n+' · '+peso(r.v)+' · '+pct(r.v/totR)+' de la venta"><span class="bl">'+r.n+'</span><span><span class="bfill" style="display:block;width:'+(r.v/maxR*100).toFixed(1)+'%"></span></span><span class="bv">'+pesoM(r.v)+'</span></div>').join('');
+
+  const topV=[...d.rows].filter(r=>r.venta>0).sort((a,b)=>b.venta-a.venta).slice(0,5);
+  $('#t-venta').innerHTML=tabla(['Producto','Unidades','Ventas'],topV.map(r=>'<tr>'+celdaProd(r)+'<td class="num">'+nf.format(r.un)+'</td><td class="num">'+peso(r.venta)+'</td></tr>'));
+  const topG=[...d.rows].filter(r=>r.gan>0).sort((a,b)=>b.gan-a.gan).slice(0,5);
+  $('#t-gan').innerHTML=tabla(['Producto','Margen','Ganancia'],topG.map(r=>'<tr>'+celdaProd(r)+'<td class="num">'+pct((r.p.precio-r.p.costo)/r.p.precio)+'</td><td class="num">'+peso(r.gan)+'</td></tr>'));
+  $('#t-rep').innerHTML=tabla(['Producto','Alcanza para','Comprar'],d.rep.slice(0,5).map(r=>{
+    const dias=Math.max(1,Math.round(r.cob)), k=r.cob<7?'crit':'warn';
+    const comprar=Math.max(1,Math.ceil(r.prom*1.5-r.p.stock));
+    return '<tr>'+celdaProd(r,'Stock: '+nf.format(r.p.stock))+'<td class="num"><span class="pill '+k+'">'+ICON[k]+(k==='crit'?'Urgente':'Pronto')+'</span><span class="small">'+dias+(dias===1?' día':' días')+'</span></td><td class="num">'+nf.format(comprar)+'</td></tr>';
+  }));
+}
+
+function botones(sel,opciones,actual,alElegir){
+  const cont=$(sel);
+  opciones.forEach(([valor,texto])=>{
+    const b=document.createElement('button');
+    b.type='button'; b.textContent=texto; b.setAttribute('aria-pressed',String(valor===actual()));
+    b.addEventListener('click',()=>{alElegir(valor);cont.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed','false'));b.setAttribute('aria-pressed','true');render();});
+    cont.appendChild(b);
+  });
+}
+botones('#f-periodo',[[6,'6 meses'],[3,'3 meses'],[1,'Último mes']],()=>st.meses,v=>{st.meses=v});
+botones('#f-rubro',[[-1,'Todos'],...RUBROS.map((n,i)=>[i,n])],()=>st.rubro,v=>{st.rubro=v});
+
+const tip=$('#tip');
+function mostrar(el){
+  const ancla=el.querySelector('path')||el.querySelector('.bfill')||el, r=ancla.getBoundingClientRect();
+  tip.textContent=el.dataset.tip; tip.hidden=false;
+  const tw=tip.offsetWidth;
+  tip.style.left=Math.max(8,Math.min(r.left+r.width/2-tw/2,innerWidth-tw-8))+'px';
+  tip.style.top=Math.max(8,r.top-34)+'px';
+}
+const ocultar=()=>{tip.hidden=true};
+document.addEventListener('pointerover',e=>{const g=e.target.closest('[data-tip]');g?mostrar(g):ocultar()});
+document.addEventListener('focusin',e=>{const g=e.target.closest('[data-tip]');g?mostrar(g):ocultar()});
+document.addEventListener('focusout',ocultar);
+window.addEventListener('scroll',ocultar,{passive:true});
+render();
+</script>
+</body>
+</html>
